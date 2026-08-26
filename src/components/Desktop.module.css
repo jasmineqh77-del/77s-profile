@@ -1,0 +1,41 @@
+.desktop {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background-image: url("/wallpaper/bliss.png");
+  background-size: cover;
+  background-position: center;
+  /* 图片没加载出来时也不会是白屏 */
+  background-color: #4a86d8;
+}
+
+.iconGrid {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 4px;
+  /* 图标本身要能点，但容器空白处的点击要穿透到桌面上去做取消选中 */
+  pointer-events: none;
+}
+
+.iconGrid > * {
+  pointer-events: auto;
+}
+
+@media (max-width: 720px) {
+  .iconGrid {
+    position: absolute;
+    inset: 8px 8px 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: max-content;
+    gap: 8px;
+    align-content: start;
+    overflow-y: auto;
+  }
+}

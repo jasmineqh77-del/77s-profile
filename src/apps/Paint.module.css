@@ -1,0 +1,63 @@
+.paint {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 6px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 5px;
+  border: 2px outset #e8e8e8;
+  background: #ece9d8;
+}
+
+.palette {
+  display: grid;
+  grid-template-columns: repeat(6, 18px);
+  grid-auto-rows: 18px;
+  gap: 2px;
+  padding: 2px;
+  border: 2px inset #c0c0c0;
+}
+
+.swatch {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid #7f7f7f;
+  cursor: pointer;
+}
+
+.swatchActive {
+  outline: 2px solid #316ac5;
+  outline-offset: -1px;
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.toolActive {
+  border-style: inset;
+  font-weight: bold;
+}
+
+.canvasWrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  border: 2px inset #808080;
+  background: #fff;
+  overflow: hidden;
+}
+
+.canvas {
+  display: block;
+  cursor: crosshair;
+  touch-action: none;
+}

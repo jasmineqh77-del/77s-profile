@@ -1,0 +1,84 @@
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 6px;
+  border: 2px inset #c0c0c0;
+  background: #c0c0c0;
+}
+
+.counter {
+  background: #000;
+  color: #ff2b2b;
+  font-family: "Courier New", monospace;
+  font-size: 19px;
+  font-weight: bold;
+  padding: 1px 5px;
+  letter-spacing: 1px;
+  border: 1px inset #808080;
+}
+
+.face {
+  width: 28px;
+  height: 28px;
+  font-size: 15px;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+}
+
+.board {
+  border: 3px inset #c0c0c0;
+  background: #c0c0c0;
+  padding: 2px;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+  font-weight: bold;
+  font-family: "Courier New", monospace;
+  line-height: 1;
+  border: 2px outset #e8e8e8;
+  background: #c0c0c0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.revealed {
+  border: 1px solid #9a9a9a;
+  background: #d4d4d4;
+  cursor: default;
+}
+
+/* 经典扫雷的数字配色 */
+.cell[data-adjacent="1"] { color: #0000ff; }
+.cell[data-adjacent="2"] { color: #008000; }
+.cell[data-adjacent="3"] { color: #ff0000; }
+.cell[data-adjacent="4"] { color: #000080; }
+.cell[data-adjacent="5"] { color: #800000; }
+.cell[data-adjacent="6"] { color: #008080; }
+.cell[data-adjacent="7"] { color: #000000; }
+.cell[data-adjacent="8"] { color: #808080; }
+
+.hint {
+  margin: 0;
+  font-size: 11px;
+  color: #555;
+}

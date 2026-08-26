@@ -1,0 +1,38 @@
+.terminal {
+  background: #000;
+  color: #c0c0c0;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+  height: 100%;
+  padding: 6px 8px;
+  overflow: hidden;
+  cursor: text;
+}
+
+.scroll {
+  height: 100%;
+  overflow: auto;
+}
+
+.line {
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+.promptRow {
+  display: flex;
+  align-items: center;
+  line-height: 1.45;
+}
+
+.input {
+  flex: 1 1 auto;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  min-width: 0;
+}

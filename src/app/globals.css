@@ -1,0 +1,67 @@
+/* XP.css 已经提供了控件皮肤，这里只补它没管的部分：
+   全局重置、中文字体回退、以及桌面外壳需要的滚动/选中行为。 */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  /* XP 界面字体是 Tahoma，中文回退到系统黑体 */
+  font-family: Tahoma, Verdana, "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB",
+    sans-serif;
+  font-size: 12px;
+  color: #000;
+  background: #3a6ea5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 标题栏在真实 XP 里用的是 Trebuchet MS */
+.title-bar-text {
+  font-family: "Trebuchet MS", Tahoma, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+button {
+  font-family: inherit;
+}
+
+a {
+  color: #0a49b0;
+}
+
+a:hover {
+  color: #1565d8;
+}
+
+/* 复古滚动条，只有 WebKit 内核支持，其他浏览器会优雅退化成默认样式 */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-left: 1px solid #d6d6d6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #f0f4fb 0%, #c9dcf5 50%, #a8c6ec 100%);
+  border: 1px solid #7f9db9;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #f6f9fe 0%, #d8e6fa 50%, #b8d2f2 100%);
+}
+
+/* 窗口标题栏、图标这些地方不该被文字选中打断 */
+.title-bar,
+.title-bar-text {
+  user-select: none;
+}

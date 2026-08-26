@@ -1,0 +1,125 @@
+.layout {
+  display: flex;
+  height: 100%;
+  gap: 8px;
+  min-height: 0;
+}
+
+.sidebar {
+  flex: 0 0 190px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  border: 2px inset #808080;
+  background: #fff;
+}
+
+.sidebarItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font: inherit;
+  padding: 7px 9px;
+  cursor: pointer;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.sidebarItem:hover {
+  background: #e8f0fe;
+}
+
+.sidebarItemActive {
+  background: #316ac5;
+  color: #fff;
+}
+
+.sidebarItemActive:hover {
+  background: #316ac5;
+}
+
+.postTitle {
+  display: block;
+  font-weight: bold;
+}
+
+.postDate {
+  display: block;
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+.reader {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+  border: 2px inset #808080;
+  background: #fff;
+  padding: 14px 16px;
+}
+
+.readerTitle {
+  font-size: 17px;
+  margin: 0;
+}
+
+.readerDate {
+  color: #777;
+  font-size: 11px;
+  margin: 2px 0 14px;
+}
+
+/* Markdown 正文排版 */
+.prose {
+  line-height: 1.8;
+}
+
+.prose :global(h2) {
+  font-size: 14px;
+  margin: 18px 0 6px;
+}
+
+.prose :global(h3) {
+  font-size: 13px;
+  margin: 14px 0 4px;
+}
+
+.prose :global(p) {
+  margin: 0 0 12px;
+}
+
+.prose :global(ul),
+.prose :global(ol) {
+  margin: 0 0 12px;
+  padding-left: 22px;
+}
+
+.prose :global(li) {
+  margin-bottom: 4px;
+}
+
+.prose :global(code) {
+  background: #f0f0f0;
+  padding: 1px 4px;
+  font-family: "Courier New", monospace;
+}
+
+.prose :global(pre) {
+  background: #f0f0f0;
+  padding: 10px;
+  overflow: auto;
+  border: 1px solid #d4d4d4;
+}
+
+.prose :global(blockquote) {
+  margin: 0 0 12px;
+  padding-left: 12px;
+  border-left: 3px solid #b6cbe8;
+  color: #555;
+}
+
+.prose :global(img) {
+  max-width: 100%;
+}
