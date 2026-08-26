@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { Post } from "@/lib/posts";
 import { DESKTOP_APPS } from "@/os/appMeta";
@@ -8,8 +8,10 @@ import { usePostsStore } from "@/os/postsStore";
 import { useSystemStore } from "@/os/systemStore";
 import { useWindowStore } from "@/os/windowStore";
 
+import Assistant from "./Assistant";
 import Bsod from "./Bsod";
 import { BootScreen, LoginScreen, ShutdownScreen } from "./BootScreen";
+import ContextMenu, { type MenuItem } from "./ContextMenu";
 import DesktopIcon from "./DesktopIcon";
 import Taskbar from "./Taskbar";
 import WindowFrame from "./WindowFrame";
@@ -31,6 +33,8 @@ function useIsMobile() {
   return isMobile;
 }
 
+type IconSort = "default" | "name";
+
 export default function Desktop({ posts }: { posts: Post[] }) {
   const phase = useSystemStore((s) => s.phase);
   const bsod = useSystemStore((s) => s.bsod);
@@ -42,12 +46,38 @@ export default function Desktop({ posts }: { posts: Post[] }) {
 
   const setPosts = usePostsStore((s) => s.setPosts);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
+  const [menuAt, setMenuAt] = useState<{ x: number; y: number } | null>(null);
+  const [iconSort, setIconSort] = useState<IconSort>("default");
+  // 变一次值就让图标重新挂载，播一遍淡入，模拟「刷新」
+  const [refreshKey, setRefreshKey] = useState(0);
+
   const isMobile = useIsMobile();
 
   // 文章在服务端构建时读好，这里灌进 store 给博客窗口用
   useEffect(() => {
     setPosts(posts);
   }, [posts, setPosts]);
+
+  const icons = useMemo(() => {
+    if (iconSort === "name") {
+      return [...DESKTOP_APPS].sort((a, b) => a.title.localeCompare(b.title, "zh-CN"));
+    }
+    return DESKTOP_APPS;
+  }, [iconSort]);
+
+  const menuItems: MenuItem[] = [
+    {
+      kind: "item",
+      label: iconSort === "name" ? "排列图标（恢复默认）" : "排列图标（按名称）",
+      onSelect: () => setIconSort((s) => (s === "name" ? "default" : "name")),
+    },
+    { kind: "item", label: "刷新", onSelect: () => setRefreshKey((k) => k + 1) },
+    { kind: "separator" },
+    { kind: "item", label: "新建", disabled: true },
+    { kind: "item", label: "粘贴", disabled: true },
+    { kind: "separator" },
+    { kind: "item", label: "属性", onSelect: () => open("about") },
+  ];
 
   if (phase === "boot") return <BootScreen />;
   if (phase === "login") return <LoginScreen />;
@@ -63,9 +93,15 @@ export default function Desktop({ posts }: { posts: Post[] }) {
           setStartMenuOpen(false);
         }
       }}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        setSelectedIcon(null);
+        setStartMenuOpen(false);
+        setMenuAt({ x: e.clientX, y: e.clientY });
+      }}
     >
-      <div className={styles.iconGrid}>
-        {DESKTOP_APPS.map((app) => (
+      <div className={styles.iconGrid} key={refreshKey}>
+        {icons.map((app) => (
           <DesktopIcon
             key={app.id}
             label={app.title}
@@ -89,7 +125,18 @@ export default function Desktop({ posts }: { posts: Post[] }) {
           />
         ))}
 
+      <Assistant />
+
       <Taskbar />
+
+      {menuAt && (
+        <ContextMenu
+          x={menuAt.x}
+          y={menuAt.y}
+          items={menuItems}
+          onClose={() => setMenuAt(null)}
+        />
+      )}
 
       {bsod && <Bsod />}
     </div>

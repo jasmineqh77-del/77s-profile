@@ -159,8 +159,10 @@
 
 .loginDivider {
   width: 1px;
-  align-self: stretch;
-  max-height: 200px;
+  /* 不能用 stretch：单行 flex 容器的行高等于整个容器，
+     会把分割线拉到顶上去，和居中的内容错开 */
+  align-self: center;
+  height: 150px;
   background: rgba(255, 255, 255, 0.4);
 }
 

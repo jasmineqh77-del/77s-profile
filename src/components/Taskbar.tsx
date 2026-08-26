@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 import { iconFor } from "@/os/icons";
 import { useSystemStore } from "@/os/systemStore";
@@ -9,21 +9,36 @@ import { useWindowStore } from "@/os/windowStore";
 import StartMenu from "./StartMenu";
 import styles from "./Taskbar.module.css";
 
-function Clock() {
-  const [now, setNow] = useState<Date | null>(null);
+function subscribeToMinute(onChange: () => void) {
+  const timer = setInterval(onChange, 15_000);
+  return () => clearInterval(timer);
+}
 
-  // 服务端渲染不出时间，挂载后再显示，避免 hydration 不一致
-  useEffect(() => {
-    setNow(new Date());
-    const timer = setInterval(() => setNow(new Date()), 15_000);
-    return () => clearInterval(timer);
-  }, []);
+/**
+ * 快照必须是稳定值，否则 React 会认为状态一直在变而不停重渲染，
+ * 所以这里取「第几分钟」而不是精确到毫秒的时间戳。
+ */
+function getMinuteBucket() {
+  return Math.floor(Date.now() / 60_000);
+}
+
+/** 服务端渲染时没有时间，返回 null 让它显示占位符，避免 hydration 不一致 */
+function getServerSnapshot(): number | null {
+  return null;
+}
+
+function Clock() {
+  const bucket = useSyncExternalStore(subscribeToMinute, getMinuteBucket, getServerSnapshot);
 
   return (
     <span className={styles.clock}>
-      {now
-        ? now.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false })
-        : "--:--"}
+      {bucket === null
+        ? "--:--"
+        : new Date(bucket * 60_000).toLocaleTimeString("zh-CN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })}
     </span>
   );
 }

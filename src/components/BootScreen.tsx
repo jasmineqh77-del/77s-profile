@@ -81,7 +81,7 @@ export function LoginScreen() {
       </div>
 
       <div className={styles.loginBottom}>
-        <p>开机后可以拖动窗口、右键桌面、翻翻开始菜单。</p>
+        <p>开机后翻翻桌面图标和开始菜单，在电脑上还能拖动窗口、右键桌面。</p>
       </div>
     </div>
   );

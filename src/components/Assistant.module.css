@@ -1,0 +1,123 @@
+.assistant {
+  position: fixed;
+  right: 18px;
+  bottom: 52px;
+  z-index: 7500;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  font-family: Tahoma, Verdana, "PingFang SC", "Microsoft YaHei", sans-serif;
+  animation: rise 0.28s ease-out;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bubble {
+  position: relative;
+  width: 224px;
+  padding: 12px 14px 10px;
+  background: #ffffe1;
+  border: 1px solid #8a8a5c;
+  border-radius: 5px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  font-size: 12px;
+}
+
+/* 指向右下角回形针的小尾巴 */
+.bubble::after {
+  content: "";
+  position: absolute;
+  right: -7px;
+  bottom: 12px;
+  width: 12px;
+  height: 12px;
+  background: #ffffe1;
+  border-right: 1px solid #8a8a5c;
+  border-bottom: 1px solid #8a8a5c;
+  transform: rotate(-45deg);
+}
+
+.close {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 11px;
+  color: #666;
+  padding: 2px 4px;
+  line-height: 1;
+}
+
+.close:hover {
+  color: #000;
+}
+
+.tip {
+  margin: 0 0 10px;
+  line-height: 1.65;
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.actions button {
+  font-size: 11px;
+  padding: 2px 8px;
+  min-width: auto;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  font-size: 24px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.45));
+}
+
+.avatar:hover {
+  transform: scale(1.12);
+}
+
+@media (max-width: 720px) {
+  .assistant {
+    right: 10px;
+    left: 10px;
+    justify-content: flex-end;
+  }
+
+  .bubble {
+    width: auto;
+    flex: 1 1 auto;
+    max-width: 260px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assistant {
+    animation: none;
+  }
+
+  .avatar:hover {
+    transform: none;
+  }
+}

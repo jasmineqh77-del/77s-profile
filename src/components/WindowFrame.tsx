@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 
-import { getAppComponent } from "@/os/appRegistry";
+import AppSurface from "@/os/appRegistry";
 import { MIN_WINDOW_SIZE, startPointerDrag, type ResizeDirection } from "@/os/pointerDrag";
 import { TASKBAR_HEIGHT, useWindowStore, type WindowInstance } from "@/os/windowStore";
 
@@ -18,9 +18,12 @@ type Props = {
 };
 
 export default function WindowFrame({ win, isActive, isMobile }: Props) {
-  const { focus, close, minimize, toggleMaximize, setRect } = useWindowStore();
-
-  const AppComponent = getAppComponent(win.appId);
+  // 逐个订阅 action，避免整个 store 变化时所有窗口一起重渲染
+  const focus = useWindowStore((s) => s.focus);
+  const close = useWindowStore((s) => s.close);
+  const minimize = useWindowStore((s) => s.minimize);
+  const toggleMaximize = useWindowStore((s) => s.toggleMaximize);
+  const setRect = useWindowStore((s) => s.setRect);
 
   const handleTitlePointerDown = useCallback(
     (event: React.PointerEvent) => {
@@ -115,11 +118,7 @@ export default function WindowFrame({ win, isActive, isMobile }: Props) {
       </div>
 
       <div className={`window-body ${styles.body}`}>
-        {AppComponent ? (
-          <AppComponent payload={win.payload} windowId={win.id} />
-        ) : (
-          <p>这个窗口还没做好。</p>
-        )}
+        <AppSurface appId={win.appId} payload={win.payload} windowId={win.id} />
       </div>
 
       {!maximized &&

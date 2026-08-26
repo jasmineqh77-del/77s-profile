@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background-image: url("/wallpaper/bliss.png");
+  background-image: url("/wallpaper/bliss.jpg");
   background-size: cover;
   background-position: center;
   /* 图片没加载出来时也不会是白屏 */
@@ -25,6 +25,26 @@
 
 .iconGrid > * {
   pointer-events: auto;
+}
+
+/* 右键菜单里的「刷新」会让整块图标重新挂载，借这个动画给点反馈 */
+.iconGrid {
+  animation: iconsFadeIn 0.22s ease-out;
+}
+
+@keyframes iconsFadeIn {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iconGrid {
+    animation: none;
+  }
 }
 
 @media (max-width: 720px) {

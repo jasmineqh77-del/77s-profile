@@ -1,7 +1,5 @@
 "use client";
 
-import type { ComponentType } from "react";
-
 import About from "@/apps/About";
 import Blog from "@/apps/Blog";
 import Cmd from "@/apps/Cmd";
@@ -15,24 +13,41 @@ import RecycleBin from "@/apps/RecycleBin";
 import Resume from "@/apps/Resume";
 import type { AppProps } from "@/apps/types";
 
-/**
- * appId → 窗口内容组件。
- * 元数据（标题、图标、默认尺寸）在 appMeta.ts 里，两边的 id 要对得上。
- */
-const COMPONENTS: Record<string, ComponentType<AppProps>> = {
-  about: About,
-  projects: Projects,
-  "project-detail": ProjectDetail,
-  blog: Blog,
-  now: NowPlaying,
-  resume: Resume,
-  contact: Contact,
-  recycle: RecycleBin,
-  minesweeper: Minesweeper,
-  paint: Paint,
-  cmd: Cmd,
-};
+type Props = AppProps & { appId: string };
 
-export function getAppComponent(appId: string): ComponentType<AppProps> | undefined {
-  return COMPONENTS[appId];
+/**
+ * 把 appId 渲染成对应的窗口内容。
+ *
+ * 这里刻意用 switch 直接返回 JSX，而不是查一张 id → 组件的表：
+ * 查表拿到组件再渲染的写法，React 静态分析认不出来，会当成「在渲染中创建组件」。
+ *
+ * 新增窗口：在 appMeta.ts 加元数据，再到这里加一个 case。
+ */
+export default function AppSurface({ appId, payload, windowId }: Props) {
+  switch (appId) {
+    case "about":
+      return <About />;
+    case "projects":
+      return <Projects />;
+    case "project-detail":
+      return <ProjectDetail payload={payload} windowId={windowId} />;
+    case "blog":
+      return <Blog />;
+    case "now":
+      return <NowPlaying />;
+    case "resume":
+      return <Resume />;
+    case "contact":
+      return <Contact />;
+    case "recycle":
+      return <RecycleBin />;
+    case "minesweeper":
+      return <Minesweeper />;
+    case "paint":
+      return <Paint />;
+    case "cmd":
+      return <Cmd windowId={windowId} />;
+    default:
+      return <p>这个窗口还没做好。</p>;
+  }
 }
