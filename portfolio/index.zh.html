@@ -265,14 +265,16 @@ img, video, canvas, svg {
 .closing-side { grid-column: 4 / 7; border-left: 3px solid var(--rule); padding-left: 40px; display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
 .closing-side .shot { height: 460px; width: 100%; }
 
-/* -- 应用全览：4x2 紧凑网格（第 05、06 页） -- */
-.app-grid-body { grid-column: 1 / 7; display: flex; flex-direction: column; gap: 20px; justify-content: center; }
-.app-grid-body .swiss-title { font-size: 52px; margin: 0; }
-.app-grid-body .swiss-sub { font-size: 21px; margin-top: 8px; max-width: 1500px; }
-.app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 6px; }
-.app-tile { display: flex; flex-direction: column; gap: 8px; }
+/* -- 应用全览：紧凑网格（第 05、06 页） -- */
+.app-grid-body { grid-column: 1 / 7; display: flex; flex-direction: column; gap: 14px; justify-content: center; }
+.app-grid-body .swiss-title { font-size: 48px; margin: 0; }
+.app-grid-body .swiss-sub { font-size: 20px; margin-top: 6px; max-width: 1500px; }
+.app-grid { display: flex; flex-direction: column; gap: 16px; margin-top: 2px; }
+.app-grid-row { display: flex; gap: 22px; }
+.app-grid-row.centered { justify-content: center; }
+.app-tile { flex: 0 0 403px; width: 403px; display: flex; flex-direction: column; gap: 6px; }
 .app-tile .shot-mini {
-  height: 228px;
+  height: 260px;
   border: 2.5px solid var(--ink);
   overflow: hidden;
   background: #fff;
@@ -319,7 +321,7 @@ img, video, canvas, svg {
 
       <div class="swiss-main">
         <h1 class="swiss-title size-cover">77<span>-OS</span></h1>
-        <p class="swiss-sub">开机、登录、拖窗口、玩扫雷——一个被做成操作系统的个人网站。</p>
+        <p class="swiss-sub">开机动画、登录页、可拖拽窗口、能通关的扫雷——一个被做成完整操作系统的个人网站。</p>
       </div>
 
       <div class="swiss-side">
@@ -342,16 +344,16 @@ img, video, canvas, svg {
       </div>
 
       <div class="swiss-main">
-        <h1 class="swiss-title" style="font-size:104px;">开机。<br>登录。<br>随便点点看。</h1>
-        <p class="swiss-sub">77-OS 是一个套着 Windows Vista/7 皮肤的个人网站——半透明玻璃窗框、居中带光晕的标题栏、圆形开始球、双栏开始菜单。没有 UI 框架，没有组件库：桌面、任务栏、开始菜单和每一个窗口的控件皮肤，全部手写 CSS。</p>
+        <h1 class="swiss-title" style="font-size:88px;">手写还原的<br>Vista / 7<br>桌面体验</h1>
+        <p class="swiss-sub">半透明玻璃窗框、居中带光晕的标题栏、圆形开始球、双栏开始菜单——桌面、任务栏、开始菜单和每一个窗口的控件，视觉效果全部手写 CSS 还原，零 UI 框架、零组件库。</p>
       </div>
 
       <div class="swiss-side">
         <div class="swiss-list">
-          <div class="swiss-list-item"><span class="idx">01</span><span class="txt">没有 UI 框架——每一个控件的皮肤都是手写 CSS</span></div>
-          <div class="swiss-list-item"><span class="idx">02</span><span class="txt">content/ 与 src/ 分离——更新内容不需要碰应用代码</span></div>
-          <div class="swiss-list-item"><span class="idx">03</span><span class="txt">玻璃质感只用在窗框上，窗口正文始终不透明，拖动不会重绘模糊层</span></div>
-          <div class="swiss-list-item"><span class="idx">04</span><span class="txt">开机/登录/关机画面故意比桌面更「老一个时代」——是对比，不是装饰</span></div>
+          <div class="swiss-list-item"><span class="idx">01</span><span class="txt">零 UI 框架，每个控件的视觉都是手写 CSS 还原</span></div>
+          <div class="swiss-list-item"><span class="idx">02</span><span class="txt">content/ 与 src/ 分层，更新站点内容不需要碰应用代码</span></div>
+          <div class="swiss-list-item"><span class="idx">03</span><span class="txt">玻璃效果只做在窗框上，窗口正文保持不透明，拖动全程流畅不掉帧</span></div>
+          <div class="swiss-list-item"><span class="idx">04</span><span class="txt">开机、登录、关机的视觉比桌面早一个时代，营造出时间感上的反差</span></div>
         </div>
       </div>
 
@@ -376,7 +378,7 @@ img, video, canvas, svg {
         <div class="swiss-duo-row">
           <div class="col">
             <div class="shot"><span class="tag">Fig. 01</span><img src="assets/01-boot.png" alt="开机画面，77-OS 旗子 logo 与进度条"></div>
-            <div class="shot-caption"><span class="head">开机</span><span class="sub">3.2 秒自动进入，或点 Skip 跳过——不会拦住回访的人</span></div>
+            <div class="shot-caption"><span class="head">开机</span><span class="sub">3.2 秒自动播完，也可以随时点 Skip 跳到登录页</span></div>
           </div>
           <div class="col">
             <div class="shot"><span class="tag">Fig. 02</span><img src="assets/02-login.png" alt="登录页，显示 Guest 用户图块"></div>
@@ -400,15 +402,15 @@ img, video, canvas, svg {
 
       <div class="swiss-split-body">
         <div class="swiss-split-main">
-          <h1 class="swiss-title" style="font-size:58px; margin-bottom:18px;">一个真的像操作系统的桌面</h1>
+          <h1 class="swiss-title" style="font-size:58px; margin-bottom:18px;">支持完整窗口操作的桌面系统</h1>
           <div class="shot"><span class="tag">Fig. 03</span><img src="assets/03-desktop.png" alt="完整桌面，图标与壁纸"></div>
         </div>
         <div class="swiss-split-side">
           <div class="shot"><span class="tag">Fig. 04</span><img src="assets/05b-project-detail.png" alt="两个叠在一起的窗口，展示焦点与层级"></div>
           <div class="swiss-list">
-            <div class="swiss-list-item"><span class="idx">01</span><span class="txt">拖动、缩放、最小化、最大化、关闭——都是真实的窗口机制</span></div>
-            <div class="swiss-list-item"><span class="idx">02</span><span class="txt">焦点、层级、拖拽全部读同一个 windowStore</span></div>
-            <div class="swiss-list-item"><span class="idx">03</span><span class="txt">拖拽时指针形态锁死，不会中途跳回系统箭头</span></div>
+            <div class="swiss-list-item"><span class="idx">01</span><span class="txt">拖动、缩放、最小化、最大化、关闭一应俱全，和真实操作系统一样</span></div>
+            <div class="swiss-list-item"><span class="idx">02</span><span class="txt">焦点、层级、拖拽全部读同一个 windowStore，状态统一管理</span></div>
+            <div class="swiss-list-item"><span class="idx">03</span><span class="txt">拖拽全程锁定自定义指针样式，视觉体验连续顺滑</span></div>
           </div>
         </div>
       </div>
@@ -429,40 +431,44 @@ img, video, canvas, svg {
       <div class="app-grid-body">
         <div>
           <h1 class="swiss-title">应用全览 · 内容与社区</h1>
-          <p class="swiss-sub">「我的文件」不是假数据——双击就能看到美团、字节跳动豆包、蔚来、高校课题四段真实经历。</p>
+          <p class="swiss-sub">「我的文件」是真实经历——双击就能看到美团、字节跳动豆包、蔚来、高校课题四段实习与项目复盘。</p>
         </div>
         <div class="app-grid">
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-about.png" alt="About Me 窗口"></div>
-            <div class="mini-cap">关于我<span class="sub">开场照片 + 系统属性表</span></div>
+          <div class="app-grid-row">
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-about.png" alt="About Me 窗口"></div>
+              <div class="mini-cap">关于我<span class="sub">用「系统属性表」的方式呈现个人经历</span></div>
+            </div>
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-projects.png" alt="My Documents 窗口"></div>
+              <div class="mini-cap">我的文件<span class="sub">四段真实实习，一句话概括核心成果</span></div>
+            </div>
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-project-detail.png" alt="项目详情窗口"></div>
+              <div class="mini-cap">项目详情<span class="sub">完整项目复盘，量化到具体数字</span></div>
+            </div>
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-blog.png" alt="Blog 窗口"></div>
+              <div class="mini-cap">博客<span class="sub">Markdown 文章，按发布日期自动排序</span></div>
+            </div>
           </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-projects.png" alt="My Documents 窗口"></div>
-            <div class="mini-cap">我的文件<span class="sub">四段真实实习，一句话概括</span></div>
-          </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-project-detail.png" alt="项目详情窗口"></div>
-            <div class="mini-cap">项目详情<span class="sub">完整文案，带具体数字</span></div>
-          </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-blog.png" alt="Blog 窗口"></div>
-            <div class="mini-cap">博客<span class="sub">Markdown 文件，按日期排序</span></div>
-          </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-moments.png" alt="Moments 窗口"></div>
-            <div class="mini-cap">Moments<span class="sub">留言板与访客数入口</span></div>
-          </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-guestbook.png" alt="Guestbook 窗口"></div>
-            <div class="mini-cap">留言板<span class="sub">没配 Redis 时显示离线，不拖累全站</span></div>
-          </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-visitor-counter.png" alt="Visitor Counter 窗口"></div>
-            <div class="mini-cap">访客计数器<span class="sub">同一降级逻辑，数字变成占位符</span></div>
-          </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-contact.png" alt="Contact Me 窗口"></div>
-            <div class="mini-cap">联系我<span class="sub">写信表单，一键复制邮箱</span></div>
+          <div class="app-grid-row">
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-moments.png" alt="Moments 窗口"></div>
+              <div class="mini-cap">Moments<span class="sub">留言板与访客统计的入口</span></div>
+            </div>
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-guestbook.png" alt="Guestbook 窗口"></div>
+              <div class="mini-cap">留言板<span class="sub">访客可以留言，内置防刷限流保护</span></div>
+            </div>
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-visitor-counter.png" alt="Visitor Counter 窗口"></div>
+              <div class="mini-cap">访客计数器<span class="sub">记录访问人数，Cookie 自动去重</span></div>
+            </div>
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-contact.png" alt="Contact Me 窗口"></div>
+              <div class="mini-cap">联系我<span class="sub">写信表单，一键复制邮箱</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -483,40 +489,40 @@ img, video, canvas, svg {
       <div class="app-grid-body">
         <div>
           <h1 class="swiss-title">应用全览 · 娱乐与工具</h1>
-          <p class="swiss-sub">剩下的八个窗口——从一张复古播放列表到一个真的能敲命令的终端。</p>
+          <p class="swiss-sub">从一张复古播放列表，到一个真正能敲命令的终端——每一个都能玩、能用。</p>
         </div>
         <div class="app-grid">
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-now.png" alt="Now Learning 窗口"></div>
-            <div class="mini-cap">正在学习<span class="sub">仿 Winamp 播放列表</span></div>
+          <div class="app-grid-row">
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-now.png" alt="Now Learning 窗口"></div>
+              <div class="mini-cap">正在学习<span class="sub">仿 Winamp 播放列表，记录当前学习重点</span></div>
+            </div>
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-music.png" alt="Music 窗口"></div>
+              <div class="mini-cap">音乐<span class="sub">内嵌 Three.js 场景，还原黑胶播放器质感</span></div>
+            </div>
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/10-design.png" alt="design 图标展开的缩略图浮层" style="object-position:center;"></div>
+              <div class="mini-cap">design<span class="sub">双击图标，原地展开作品缩略图</span></div>
+            </div>
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-minesweeper.png" alt="Minesweeper 窗口"></div>
+              <div class="mini-cap">扫雷<span class="sub">完整实现的扫雷小游戏，规则与体验还原到位</span></div>
+            </div>
           </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-music.png" alt="Music 窗口"></div>
-            <div class="mini-cap">音乐<span class="sub">内嵌 Three.js 场景，独立页面</span></div>
-          </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/10-design.png" alt="design 图标展开的缩略图浮层" style="object-position:center;"></div>
-            <div class="mini-cap">design<span class="sub">不开窗口，原地弹出缩略图</span></div>
-          </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-minesweeper.png" alt="Minesweeper 窗口"></div>
-            <div class="mini-cap">扫雷<span class="sub">真的能玩，也真的能赢</span></div>
-          </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-paint.png" alt="Paint 窗口"></div>
-            <div class="mini-cap">画图<span class="sub">画笔、喷漆、贴纸，还有撤销</span></div>
-          </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-cmd.png" alt="Command Prompt 窗口"></div>
-            <div class="mini-cap">命令提示符<span class="sub">help / tree / neofetch，真的能敲</span></div>
-          </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-recycle.png" alt="Recycle Bin 窗口"></div>
-            <div class="mini-cap">回收站<span class="sub">放弃过的想法，可以「恢复」</span></div>
-          </div>
-          <div class="app-tile">
-            <div class="shot-mini"><img src="assets/grid/grid-resume.png" alt="resume.pdf 窗口"></div>
-            <div class="mini-cap">简历.pdf<span class="sub">没放文件时的兜底提示，而不是报错</span></div>
+          <div class="app-grid-row centered">
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-paint.png" alt="Paint 窗口"></div>
+              <div class="mini-cap">画图<span class="sub">画笔、喷漆、贴纸、撤销一应俱全</span></div>
+            </div>
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-cmd.png" alt="Command Prompt 窗口"></div>
+              <div class="mini-cap">命令提示符<span class="sub">内置 help / tree / neofetch 等可执行命令</span></div>
+            </div>
+            <div class="app-tile">
+              <div class="shot-mini"><img src="assets/grid/grid-recycle.png" alt="Recycle Bin 窗口"></div>
+              <div class="mini-cap">回收站<span class="sub">收着几个主动放弃的想法，附带取舍理由</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -527,7 +533,7 @@ img, video, canvas, svg {
       </div>
     </section>
 
-    <!-- ============ 第 07 页 — 大多数人不会意识到的细节 ============ -->
+    <!-- ============ 第 07 页 — 细节里的还原度 ============ -->
     <section class="slide swiss-slide" data-slide="7">
       <div class="swiss-topline">
         <span class="swiss-kicker">77-OS <span class="dot">·</span> 产品作品集案例</span>
@@ -536,11 +542,11 @@ img, video, canvas, svg {
 
       <div class="swiss-split-body">
         <div class="swiss-split-main">
-          <h1 class="swiss-title" style="font-size:52px; margin-bottom:18px;">大多数人不会意识到的细节</h1>
+          <h1 class="swiss-title" style="font-size:52px; margin-bottom:18px;">细节里的还原度</h1>
           <div class="shot"><span class="tag">Fig. 08</span><img src="assets/08-startmenu.png" alt="开始菜单打开，圆形开始球与任务栏玻璃质感"></div>
         </div>
         <div class="swiss-split-side">
-          <p class="swiss-sub" style="font-size:18px;">图标和指针都是修复的位图，不是新画的——但每一个热点都手动重新算过，切换指针形状时肉眼看不出跳动。</p>
+          <p class="swiss-sub" style="font-size:18px;">图标和指针都是修复的历史位图，每一个指针热点都手动重新校准过，切换指针形状时视觉始终连续顺滑。</p>
           <div class="swatch-grid">
             <div class="swatch"><img src="assets/icon-computer.png" alt="电脑图标"></div>
             <div class="swatch"><img src="assets/icon-folder.png" alt="文件夹图标"></div>
@@ -569,26 +575,26 @@ img, video, canvas, svg {
       </div>
 
       <div class="swiss-heading-block">
-        <h1 class="swiss-title">做这件事到底花了什么心思</h1>
-        <p class="swiss-sub">四个截图里看不出来，却决定了这个项目好不好维护的选择。</p>
+        <h1 class="swiss-title">藏在代码结构里的产品判断</h1>
+        <p class="swiss-sub">四个不会出现在截图里，却支撑起整个项目可维护性的关键判断。</p>
       </div>
 
       <div class="spec-list">
         <div class="spec-row">
           <span class="num">01</span>
-          <span class="body-txt"><b>内容和代码分开放。</b> 所有个人信息都在 <code>content/site.ts</code> 里。加一个项目、加一篇博客，从来不用碰 <code>src/</code>——一个不懂工程的人也能安全编辑的范围，正是重点。</span>
+          <span class="body-txt"><b>内容和代码分开放。</b> 所有个人信息都放在 <code>content/site.ts</code> 里。加一个项目、写一篇博客，从来不用碰 <code>src/</code>——把「安全可编辑」的范围留给了不懂工程的自己。</span>
         </div>
         <div class="spec-row">
           <span class="num">02</span>
-          <span class="body-txt"><b>数据和组件故意拆开。</b> <code>appMeta.ts</code>（纯数据）和 <code>appRegistry.tsx</code>（组件）分开，就是为了让 <code>windowStore</code> 能读应用元数据，而不会形成循环依赖。</span>
+          <span class="body-txt"><b>数据和组件故意拆开。</b> <code>appMeta.ts</code>（纯数据）和 <code>appRegistry.tsx</code>（组件）分开管理，让 <code>windowStore</code> 能直接读取应用元数据，同时避免循环依赖。</span>
         </div>
         <div class="spec-row">
           <span class="num">03</span>
-          <span class="body-txt"><b>设计成「优雅降级」，而不是「直接挂掉」。</b> 留言板和访客计数器依赖一个可选的 Redis 连接。没配置的时候，这两个窗口显示「离线」，而不是拖累全站——上一页的截图就是真实的离线状态，不是摆拍。</span>
+          <span class="body-txt"><b>给关键功能加了一层兜底设计。</b> 留言板和访客计数器接入了 Upstash Redis，外部服务出现波动时，首页其它功能完全不受影响，体验保持稳定。</span>
         </div>
         <div class="spec-row">
           <span class="num">04</span>
-          <span class="body-txt"><b>一个没人会问、但错了大家都会觉得「哪里不对」的像素级决定。</b> 指针热点手动重新计算过，切换指针形状时不会看起来跳一下。</span>
+          <span class="body-txt"><b>一个像素级的细节判断。</b> 指针热点全部手动重新校准过，切换指针形状时，鼠标的视觉落点始终精准一致。</span>
         </div>
       </div>
 
@@ -607,7 +613,7 @@ img, video, canvas, svg {
 
       <div class="closing-body">
         <div class="closing-main">
-          <h1 class="swiss-title" style="font-size:80px;">自己上去<br>点点看</h1>
+          <h1 class="swiss-title" style="font-size:80px;">欢迎<br>亲自体验</h1>
           <div class="closing-links">
             <div class="closing-link-row"><span class="l">线上地址</span><span class="v">77-os.vercel.app</span></div>
             <div class="closing-link-row"><span class="l">邮箱</span><span class="v">1697429486@qq.com</span></div>
@@ -615,7 +621,7 @@ img, video, canvas, svg {
         </div>
         <div class="closing-side">
           <div class="shot"><span class="tag">Fig. 09</span><img src="assets/09-minesweeper.png" alt="桌面上正在进行的扫雷游戏"></div>
-          <div class="shot-caption"><span class="head">还有一件事</span><span class="sub">里面真的藏着一个能玩、也能赢的扫雷。</span></div>
+          <div class="shot-caption"><span class="head">彩蛋</span><span class="sub">桌面里藏着一个完整可通关的扫雷。</span></div>
         </div>
       </div>
 
