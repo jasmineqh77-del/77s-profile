@@ -202,26 +202,57 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
 }
 .lede.narrow { max-width: 46ch; }
 
+/* —— Vertically centered panel (covers / thesis / closing) —— */
+.panel-center {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  padding-bottom: 12px;
+}
+.slide.has-panel {
+  display: flex;
+  flex-direction: column;
+}
+.slide.has-panel .masthead { flex: 0 0 auto; }
+.slide.has-panel .colophon { position: absolute; }
+
 /* —— Cover —— */
 .cover-grid {
   display: grid;
-  grid-template-columns: 1.4fr 0.85fr;
-  gap: 72px;
-  align-items: end;
-  min-height: 720px;
-  padding-bottom: 48px;
+  grid-template-columns: 1.35fr 0.9fr;
+  column-gap: 72px;
+  row-gap: 28px;
+  align-items: center;
+  width: 100%;
+  margin-top: 8px;
 }
 .cover-title {
+  grid-column: 1;
+  grid-row: 1;
   font-size: 168px;
   line-height: 0.88;
+  margin: 0;
+  align-self: center;
 }
 .cover-title .os { color: var(--color-accent); }
+.cover-lede {
+  grid-column: 1;
+  grid-row: 2;
+  margin: 0;
+  max-width: 34ch;
+}
 .cover-meta {
+  grid-column: 2;
+  grid-row: 1;
   border-left: 2px solid var(--color-rule-strong);
-  padding-left: 36px;
+  padding: 0 0 0 36px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 28px;
+  align-self: center;
 }
 .datum .n {
   display: block;
@@ -242,12 +273,30 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
 /* —— Two-column claim + list —— */
 .split-claim {
   display: grid;
-  grid-template-columns: 1.15fr 0.95fr;
-  gap: 64px;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 80px;
   align-items: start;
-  min-height: 680px;
+  width: 100%;
+  margin-top: 10px;
 }
-.split-claim .display { font-size: 72px; max-width: 12ch; }
+.split-claim .display {
+  font-size: 58px;
+  max-width: none;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+.thesis-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.thesis-title .line {
+  display: block;
+}
+.thesis-title .line-sub {
+  color: var(--color-accent);
+}
+.split-claim .lede { margin-top: 28px; max-width: 30ch; }
 .claim-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
 .claim-list li {
   display: grid;
@@ -442,15 +491,39 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
 }
 
 /* —— Closing —— */
+.closing-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  width: 100%;
+}
 .closing-grid {
   display: grid;
   grid-template-columns: 1fr 1.05fr;
-  gap: 64px;
-  align-items: center;
-  min-height: 700px;
+  gap: 56px;
+  align-items: start;
+  width: 100%;
+  position: relative;
 }
-.closing-grid .display { font-size: 80px; }
-.contact-rows { margin-top: 36px; display: flex; flex-direction: column; gap: 16px; }
+.closing-grid::before {
+  content: "";
+  position: absolute;
+  left: 48.5%;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--color-rule);
+  pointer-events: none;
+}
+.closing-grid .display { font-size: 76px; line-height: 1.08; }
+.closing-lede {
+  margin: 22px 0 0;
+  font-size: 22px;
+  line-height: 1.55;
+  max-width: 28ch;
+  color: var(--color-ink);
+}
+.contact-rows { margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
 .contact-row { display: flex; align-items: baseline; gap: 20px; }
 .contact-row .k {
   font-family: var(--font-mono);
@@ -461,10 +534,86 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
   min-width: 96px;
 }
 .contact-row .v {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 600;
 }
-.closing-grid .frame { height: 460px; width: 100%; }
+.closing-notes {
+  margin-top: 36px;
+  padding-top: 22px;
+  border-top: 3px double var(--color-rule-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.closing-note {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 12px;
+  align-items: baseline;
+}
+.closing-note .n {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+}
+.closing-note .t {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--color-ink);
+}
+.closing-grid .frame { height: 400px; width: 100%; }
+.closing-aside .pull {
+  margin: 18px 0 0;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--color-rule);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-ink);
+  max-width: 28ch;
+}
+.closing-aside .pull span {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.closing-band {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  width: 100%;
+  padding-top: 22px;
+  border-top: 1px solid var(--color-ink);
+}
+.closing-band .band-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.closing-band .bn {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-accent);
+  letter-spacing: -0.03em;
+}
+.closing-band .bl {
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--color-ink-soft, var(--color-muted));
+  padding-top: 6px;
+  max-width: 26ch;
+}
 
 /* —— Deck controls —— */
 .deck-controls {
@@ -510,27 +659,27 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
   <div class="deck-stage" id="stage">
 
     <!-- 01 · 封面 -->
-    <section class="slide active" data-slide="1">
+    <section class="slide active has-panel" data-slide="1">
       <header class="masthead">
         <div class="brand">77<em>-OS</em></div>
         <div class="issue">产品作品集案例 · Vol. 01</div>
         <div class="folio">01 / 09</div>
       </header>
 
-      <div class="cover-grid">
-        <div>
-          <div class="stage-rail">
-            <span class="stage-num">01</span>
-            <span class="stage-label">开场 · Opening</span>
-          </div>
-          <h1 class="display cover-title">77<span class="os">-OS</span></h1>
-          <p class="lede">开机动画、登录页、可拖拽窗口、能通关的扫雷——一个被做成完整操作系统的个人网站。</p>
+      <div class="panel-center">
+        <div class="stage-rail">
+          <span class="stage-num">01</span>
+          <span class="stage-label">开场 · Opening</span>
         </div>
-        <aside class="cover-meta">
-          <div class="datum"><span class="n">16</span><span class="l">个可以打开的应用</span></div>
-          <div class="datum"><span class="n">4</span><span class="l">段真实实习经历</span></div>
-          <div class="datum"><span class="n">1</span><span class="l">套手写桌面系统</span></div>
-        </aside>
+        <div class="cover-grid">
+          <h1 class="display cover-title">77<span class="os">-OS</span></h1>
+          <p class="lede cover-lede">开机动画、登录页、可拖拽窗口、能通关的扫雷——一个被做成完整操作系统的个人网站。</p>
+          <aside class="cover-meta">
+            <div class="datum"><span class="n">16</span><span class="l">个可以打开的应用</span></div>
+            <div class="datum"><span class="n">4</span><span class="l">段真实实习经历</span></div>
+            <div class="datum"><span class="n">1</span><span class="l">套手写桌面系统</span></div>
+          </aside>
+        </div>
       </div>
 
       <footer class="colophon">
@@ -540,29 +689,35 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
     </section>
 
     <!-- 02 · 命题 -->
-    <section class="slide" data-slide="2">
+    <section class="slide has-panel" data-slide="2">
       <header class="masthead">
         <div class="brand">77<em>-OS</em></div>
         <div class="issue">产品作品集案例 · Vol. 01</div>
         <div class="folio">02 / 09</div>
       </header>
 
-      <div class="stage-rail">
-        <span class="stage-num">02</span>
-        <span class="stage-label">命题 · Thesis</span>
-      </div>
-
-      <div class="split-claim">
-        <div>
-          <h1 class="display">手写还原的 Vista / 7 桌面体验</h1>
-          <p class="lede narrow">半透明玻璃窗框、居中带光晕的标题栏、圆形开始球、双栏开始菜单——桌面、任务栏、开始菜单和每一个窗口的控件，视觉效果全部手写 CSS 还原。</p>
+      <div class="panel-center">
+        <div class="stage-rail">
+          <span class="stage-num">02</span>
+          <span class="stage-label">命题 · Thesis</span>
         </div>
-        <ol class="claim-list">
-          <li><span class="idx">01</span><span class="txt">每个控件的视觉都是手写 CSS 还原</span></li>
-          <li><span class="idx">02</span><span class="txt">content/ 与 src/ 分层，更新站点内容只改内容文件</span></li>
-          <li><span class="idx">03</span><span class="txt">玻璃效果只做在窗框上，窗口正文保持不透明，拖动全程流畅不掉帧</span></li>
-          <li><span class="idx">04</span><span class="txt">开机、登录、关机的视觉比桌面早一个时代，营造出时间感上的反差</span></li>
-        </ol>
+
+        <div class="split-claim">
+          <div>
+            <h1 class="display thesis-title">
+              <span class="line">手写还原的</span>
+              <span class="line line-sub">Vista / 7</span>
+              <span class="line">桌面体验</span>
+            </h1>
+            <p class="lede narrow">半透明玻璃窗框、居中带光晕的标题栏、圆形开始球、双栏开始菜单——桌面、任务栏、开始菜单和每一个窗口的控件，视觉效果全部手写 CSS 还原。</p>
+          </div>
+          <ol class="claim-list">
+            <li><span class="idx">01</span><span class="txt">每个控件的视觉都是手写 CSS 还原</span></li>
+            <li><span class="idx">02</span><span class="txt">content/ 与 src/ 分层，更新站点内容只改内容文件</span></li>
+            <li><span class="idx">03</span><span class="txt">玻璃效果只做在窗框上，窗口正文保持不透明，拖动全程流畅不掉帧</span></li>
+            <li><span class="idx">04</span><span class="txt">开机、登录、关机的视觉比桌面早一个时代，营造出时间感上的反差</span></li>
+          </ol>
+        </div>
       </div>
 
       <footer class="colophon">
@@ -843,30 +998,58 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
     </section>
 
     <!-- 09 · 结语 -->
-    <section class="slide" data-slide="9">
+    <section class="slide has-panel" data-slide="9">
       <header class="masthead">
         <div class="brand">77<em>-OS</em></div>
         <div class="issue">产品作品集案例 · Vol. 01</div>
         <div class="folio">09 / 09</div>
       </header>
 
-      <div class="stage-rail">
-        <span class="stage-num">09</span>
-        <span class="stage-label">邀请 · Try it</span>
-      </div>
+      <div class="panel-center">
+        <div class="stage-rail">
+          <span class="stage-num">09</span>
+          <span class="stage-label">邀请 · Try it</span>
+        </div>
 
-      <div class="closing-grid">
-        <div>
-          <h1 class="display">欢迎<br>亲自体验</h1>
-          <div class="contact-rows">
-            <div class="contact-row"><span class="k">线上地址</span><span class="v">77-os.vercel.app</span></div>
-            <div class="contact-row"><span class="k">邮箱</span><span class="v">1697429486@qq.com</span></div>
+        <div class="closing-stack">
+          <div class="closing-grid">
+            <div>
+              <h1 class="display">欢迎<br>亲自体验</h1>
+              <p class="closing-lede">打开线上站点，自己点一遍开机、登录、拖窗口——比看截图更能判断产品完成度。</p>
+              <div class="contact-rows">
+                <div class="contact-row"><span class="k">线上地址</span><span class="v">77-os.vercel.app</span></div>
+                <div class="contact-row"><span class="k">邮箱</span><span class="v">1697429486@qq.com</span></div>
+              </div>
+              <div class="closing-notes">
+                <div class="closing-note"><span class="n">01</span><span class="t">先看「我的文件」——四段实习复盘都在里面</span></div>
+                <div class="closing-note"><span class="n">02</span><span class="t">再开几个窗口叠在一起，感受真实的焦点与层级</span></div>
+                <div class="closing-note"><span class="n">03</span><span class="t">最后试试扫雷或命令提示符，验证它不只是皮肤</span></div>
+              </div>
+            </div>
+            <aside class="closing-aside">
+              <figure class="figure">
+                <div class="frame"><span class="fig-tag">Fig. 09</span><img src="assets/09-minesweeper.png" alt="桌面上正在进行的扫雷游戏"></div>
+                <figcaption><span class="cap-head">彩蛋</span><span class="cap-sub">桌面里藏着一个完整可通关的扫雷。</span></figcaption>
+              </figure>
+              <p class="pull">截图说明完成度；亲手点一遍，才说明判断力。<span>— 试用路径</span></p>
+            </aside>
+          </div>
+
+          <div class="closing-band" aria-label="作品集要点">
+            <div class="band-item">
+              <span class="bn">16</span>
+              <span class="bl">个可打开应用，从简历到扫雷，都挂在同一套桌面上。</span>
+            </div>
+            <div class="band-item">
+              <span class="bn">4</span>
+              <span class="bl">段实习被写成可点开的窗口，而不是列表条目。</span>
+            </div>
+            <div class="band-item">
+              <span class="bn">1</span>
+              <span class="bl">套手写系统：开机、登录、桌面、关机整条链路。</span>
+            </div>
           </div>
         </div>
-        <figure class="figure">
-          <div class="frame"><span class="fig-tag">Fig. 09</span><img src="assets/09-minesweeper.png" alt="桌面上正在进行的扫雷游戏"></div>
-          <figcaption><span class="cap-head">彩蛋</span><span class="cap-sub">桌面里藏着一个完整可通关的扫雷。</span></figcaption>
-        </figure>
       </div>
 
       <footer class="colophon">
