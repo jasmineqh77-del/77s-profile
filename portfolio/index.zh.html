@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>77-OS — 产品作品集案例</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600;6..72,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Hallmark · pre-emit critique: P4 H5 E4 S4 R5 V4
+ * Hallmark · genre: editorial · macrostructure: Narrative Workflow · theme: Newsprint
+ * enrichment: none · nav: N6 masthead · footer: Ft4 dense colophon
+ * audience: campus HR + interviewers · use: clarify product judgment · tone: editorial
+ * diversification: vs prior Swiss Modern — paper (cool slate vs pure white) · display (roman serif vs geometric grotesk) · accent (steel-blue vs vermillion)
+ */
+:root {
+  --stage-bg: oklch(18% 0.018 250);
+  --color-paper: oklch(96.2% 0.008 240);
+  --color-paper-2: oklch(93.5% 0.010 240);
+  --color-rule: oklch(78% 0.014 245);
+  --color-rule-strong: oklch(32% 0.025 250);
+  --color-muted: oklch(48% 0.020 245);
+  --color-ink: oklch(22% 0.022 250);
+  --color-accent: oklch(46% 0.13 250);
+  --color-focus: oklch(52% 0.15 250);
+  --font-display: "Newsreader", "Noto Serif SC", Georgia, serif;
+  --font-body: "Source Sans 3", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 40px;
+  --space-xl: 64px;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--stage-bg);
+}
+.deck-viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--stage-bg);
+}
+.deck-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  transform-origin: 0 0;
+  background: var(--color-paper);
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  box-sizing: border-box;
+  padding: 64px 96px 56px;
+}
+.slide.active {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+img, video, canvas, svg { max-width: 100%; max-height: 100%; }
+@media print {
+  html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
+  .deck-viewport { position: static; overflow: visible; background: #fff; }
+  .deck-stage { position: static; width: auto; height: auto; transform: none !important; background: none; }
+  .slide {
+    position: relative;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    width: 1920px;
+    height: 1080px;
+    break-after: page;
+    page-break-after: always;
+  }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .deck-controls { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .2s !important; }
+}
+
+/* —— Masthead (N6) —— */
+.masthead {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: var(--space-md);
+  padding-bottom: 14px;
+  border-bottom: 3px double var(--color-rule-strong);
+  margin-bottom: var(--space-lg);
+}
+.masthead .brand {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+.masthead .brand em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+.masthead .issue {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.masthead .folio {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--color-ink);
+}
+
+/* —— Colophon (Ft4) —— */
+.colophon {
+  position: absolute;
+  left: 96px;
+  right: 96px;
+  bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-rule);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+/* —— Stage label (Narrative Workflow) —— */
+.stage-rail {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.stage-num {
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 0.9;
+  color: var(--color-accent);
+  letter-spacing: -0.02em;
+  font-style: normal;
+}
+.stage-label {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--color-ink);
+}
+.lede {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.55;
+  max-width: 58ch;
+  color: var(--color-ink);
+  margin: 18px 0 0;
+}
+.lede.narrow { max-width: 46ch; }
+
+/* —— Vertically centered panel (covers / thesis / closing) —— */
+.panel-center {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  padding-bottom: 12px;
+}
+.slide.has-panel {
+  display: flex;
+  flex-direction: column;
+}
+.slide.has-panel .masthead { flex: 0 0 auto; }
+.slide.has-panel .colophon { position: absolute; }
+
+/* —— Cover —— */
+.cover-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 0.9fr;
+  column-gap: 72px;
+  row-gap: 28px;
+  align-items: center;
+  width: 100%;
+  margin-top: 8px;
+}
+.cover-title {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: 168px;
+  line-height: 0.88;
+  margin: 0;
+  align-self: center;
+}
+.cover-title .os { color: var(--color-accent); }
+.cover-lede {
+  grid-column: 1;
+  grid-row: 2;
+  margin: 0;
+  max-width: 34ch;
+}
+.cover-meta {
+  grid-column: 2;
+  grid-row: 1;
+  border-left: 2px solid var(--color-rule-strong);
+  padding: 0 0 0 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  align-self: center;
+}
+.datum .n {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-accent);
+}
+.datum .l {
+  display: block;
+  margin-top: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+/* —— Two-column claim + list —— */
+.split-claim {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 80px;
+  align-items: start;
+  width: 100%;
+  margin-top: 10px;
+}
+.split-claim .display {
+  font-size: 58px;
+  max-width: none;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+.thesis-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.thesis-title .line {
+  display: block;
+}
+.thesis-title .line-sub {
+  color: var(--color-accent);
+}
+.split-claim .lede { margin-top: 28px; max-width: 30ch; }
+.claim-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+.claim-list li {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 16px;
+  padding: 20px 0;
+  border-top: 1px solid var(--color-rule);
+}
+.claim-list li:last-child { border-bottom: 1px solid var(--color-rule); }
+.claim-list .idx {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-accent);
+  letter-spacing: 0.06em;
+}
+.claim-list .txt {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+
+/* —— Duo figures —— */
+.duo-body { display: flex; flex-direction: column; gap: 28px; min-height: 700px; }
+.duo-body .display { font-size: 64px; }
+.duo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+.figure { display: flex; flex-direction: column; gap: 12px; }
+.frame {
+  position: relative;
+  border: 1px solid var(--color-rule-strong);
+  background: var(--color-paper-2);
+  overflow: hidden;
+}
+.frame img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.frame .fig-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  padding: 6px 10px;
+}
+.cap-head {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  font-style: normal;
+}
+.cap-sub {
+  display: block;
+  margin-top: 4px;
+  font-size: 16px;
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+.duo-row .frame { height: 460px; }
+
+/* —— Split proof —— */
+.proof-split {
+  display: grid;
+  grid-template-columns: 1.25fr 0.85fr;
+  gap: 48px;
+  align-items: start;
+  min-height: 700px;
+}
+.proof-split .display { font-size: 48px; margin-bottom: 18px; max-width: 16ch; }
+.proof-split .main-frame { height: 520px; }
+.proof-side { display: flex; flex-direction: column; gap: 22px; }
+.proof-side .side-frame { height: 280px; }
+.proof-side .claim-list li { padding: 14px 0; }
+.proof-side .claim-list .txt { font-size: 18px; }
+
+/* —— App catalogue grids —— */
+.catalog-head { margin-bottom: 18px; }
+.catalog-head .display { font-size: 44px; }
+.catalog-head .lede { font-size: 20px; margin-top: 10px; }
+.catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.catalog-row {
+  display: flex;
+  gap: 22px;
+}
+.catalog-row.centered { justify-content: center; }
+.tile {
+  flex: 0 0 403px;
+  width: 403px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tile .mini-frame {
+  height: 248px;
+  border: 1px solid var(--color-rule-strong);
+  overflow: hidden;
+  background: var(--color-paper-2);
+}
+.tile .mini-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+.tile .name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  font-style: normal;
+}
+.tile .note {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  color: var(--color-muted);
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+/* —— Detail / swatches —— */
+.detail-split {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr;
+  gap: 48px;
+  align-items: start;
+  min-height: 700px;
+}
+.detail-split .display { font-size: 44px; margin-bottom: 16px; }
+.detail-split .main-frame { height: 520px; }
+.detail-copy .lede { font-size: 19px; margin: 0 0 22px; }
+.swatch-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.swatch {
+  width: 72px;
+  height: 72px;
+  border: 1px solid var(--color-rule-strong);
+  background: var(--color-paper-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.swatch img { width: 40px; height: 40px; object-fit: contain; image-rendering: pixelated; }
+.swatch.cursor img { width: 28px; height: 28px; image-rendering: auto; }
+.swatch-note {
+  display: block;
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+
+/* —— Design showcase (slide 07, static board) —— */
+.design-board {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  min-height: 720px;
+}
+.design-board-head {
+  display: grid;
+  grid-template-columns: 1fr 1.55fr;
+  gap: 36px;
+  align-items: end;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-rule);
+}
+.design-board-head .work-block { display: flex; flex-direction: column; gap: 6px; }
+.design-kicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.design-board-head .work-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  color: var(--color-ink);
+}
+.design-board-head .work-desc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--color-muted);
+  max-width: 52ch;
+}
+.design-sheet {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px 14px;
+  flex: 1;
+  align-content: start;
+}
+.design-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+}
+.design-card .shot {
+  border: 1px solid var(--color-rule-strong);
+  background: #141418;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+.design-card .shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  display: block;
+}
+.design-card.welcome .shot { background: #0b0b0f; }
+.design-card.welcome .shot img {
+  object-fit: contain;
+  object-position: center;
+}
+.design-card .meta {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  column-gap: 8px;
+  row-gap: 2px;
+  align-items: baseline;
+}
+.design-card .meta .idx {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+}
+.design-card .meta .label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-ink);
+}
+.design-card .meta .note {
+  grid-column: 2;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--color-muted);
+}
+
+/* —— Judgment list (slide 08) —— */
+.judgment-head { margin-bottom: 12px; }
+.judgment-head .display { font-size: 48px; }
+.judgment-head .lede { font-size: 20px; margin-top: 12px; max-width: 70ch; }
+.judgment-list { margin-top: 8px; }
+.judgment-row {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 28px;
+  padding: 22px 0;
+  border-top: 1px solid var(--color-rule);
+}
+.judgment-row:first-child { border-top: 2px solid var(--color-rule-strong); }
+.judgment-row:last-child { border-bottom: 1px solid var(--color-rule); }
+.judgment-row .num {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--color-accent);
+  line-height: 1;
+}
+.judgment-row .body {
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.55;
+  max-width: 68ch;
+}
+.judgment-row .body b { font-weight: 700; }
+.judgment-row code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--color-paper-2);
+  padding: 1px 6px;
+  border: 1px solid var(--color-rule);
+}
+
+/* —— Closing —— */
+.closing-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  width: 100%;
+}
+.closing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 56px;
+  align-items: start;
+  width: 100%;
+  position: relative;
+}
+.closing-grid::before {
+  content: "";
+  position: absolute;
+  left: 48.5%;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--color-rule);
+  pointer-events: none;
+}
+.closing-grid .display { font-size: 76px; line-height: 1.08; }
+.closing-lede {
+  margin: 22px 0 0;
+  font-size: 22px;
+  line-height: 1.55;
+  max-width: 28ch;
+  color: var(--color-ink);
+}
+.contact-rows { margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
+.contact-row { display: flex; align-items: baseline; gap: 20px; }
+.contact-row .k {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  min-width: 96px;
+}
+.contact-row .v {
+  font-size: 24px;
+  font-weight: 600;
+}
+.closing-notes {
+  margin-top: 36px;
+  padding-top: 22px;
+  border-top: 3px double var(--color-rule-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.closing-note {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 12px;
+  align-items: baseline;
+}
+.closing-note .n {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+}
+.closing-note .t {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--color-ink);
+}
+.closing-grid .frame { height: 400px; width: 100%; }
+.closing-aside .pull {
+  margin: 18px 0 0;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--color-rule);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-ink);
+  max-width: 28ch;
+}
+.closing-aside .pull span {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.closing-band {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  width: 100%;
+  padding-top: 22px;
+  border-top: 1px solid var(--color-ink);
+}
+.closing-band .band-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.closing-band .bn {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-accent);
+  letter-spacing: -0.03em;
+}
+.closing-band .bl {
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--color-ink-soft, var(--color-muted));
+  padding-top: 6px;
+  max-width: 26ch;
+}
+
+/* —— Deck controls —— */
+.deck-controls {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 20px;
+  background: oklch(18% 0.02 250 / 0.92);
+  border-radius: 999px;
+  font-family: var(--font-body);
+}
+.deck-controls button {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: oklch(96% 0.01 240);
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 10px;
+  line-height: 1;
+}
+.deck-controls button:hover { color: var(--color-accent); }
+.deck-controls button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.deck-counter {
+  color: oklch(96% 0.01 240);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  min-width: 64px;
+  text-align: center;
+  font-family: var(--font-mono);
+}
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+  <div class="deck-stage" id="stage">
+
+    <!-- 01 · 封面 -->
+    <section class="slide active has-panel" data-slide="1">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">01 / 09</div>
+      </header>
+
+      <div class="panel-center">
+        <div class="stage-rail">
+          <span class="stage-num">01</span>
+          <span class="stage-label">开场 · Opening</span>
+        </div>
+        <div class="cover-grid">
+          <h1 class="display cover-title">77<span class="os">-OS</span></h1>
+          <p class="lede cover-lede">开机动画、登录页、可拖拽窗口、能通关的扫雷——一个被做成完整操作系统的个人网站。</p>
+          <aside class="cover-meta">
+            <div class="datum"><span class="n">16</span><span class="l">个可以打开的应用</span></div>
+            <div class="datum"><span class="n">3</span><span class="l">段真实实习经历</span></div>
+            <div class="datum"><span class="n">1</span><span class="l">套手写桌面系统</span></div>
+          </aside>
+        </div>
+      </div>
+
+      <footer class="colophon">
+        <span>Jiaqi Huang</span>
+        <span>Next.js 16 · 纯手写 CSS</span>
+      </footer>
+    </section>
+
+    <!-- 02 · 命题 -->
+    <section class="slide has-panel" data-slide="2">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">02 / 09</div>
+      </header>
+
+      <div class="panel-center">
+        <div class="stage-rail">
+          <span class="stage-num">02</span>
+          <span class="stage-label">命题 · Thesis</span>
+        </div>
+
+        <div class="split-claim">
+          <div>
+            <h1 class="display thesis-title">
+              <span class="line">手写还原的</span>
+              <span class="line line-sub">Vista / 7</span>
+              <span class="line">桌面体验</span>
+            </h1>
+            <p class="lede narrow">半透明玻璃窗框、居中带光晕的标题栏、圆形开始球、双栏开始菜单——桌面、任务栏、开始菜单和每一个窗口的控件，视觉效果全部手写 CSS 还原。</p>
+          </div>
+          <ol class="claim-list">
+            <li><span class="idx">01</span><span class="txt">每个控件的视觉都是手写 CSS 还原</span></li>
+            <li><span class="idx">02</span><span class="txt">content/ 与 src/ 分层，更新站点内容只改内容文件</span></li>
+            <li><span class="idx">03</span><span class="txt">玻璃效果只做在窗框上，窗口正文保持不透明，拖动全程流畅不掉帧</span></li>
+            <li><span class="idx">04</span><span class="txt">开机、登录、关机的视觉比桌面早一个时代，营造出时间感上的反差</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <footer class="colophon">
+        <span>Jiaqi Huang</span>
+        <span>Next.js 16 · TypeScript</span>
+      </footer>
+    </section>
+
+    <!-- 03 · 最初五秒 -->
+    <section class="slide" data-slide="3">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">03 / 09</div>
+      </header>
+
+      <div class="duo-body">
+        <div>
+          <div class="stage-rail">
+            <span class="stage-num">03</span>
+            <span class="stage-label">入场 · First five seconds</span>
+          </div>
+          <h1 class="display">最初的五秒钟</h1>
+          <p class="lede">一段可以跳过的 XP 式开机动画，然后是一个只需要点一下用户名的登录页。</p>
+        </div>
+        <div class="duo-row">
+          <figure class="figure">
+            <div class="frame"><span class="fig-tag">Fig. 01</span><img src="assets/01-boot.png" alt="开机画面，77-OS xp Professional 与进度条"></div>
+            <figcaption><span class="cap-head">开机</span><span class="cap-sub">3.2 秒自动播完，也可以随时点 Skip 跳到登录页</span></figcaption>
+          </figure>
+          <figure class="figure">
+            <div class="frame"><span class="fig-tag">Fig. 02</span><img src="assets/02-login.png" alt="登录页，显示 Guest 用户图块"></div>
+            <figcaption><span class="cap-head">登录</span><span class="cap-sub">点一下 Guest，先淡入黑屏，再淡入桌面</span></figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <footer class="colophon">
+        <span>Jiaqi Huang</span>
+        <span>systemStore.ts — boot → login → desktop → shutdown</span>
+      </footer>
+    </section>
+
+    <!-- 04 · 桌面系统 -->
+    <section class="slide" data-slide="4">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">04 / 09</div>
+      </header>
+
+      <div class="stage-rail">
+        <span class="stage-num">04</span>
+        <span class="stage-label">桌面 · Window system</span>
+      </div>
+
+      <div class="proof-split">
+        <div>
+          <h1 class="display">支持完整窗口操作的桌面系统</h1>
+          <div class="frame main-frame"><span class="fig-tag">Fig. 03</span><img src="assets/03-desktop.png" alt="完整桌面，图标与壁纸"></div>
+        </div>
+        <div class="proof-side">
+          <div class="frame side-frame"><span class="fig-tag">Fig. 04</span><img src="assets/05b-project-detail.png" alt="两个叠在一起的窗口，展示焦点与层级"></div>
+          <ol class="claim-list">
+            <li><span class="idx">01</span><span class="txt">拖动、缩放、最小化、最大化、关闭一应俱全</span></li>
+            <li><span class="idx">02</span><span class="txt">焦点、层级、拖拽全部读同一个 windowStore</span></li>
+            <li><span class="idx">03</span><span class="txt">拖拽全程锁定自定义指针，视觉连续顺滑</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <footer class="colophon">
+        <span>Jiaqi Huang</span>
+        <span>windowStore.ts — open / focus / minimize / z-index</span>
+      </footer>
+    </section>
+
+    <!-- 05 · 内容与社区 -->
+    <section class="slide" data-slide="5">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">05 / 09</div>
+      </header>
+
+      <div class="catalog-head">
+        <div class="stage-rail">
+          <span class="stage-num">05</span>
+          <span class="stage-label">目录 · Content &amp; community</span>
+        </div>
+        <h1 class="display">应用全览 · 内容与社区</h1>
+        <p class="lede">「我的文件」是真实经历——双击就能看到字节跳动豆包、ReelShort、蔚来三段实习，以及一段高校课题复盘。</p>
+      </div>
+
+      <div class="catalog">
+        <div class="catalog-row">
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-about.png" alt="About Me 窗口"></div>
+            <div class="name">关于我<span class="note">用「系统属性表」的方式呈现个人经历</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-projects.png" alt="My Documents 窗口"></div>
+            <div class="name">我的文件<span class="note">三段真实实习，一句话概括核心成果</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-project-detail.png" alt="项目详情窗口"></div>
+            <div class="name">项目详情<span class="note">完整项目复盘，量化到具体数字</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-blog.png" alt="Blog 窗口"></div>
+            <div class="name">博客<span class="note">Markdown 文章，按发布日期自动排序</span></div>
+          </div>
+        </div>
+        <div class="catalog-row">
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-moments.png" alt="Moments 窗口"></div>
+            <div class="name">Moments<span class="note">留言板与访客统计的入口</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-guestbook.png" alt="Guestbook 窗口"></div>
+            <div class="name">留言板<span class="note">访客可以留言，内置防刷限流保护</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-visitor-counter.png" alt="Visitor Counter 窗口"></div>
+            <div class="name">访客计数器<span class="note">记录访问人数，Cookie 自动去重</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-contact.png" alt="Contact Me 窗口"></div>
+            <div class="name">联系我<span class="note">写信表单，一键复制邮箱</span></div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="colophon">
+        <span>Jiaqi Huang</span>
+        <span>content/site.ts — 一个文件驱动每一个窗口</span>
+      </footer>
+    </section>
+
+    <!-- 06 · 娱乐与工具 -->
+    <section class="slide" data-slide="6">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">06 / 09</div>
+      </header>
+
+      <div class="catalog-head">
+        <div class="stage-rail">
+          <span class="stage-num">06</span>
+          <span class="stage-label">目录 · Play &amp; tools</span>
+        </div>
+        <h1 class="display">应用全览 · 娱乐与工具</h1>
+        <p class="lede">从一张复古播放列表，到一个真正能敲命令的终端——每一个都能玩、能用。</p>
+      </div>
+
+      <div class="catalog">
+        <div class="catalog-row">
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-now.png" alt="Now Learning 窗口"></div>
+            <div class="name">正在学习<span class="note">仿 Winamp 播放列表，记录当前学习重点</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-music.png" alt="Music 窗口"></div>
+            <div class="name">音乐<span class="note">内嵌 Three.js 场景，还原黑胶播放器质感</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/10-design.png" alt="design 文件夹旁展开的两张网页封面缩略图" style="object-position:center;"></div>
+            <div class="name">design<span class="note">两件网页作品，详见下一页展开</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-minesweeper.png" alt="Minesweeper 窗口"></div>
+            <div class="name">扫雷<span class="note">完整实现的扫雷小游戏，规则与体验还原到位</span></div>
+          </div>
+        </div>
+        <div class="catalog-row centered">
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-paint.png" alt="Paint 窗口"></div>
+            <div class="name">画图<span class="note">画笔、喷漆、贴纸、撤销一应俱全</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-cmd.png" alt="Command Prompt 窗口"></div>
+            <div class="name">命令提示符<span class="note">内置 help / tree / neofetch 等可执行命令</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-recycle.png" alt="Recycle Bin 窗口"></div>
+            <div class="name">回收站<span class="note">收着几个主动放弃的想法，附带取舍理由</span></div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="colophon">
+        <span>Jiaqi Huang</span>
+        <span>appMeta.ts — 16 个应用共用一套元数据</span>
+      </footer>
+    </section>
+
+    <!-- 07 · design 作品展开 -->
+    <section class="slide" data-slide="7">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">07 / 09</div>
+      </header>
+
+      <div class="stage-rail">
+        <span class="stage-num">07</span>
+        <span class="stage-label">作品 · Design works</span>
+      </div>
+
+      <div class="design-board">
+        <div class="design-board-head">
+          <div class="work-block">
+            <span class="design-kicker">Work 01</span>
+            <h2 class="work-title">回来了</h2>
+            <p class="work-desc">欢迎页式回归叙事：深色封面把「离开又回来」压成一眼可读的入口。</p>
+          </div>
+          <div class="work-block">
+            <span class="design-kicker">Work 02</span>
+            <h2 class="work-title">毕业第 63 天</h2>
+            <p class="work-desc">六章个人档案：从毕业、回家、求职到手帐与第一次，整条叙事线静态铺开。</p>
+          </div>
+        </div>
+
+        <div class="design-sheet">
+          <figure class="design-card welcome">
+            <div class="shot"><img src="assets/design-welcome-thumb.png" alt="回来了 封面"></div>
+            <div class="meta"><span class="idx">W1</span><span class="label">回来了</span><p class="note">封面入口</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/00-cover.png" alt="毕业第63天 封面"></div>
+            <div class="meta"><span class="idx">00</span><span class="label">封面 · 档案入口</span><p class="note">滚动探索，解锁夏天记忆</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/01-graduation.png" alt="毕业章"></div>
+            <div class="meta"><span class="idx">01</span><span class="label">毕业</span><p class="note">学生时代骤然停住</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/02-home.png" alt="回家章"></div>
+            <div class="meta"><span class="idx">02</span><span class="label">回家 · 苏州</span><p class="note">父母身边的一周喘息</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/03-shenzhen.png" alt="深圳香港章"></div>
+            <div class="meta"><span class="idx">03</span><span class="label">深圳 · 香港</span><p class="note">投递、面试与不确定</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/04-people.png" alt="人们手帐章"></div>
+            <div class="meta"><span class="idx">04</span><span class="label">人们 · 夏日手帐</span><p class="note">陌生人成为生活的一部分</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/05-firsts.png" alt="第一次章"></div>
+            <div class="meta"><span class="idx">05</span><span class="label">第一次</span><p class="note">合租、旅行、面对未来</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/06-next.png" alt="接下来章"></div>
+            <div class="meta"><span class="idx">06</span><span class="label">接下来</span><p class="note">秋招与未完待续</p></div>
+          </figure>
+        </div>
+      </div>
+
+      <footer class="colophon">
+        <span>Jiaqi Huang</span>
+        <span>design/ — 两件网页作品，静态铺开</span>
+      </footer>
+    </section>
+
+    <!-- 08 · 细节 -->
+    <section class="slide" data-slide="8">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">08 / 09</div>
+      </header>
+
+      <div class="stage-rail">
+        <span class="stage-num">08</span>
+        <span class="stage-label">细节 · Fidelity</span>
+      </div>
+
+      <div class="detail-split">
+        <div>
+          <h1 class="display">细节里的还原度</h1>
+          <div class="frame main-frame"><span class="fig-tag">Fig. 08</span><img src="assets/08-startmenu.png" alt="开始菜单打开，圆形开始球与任务栏玻璃质感"></div>
+        </div>
+        <div class="detail-copy">
+          <p class="lede">图标和指针都是修复的历史位图，每一个指针热点都手动重新校准过，切换指针形状时视觉始终连续顺滑。</p>
+          <div class="swatch-row">
+            <div class="swatch"><img src="assets/icon-computer.png" alt="电脑图标"></div>
+            <div class="swatch"><img src="assets/icon-folder.png" alt="文件夹图标"></div>
+            <div class="swatch"><img src="assets/icon-notepad.png" alt="记事本图标"></div>
+            <div class="swatch"><img src="assets/icon-pdf.png" alt="PDF 图标"></div>
+            <div class="swatch"><img src="assets/icon-mine.png" alt="扫雷图标"></div>
+            <div class="swatch cursor"><img src="assets/cursor-pointer.png" alt="指针光标"></div>
+            <div class="swatch cursor"><img src="assets/cursor-progress.png" alt="等待中光标"></div>
+            <div class="swatch cursor"><img src="assets/cursor-wait.png" alt="忙碌光标"></div>
+          </div>
+          <span class="swatch-note">图标：修复自 Win98/2000 位图 · 指针：XP「Hands」方案，热点已重新对齐</span>
+        </div>
+      </div>
+
+      <footer class="colophon">
+        <span>Jiaqi Huang</span>
+        <span>--glass-* / --cur-* tokens in globals.css</span>
+      </footer>
+    </section>
+
+
+    <!-- 09 · 结语 -->
+    <section class="slide has-panel" data-slide="9">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">09 / 09</div>
+      </header>
+
+      <div class="panel-center">
+        <div class="stage-rail">
+          <span class="stage-num">09</span>
+          <span class="stage-label">邀请 · Try it</span>
+        </div>
+
+        <div class="closing-stack">
+          <div class="closing-grid">
+            <div>
+              <h1 class="display">欢迎<br>亲自体验</h1>
+              <p class="closing-lede">打开线上站点，自己点一遍开机、登录、拖窗口——比看截图更能判断产品完成度。</p>
+              <div class="contact-rows">
+                <div class="contact-row"><span class="k">线上地址</span><span class="v">77-os.vercel.app</span></div>
+                <div class="contact-row"><span class="k">邮箱</span><span class="v">1697429486@qq.com</span></div>
+              </div>
+              <div class="closing-notes">
+                <div class="closing-note"><span class="n">01</span><span class="t">先看「我的文件」——三段实习复盘都在里面</span></div>
+                <div class="closing-note"><span class="n">02</span><span class="t">再开几个窗口叠在一起，感受真实的焦点与层级</span></div>
+                <div class="closing-note"><span class="n">03</span><span class="t">最后试试扫雷或命令提示符，验证它不只是皮肤</span></div>
+              </div>
+            </div>
+            <aside class="closing-aside">
+              <figure class="figure">
+                <div class="frame"><span class="fig-tag">Fig. 09</span><img src="assets/09-minesweeper.png" alt="桌面上正在进行的扫雷游戏"></div>
+                <figcaption><span class="cap-head">彩蛋</span><span class="cap-sub">桌面里藏着一个完整可通关的扫雷。</span></figcaption>
+              </figure>
+              <p class="pull">截图说明完成度；亲手点一遍，才说明判断力。<span>— 试用路径</span></p>
+            </aside>
+          </div>
+
+          <div class="closing-band" aria-label="作品集要点">
+            <div class="band-item">
+              <span class="bn">16</span>
+              <span class="bl">个可打开应用，从简历到扫雷，都挂在同一套桌面上。</span>
+            </div>
+            <div class="band-item">
+              <span class="bn">3</span>
+              <span class="bl">段实习被写成可点开的窗口，而不是列表条目。</span>
+            </div>
+            <div class="band-item">
+              <span class="bn">1</span>
+              <span class="bl">套手写系统：开机、登录、桌面、关机整条链路。</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="colophon">
+        <span>Jiaqi Huang</span>
+        <span>Next.js 16 · 纯手写 CSS</span>
+      </footer>
+    </section>
+
+  </div>
+</div>
+
+<nav class="deck-controls" aria-label="幻灯片导航">
+  <button type="button" id="prevBtn" aria-label="上一页">&larr;</button>
+  <span class="deck-counter" id="counter">01 / 09</span>
+  <button type="button" id="nextBtn" aria-label="下一页">&rarr;</button>
+</nav>
+
+<script>
+function fitStage() {
+  var stage = document.getElementById('stage');
+  var scale = Math.min(window.innerWidth / 1920, window.innerHeight / 0980);
+  var x = (window.innerWidth - 1920 * scale) / 2;
+  var y = (window.innerHeight - 1080 * scale) / 2;
+  stage.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + scale + ')';
+}
+window.addEventListener('resize', fitStage);
+fitStage();
+
+var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+var current = 0;
+
+function renderSlide() {
+  slides.forEach(function (slide, i) {
+    slide.classList.toggle('active', i === current);
+  });
+  var counter = document.getElementById('counter');
+  var n = String(current + 1).padStart(2, '0');
+  var total = String(slides.length).padStart(2, '0');
+  counter.textContent = n + ' / ' + total;
+}
+
+function goTo(index) {
+  if (index < 0 || index >= slides.length) return;
+  current = index;
+  renderSlide();
+}
+
+
+document.getElementById('prevBtn').addEventListener('click', function () { goTo(current - 1); });
+document.getElementById('nextBtn').addEventListener('click', function () { goTo(current + 1); });
+
+window.addEventListener('keydown', function (e) {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { goTo(current + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { goTo(current - 1); }
+});
+
+renderSlide();
+</script>
+</body>
+</html>

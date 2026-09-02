@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>77-OS — Product Portfolio Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES
+   Slides are authored at 1920x1080 and scaled as a whole.
+   =========================================== */
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--stage-bg, #000);
+}
+.deck-viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--stage-bg, #000);
+}
+.deck-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  transform-origin: 0 0;
+  background: var(--slide-bg, #fff);
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  background: var(--slide-bg, #fff);
+}
+.slide.active,
+.slide.visible {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+img, video, canvas, svg {
+  max-width: 100%;
+  max-height: 100%;
+}
+.deck-controls {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+@media print {
+  html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
+  .deck-viewport { position: static; overflow: visible; background: #fff; }
+  .deck-stage { position: static; width: auto; height: auto; transform: none !important; background: none; }
+  .slide {
+    position: relative;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    width: 1920px;
+    height: 1080px;
+    break-after: page;
+    page-break-after: always;
+  }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .deck-controls { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .2s !important; }
+}
+
+/* ===========================================
+   SWISS MODERN DESIGN SYSTEM
+   Static, no motion by request: slide switching is an
+   instant visibility/opacity swap, no transition, no
+   hover animation, no reveal-on-scroll.
+   =========================================== */
+:root {
+  --stage-bg: #000;
+  --slide-bg: #ffffff;
+  --ink: #0a0a0a;
+  --red: #ff3300;
+  --rule: #0a0a0a;
+  --muted: #4a4a4a;
+}
+
+.swiss-slide {
+  font-family: "Nunito", sans-serif;
+  color: var(--ink);
+  padding: 96px 120px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: auto 1fr auto;
+  column-gap: 40px;
+  row-gap: 36px;
+}
+
+.swiss-topline {
+  grid-column: 1 / 7;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 3px solid var(--rule);
+  padding-bottom: 22px;
+}
+.swiss-kicker { font-weight: 800; font-size: 21px; letter-spacing: 0.14em; text-transform: uppercase; }
+.swiss-kicker .dot { color: var(--red); }
+.swiss-index { font-weight: 800; font-size: 21px; letter-spacing: 0.1em; }
+
+.swiss-bottom {
+  grid-column: 1 / 7;
+  border-top: 3px solid var(--rule);
+  padding-top: 22px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 19px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* -- Cover-style two-column body (main + side) -- */
+.swiss-main {
+  grid-column: 1 / 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 26px;
+}
+.swiss-title {
+  font-family: "Archivo", sans-serif;
+  font-weight: 900;
+  font-size: 150px;
+  line-height: 0.94;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.swiss-title.size-cover { font-size: 168px; }
+.swiss-title span { color: var(--red); }
+.swiss-sub {
+  font-size: 27px;
+  font-weight: 600;
+  line-height: 1.45;
+  max-width: 900px;
+  color: #1a1a1a;
+}
+.swiss-side {
+  grid-column: 5 / 7;
+  border-left: 3px solid var(--rule);
+  padding-left: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+}
+.swiss-stat { display: flex; flex-direction: column; gap: 6px; }
+.swiss-stat .n { font-family: "Archivo", sans-serif; font-weight: 900; font-size: 52px; color: var(--red); line-height: 1; }
+.swiss-stat .l { font-size: 17px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* -- List side panel (numbered signature-detail list) -- */
+.swiss-list { display: flex; flex-direction: column; gap: 24px; }
+.swiss-list-item { display: flex; gap: 16px; align-items: baseline; }
+.swiss-list-item .idx { font-family: "Archivo", sans-serif; font-weight: 900; font-size: 26px; color: var(--red); min-width: 44px; }
+.swiss-list-item .txt { font-size: 19px; font-weight: 600; line-height: 1.45; color: #1a1a1a; }
+
+/* -- Full-width heading block used on text-forward slides -- */
+.swiss-heading-block {
+  grid-column: 1 / 7;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 4px;
+}
+.swiss-heading-block .swiss-title { font-size: 92px; }
+.swiss-heading-block .swiss-sub { font-size: 25px; max-width: 1400px; }
+
+/* -- Image "specimen" frame -- */
+.shot {
+  border: 3px solid var(--ink);
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  flex-shrink: 0;
+}
+.shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.shot .tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  padding: 7px 14px;
+  text-transform: uppercase;
+}
+.shot-caption { margin-top: 16px; }
+.shot-caption .head { font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink); }
+.shot-caption .sub { display: block; margin-top: 5px; font-size: 17px; font-weight: 600; color: var(--muted); line-height: 1.4; }
+
+/* -- Duo image row (Slide 03) -- */
+.swiss-duo-body {
+  grid-column: 1 / 7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+}
+.swiss-duo-row { display: flex; gap: 48px; }
+.swiss-duo-row .col { flex: 1; display: flex; flex-direction: column; }
+.swiss-duo-row .shot { height: 560px; }
+
+/* -- Split body: main shot left, side content right (Slide 04, 06) -- */
+.swiss-split-body { grid-column: 1 / 7; display: grid; grid-template-columns: repeat(6, 1fr); column-gap: 40px; align-items: center; }
+.swiss-split-main { grid-column: 1 / 5; }
+.swiss-split-main .shot { height: 490px; }
+.swiss-split-main h1 { margin: 0 0 16px; }
+.swiss-split-side { grid-column: 5 / 7; border-left: 3px solid var(--rule); padding-left: 40px; display: flex; flex-direction: column; gap: 26px; }
+.swiss-split-side .shot { height: 300px; }
+
+/* -- Trio image row (Slide 05) -- */
+.swiss-trio-body { grid-column: 1 / 7; display: flex; flex-direction: column; gap: 32px; justify-content: center; }
+.swiss-trio-row { display: flex; gap: 36px; }
+.swiss-trio-row .col { flex: 1; display: flex; flex-direction: column; }
+.swiss-trio-row .shot { height: 460px; }
+
+/* -- Specimen strip (icons/cursors, Slide 06) -- */
+.swatch-grid { display: flex; flex-wrap: wrap; gap: 16px; }
+.swatch {
+  width: 84px; height: 84px;
+  border: 2px solid var(--ink);
+  background: #f4f4f4;
+  display: flex; align-items: center; justify-content: center;
+}
+.swatch img { width: 44px; height: 44px; object-fit: contain; image-rendering: pixelated; }
+.swatch.cursor img { width: 32px; height: 32px; image-rendering: auto; }
+.swatch-label { font-size: 15px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-top: 10px; }
+
+/* -- Numbered spec-sheet list (Slide 07) -- */
+.spec-list { grid-column: 1 / 7; display: flex; flex-direction: column; }
+.spec-row { display: flex; align-items: flex-start; gap: 48px; padding: 26px 0; border-top: 2px solid rgba(10,10,10,0.15); }
+.spec-row:first-child { border-top: 2px solid var(--ink); }
+.spec-row .num { font-family: "Archivo", sans-serif; font-weight: 900; font-size: 44px; color: var(--red); min-width: 96px; }
+.spec-row .body-txt { font-size: 22px; font-weight: 600; line-height: 1.5; max-width: 1400px; color: #1a1a1a; }
+.spec-row .body-txt b { font-weight: 800; }
+
+/* -- Closing slide layout (Slide 08) -- */
+.closing-body { grid-column: 1 / 7; display: grid; grid-template-columns: repeat(6, 1fr); column-gap: 40px; align-items: center; }
+.closing-main { grid-column: 1 / 4; display: flex; flex-direction: column; gap: 28px; }
+.closing-links { display: flex; flex-direction: column; gap: 18px; margin-top: 8px; }
+.closing-link-row { display: flex; align-items: baseline; gap: 16px; }
+.closing-link-row .l { font-size: 17px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); min-width: 110px; }
+.closing-link-row .v { font-size: 24px; font-weight: 700; color: var(--ink); }
+.closing-side { grid-column: 4 / 7; border-left: 3px solid var(--rule); padding-left: 40px; display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
+.closing-side .shot { height: 460px; width: 100%; }
+
+/* -- Deck controls (navigation chrome, outside slide design system) -- */
+.deck-controls {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 20px;
+  background: rgba(10,10,10,0.88);
+  border-radius: 999px;
+  font-family: "Nunito", sans-serif;
+}
+.deck-controls button {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 4px 10px;
+  line-height: 1;
+}
+.deck-controls button:hover { color: var(--red); }
+.deck-counter { color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 0.06em; min-width: 56px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+  <div class="deck-stage" id="stage">
+
+    <!-- ============ SLIDE 01 — COVER ============ -->
+    <section class="slide active swiss-slide" data-slide="1">
+      <div class="swiss-topline">
+        <span class="swiss-kicker">77-OS <span class="dot">·</span> Product Portfolio Case Study</span>
+        <span class="swiss-index">01 / 08</span>
+      </div>
+
+      <div class="swiss-main">
+        <h1 class="swiss-title size-cover">77<span>-OS</span></h1>
+        <p class="swiss-sub">Boot it, log in, drag the windows, play Minesweeper — a personal site built to run like an operating system.</p>
+      </div>
+
+      <div class="swiss-side">
+        <div class="swiss-stat"><span class="n">0</span><span class="l">UI Frameworks</span></div>
+        <div class="swiss-stat"><span class="n">3</span><span class="l">Real Internships Inside</span></div>
+        <div class="swiss-stat"><span class="n">16</span><span class="l">Windows to Open</span></div>
+      </div>
+
+      <div class="swiss-bottom">
+        <span>Jiaqi Huang</span>
+        <span>Next.js 16 · Hand-written CSS</span>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 02 — WHAT & HOW ============ -->
+    <section class="slide swiss-slide" data-slide="2">
+      <div class="swiss-topline">
+        <span class="swiss-kicker">77-OS <span class="dot">·</span> Product Portfolio Case Study</span>
+        <span class="swiss-index">02 / 08</span>
+      </div>
+
+      <div class="swiss-main">
+        <h1 class="swiss-title">Boot.<br>Log in.<br>Click around.</h1>
+        <p class="swiss-sub">77-OS is a personal site skinned as a Windows Vista/7-era desktop — glass window frames, a glowing centered title bar, a round Start orb, a two-column Start menu. No UI framework, no component library: every control on the desktop, taskbar, Start menu, and window chrome is hand-written CSS.</p>
+      </div>
+
+      <div class="swiss-side">
+        <div class="swiss-list">
+          <div class="swiss-list-item"><span class="idx">01</span><span class="txt">No UI framework — every control skinned by hand in CSS</span></div>
+          <div class="swiss-list-item"><span class="idx">02</span><span class="txt">content/ vs src/ — updating the site never touches app code</span></div>
+          <div class="swiss-list-item"><span class="idx">03</span><span class="txt">Aero glass on frames only, windows stay opaque so dragging never redraws a blur</span></div>
+          <div class="swiss-list-item"><span class="idx">04</span><span class="txt">Boot / login / shutdown deliberately one era earlier than the desktop — contrast, not decoration</span></div>
+        </div>
+      </div>
+
+      <div class="swiss-bottom">
+        <span>Jiaqi Huang</span>
+        <span>Next.js 16 · TypeScript</span>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 03 — FIRST FIVE SECONDS (boot -> login) ============ -->
+    <section class="slide swiss-slide" data-slide="3">
+      <div class="swiss-topline">
+        <span class="swiss-kicker">77-OS <span class="dot">·</span> Product Portfolio Case Study</span>
+        <span class="swiss-index">03 / 08</span>
+      </div>
+
+      <div class="swiss-duo-body">
+        <div>
+          <h1 class="swiss-title" style="font-size:88px;">First five seconds</h1>
+          <p class="swiss-sub" style="margin-top:16px;">A skippable XP-style boot animation, then a login screen that only ever asks you to click one name.</p>
+        </div>
+        <div class="swiss-duo-row">
+          <div class="col">
+            <div class="shot"><span class="tag">Fig. 01</span><img src="assets/01-boot.png" alt="Boot screen with 77-OS xp Professional branding and progress bar"></div>
+            <div class="shot-caption"><span class="head">Boot</span><span class="sub">Auto-advances in 3.2s, or tap Skip — never blocks a returning visitor</span></div>
+          </div>
+          <div class="col">
+            <div class="shot"><span class="tag">Fig. 02</span><img src="assets/02-login.png" alt="Login screen showing the Guest user tile"></div>
+            <div class="shot-caption"><span class="head">Login</span><span class="sub">One click on Guest fades to black, then into the desktop</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiss-bottom">
+        <span>Jiaqi Huang</span>
+        <span>systemStore.ts — boot → login → desktop → shutdown</span>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 04 — A DESKTOP THAT BEHAVES LIKE ONE ============ -->
+    <section class="slide swiss-slide" data-slide="4">
+      <div class="swiss-topline">
+        <span class="swiss-kicker">77-OS <span class="dot">·</span> Product Portfolio Case Study</span>
+        <span class="swiss-index">04 / 08</span>
+      </div>
+
+      <div class="swiss-split-body">
+        <div class="swiss-split-main">
+          <h1 class="swiss-title" style="font-size:72px; margin-bottom:20px;">A desktop that behaves like one</h1>
+          <div class="shot"><span class="tag">Fig. 03</span><img src="assets/03-desktop.png" alt="Full desktop with icons and wallpaper"></div>
+        </div>
+        <div class="swiss-split-side">
+          <div class="shot"><span class="tag">Fig. 04</span><img src="assets/05b-project-detail.png" alt="Two overlapping windows demonstrating focus and stacking"></div>
+          <div class="swiss-list">
+            <div class="swiss-list-item"><span class="idx">01</span><span class="txt">Drag, resize, minimize, maximize, close — real window mechanics</span></div>
+            <div class="swiss-list-item"><span class="idx">02</span><span class="txt">Focus, z-index, and dragging all read from one windowStore</span></div>
+            <div class="swiss-list-item"><span class="idx">03</span><span class="txt">Cursor shape locks mid-drag so it never flickers back to the system arrow</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiss-bottom">
+        <span>Jiaqi Huang</span>
+        <span>windowStore.ts — open / focus / minimize / z-index</span>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 05 — THE RESUME LIVES INSIDE THE OS ============ -->
+    <section class="slide swiss-slide" data-slide="5">
+      <div class="swiss-topline">
+        <span class="swiss-kicker">77-OS <span class="dot">·</span> Product Portfolio Case Study</span>
+        <span class="swiss-index">05 / 08</span>
+      </div>
+
+      <div class="swiss-trio-body">
+        <div>
+          <h1 class="swiss-title" style="font-size:80px;">The résumé lives inside the OS</h1>
+          <p class="swiss-sub" style="margin-top:14px;">"My Documents" isn't a mock folder. Double-clicking a project opens the real write-up — ByteDance's Doubao shopping cards, ReelShort global payments, NIO sales ops, plus a university UX study — each with the actual numbers.</p>
+        </div>
+        <div class="swiss-trio-row">
+          <div class="col">
+            <div class="shot"><span class="tag">Fig. 05</span><img src="assets/05-projects.png" alt="My Documents window listing three real internships and one university project"></div>
+            <div class="shot-caption"><span class="head">My Documents</span><span class="sub">Three real internships, one line each</span></div>
+          </div>
+          <div class="col">
+            <div class="shot"><span class="tag">Fig. 06</span><img src="assets/05b-project-detail.png" alt="Project detail window open on top of My Documents"></div>
+            <div class="shot-caption"><span class="head">Project detail</span><span class="sub">Full write-up, metrics included</span></div>
+          </div>
+          <div class="col">
+            <div class="shot"><span class="tag">Fig. 07</span><img src="assets/06-blog.png" alt="Blog window rendering a markdown post"></div>
+            <div class="shot-caption"><span class="head">Blog</span><span class="sub">Markdown files in content/posts/, sorted by date</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiss-bottom">
+        <span>Jiaqi Huang</span>
+        <span>content/site.ts — one file drives every window</span>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 06 — DETAILS MOST PEOPLE WON'T NOTICE ============ -->
+    <section class="slide swiss-slide" data-slide="6">
+      <div class="swiss-topline">
+        <span class="swiss-kicker">77-OS <span class="dot">·</span> Product Portfolio Case Study</span>
+        <span class="swiss-index">06 / 08</span>
+      </div>
+
+      <div class="swiss-split-body">
+        <div class="swiss-split-main">
+          <h1 class="swiss-title" style="font-size:64px; margin-bottom:20px;">Details most people won't consciously notice</h1>
+          <div class="shot"><span class="tag">Fig. 08</span><img src="assets/08-startmenu.png" alt="Start menu open, showing the round Start orb and taskbar glass"></div>
+        </div>
+        <div class="swiss-split-side">
+          <p class="swiss-sub" style="font-size:19px;">Icons and cursors are restored bitmaps, not new art — but every hotspot was hand-recalculated so switching cursor shapes never makes the pointer visibly jump.</p>
+          <div class="swatch-grid">
+            <div class="swatch"><img src="assets/icon-computer.png" alt="Computer icon"></div>
+            <div class="swatch"><img src="assets/icon-folder.png" alt="Folder icon"></div>
+            <div class="swatch"><img src="assets/icon-notepad.png" alt="Notepad icon"></div>
+            <div class="swatch"><img src="assets/icon-pdf.png" alt="PDF icon"></div>
+            <div class="swatch"><img src="assets/icon-mine.png" alt="Minesweeper icon"></div>
+            <div class="swatch cursor"><img src="assets/cursor-pointer.png" alt="Pointer cursor"></div>
+            <div class="swatch cursor"><img src="assets/cursor-progress.png" alt="Progress cursor"></div>
+            <div class="swatch cursor"><img src="assets/cursor-wait.png" alt="Wait cursor"></div>
+          </div>
+          <span class="swatch-label">Icons: restored Win98/2000 bitmaps · Cursors: XP "Hands" set, hotspots realigned</span>
+        </div>
+      </div>
+
+      <div class="swiss-bottom">
+        <span>Jiaqi Huang</span>
+        <span>--glass-* / --cur-* tokens in globals.css</span>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 07 — WHAT BUILDING THIS TOOK ============ -->
+    <section class="slide swiss-slide" data-slide="7">
+      <div class="swiss-topline">
+        <span class="swiss-kicker">77-OS <span class="dot">·</span> Product Portfolio Case Study</span>
+        <span class="swiss-index">07 / 08</span>
+      </div>
+
+      <div class="swiss-heading-block">
+        <h1 class="swiss-title">What building this took</h1>
+        <p class="swiss-sub">Four decisions that look small in a screenshot but shaped how the whole thing was built and kept easy to maintain.</p>
+      </div>
+
+      <div class="spec-list">
+        <div class="spec-row">
+          <span class="num">01</span>
+          <span class="body-txt"><b>Content and code, kept apart.</b> Every personal fact lives in <code>content/site.ts</code>. Adding a project or a blog post never touches <code>src/</code> — the update surface a non-engineer could safely edit is the whole point.</span>
+        </div>
+        <div class="spec-row">
+          <span class="num">02</span>
+          <span class="body-txt"><b>Data and components, split on purpose.</b> <code>appMeta.ts</code> (pure data) is separate from <code>appRegistry.tsx</code> (components) specifically so the window store can read app metadata without creating a circular import.</span>
+        </div>
+        <div class="spec-row">
+          <span class="num">03</span>
+          <span class="body-txt"><b>Designed to degrade, not to break.</b> The Guestbook and visitor counter depend on an optional Redis connection. Without it, those two windows show an "offline" state — everything else on the site keeps working.</span>
+        </div>
+        <div class="spec-row">
+          <span class="num">04</span>
+          <span class="body-txt"><b>A one-pixel decision nobody asked for.</b> Cursor hotspots were hand-recalculated so switching pointer shapes doesn't make the cursor visibly jump — the kind of detail only shows up as "this feels off" if it's wrong.</span>
+        </div>
+      </div>
+
+      <div class="swiss-bottom">
+        <span>Jiaqi Huang</span>
+        <span>Product thinking, applied to a personal project</span>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 08 — CLOSING ============ -->
+    <section class="slide swiss-slide" data-slide="8">
+      <div class="swiss-topline">
+        <span class="swiss-kicker">77-OS <span class="dot">·</span> Product Portfolio Case Study</span>
+        <span class="swiss-index">08 / 08</span>
+      </div>
+
+      <div class="closing-body">
+        <div class="closing-main">
+          <h1 class="swiss-title" style="font-size:96px;">Try it<br>yourself</h1>
+          <div class="closing-links">
+            <div class="closing-link-row"><span class="l">Live site</span><span class="v">77-os.vercel.app</span></div>
+            <div class="closing-link-row"><span class="l">Email</span><span class="v">1697429486@qq.com</span></div>
+          </div>
+        </div>
+        <div class="closing-side">
+          <div class="shot"><span class="tag">Fig. 09</span><img src="assets/09-minesweeper.png" alt="A working game of Minesweeper open on the desktop"></div>
+          <div class="shot-caption"><span class="head">One more thing</span><span class="sub">There's a fully working Minesweeper in there too — you can actually win it.</span></div>
+        </div>
+      </div>
+
+      <div class="swiss-bottom">
+        <span>Jiaqi Huang</span>
+        <span>Next.js 16 · Hand-written CSS</span>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<nav class="deck-controls" aria-label="Slide navigation">
+  <button type="button" id="prevBtn" aria-label="Previous slide">&larr;</button>
+  <span class="deck-counter" id="counter">01 / 08</span>
+  <button type="button" id="nextBtn" aria-label="Next slide">&rarr;</button>
+</nav>
+
+<script>
+/* ===== Fixed-stage scaling: uniform scale to fit the viewport ===== */
+function fitStage() {
+  var stage = document.getElementById('stage');
+  var scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+  var x = (window.innerWidth - 1920 * scale) / 2;
+  var y = (window.innerHeight - 1080 * scale) / 2;
+  stage.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + scale + ')';
+}
+window.addEventListener('resize', fitStage);
+fitStage();
+
+/* ===== Slide navigation: instant, no transition/animation ===== */
+var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+var current = 0;
+
+function renderSlide() {
+  slides.forEach(function (slide, i) {
+    slide.classList.toggle('active', i === current);
+  });
+  var counter = document.getElementById('counter');
+  var n = String(current + 1).padStart(2, '0');
+  var total = String(slides.length).padStart(2, '0');
+  counter.textContent = n + ' / ' + total;
+}
+
+function goTo(index) {
+  if (index < 0 || index >= slides.length) return;
+  current = index;
+  renderSlide();
+}
+
+document.getElementById('prevBtn').addEventListener('click', function () { goTo(current - 1); });
+document.getElementById('nextBtn').addEventListener('click', function () { goTo(current + 1); });
+
+window.addEventListener('keydown', function (e) {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { goTo(current + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { goTo(current - 1); }
+});
+
+renderSlide();
+</script>
+</body>
+</html>
