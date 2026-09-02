@@ -6,24 +6,46 @@
 <title>77-OS — 产品作品集案例</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=Nunito:wght@400;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600;6..72,700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ===========================================
-   FIXED 16:9 STAGE: MANDATORY BASE STYLES
-   Slides are authored at 1920x1080 and scaled as a whole.
-   =========================================== */
+/* Hallmark · pre-emit critique: P4 H5 E4 S4 R5 V4
+ * Hallmark · genre: editorial · macrostructure: Narrative Workflow · theme: Newsprint
+ * enrichment: none · nav: N6 masthead · footer: Ft4 dense colophon
+ * audience: campus HR + interviewers · use: clarify product judgment · tone: editorial
+ * diversification: vs prior Swiss Modern — paper (cool slate vs pure white) · display (roman serif vs geometric grotesk) · accent (steel-blue vs vermillion)
+ */
+:root {
+  --stage-bg: oklch(18% 0.018 250);
+  --color-paper: oklch(96.2% 0.008 240);
+  --color-paper-2: oklch(93.5% 0.010 240);
+  --color-rule: oklch(78% 0.014 245);
+  --color-rule-strong: oklch(32% 0.025 250);
+  --color-muted: oklch(48% 0.020 245);
+  --color-ink: oklch(22% 0.022 250);
+  --color-accent: oklch(46% 0.13 250);
+  --color-focus: oklch(52% 0.15 250);
+  --font-display: "Newsreader", "Noto Serif SC", Georgia, serif;
+  --font-body: "Source Sans 3", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 40px;
+  --space-xl: 64px;
+}
+
 html, body {
   width: 100%;
   height: 100%;
   margin: 0;
   overflow: hidden;
-  background: var(--stage-bg, #000);
+  background: var(--stage-bg);
 }
 .deck-viewport {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background: var(--stage-bg, #000);
+  background: var(--stage-bg);
 }
 .deck-stage {
   position: absolute;
@@ -33,7 +55,7 @@ html, body {
   height: 1080px;
   overflow: hidden;
   transform-origin: 0 0;
-  background: var(--slide-bg, #fff);
+  background: var(--color-paper);
 }
 .slide {
   position: absolute;
@@ -45,26 +67,19 @@ html, body {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  background: var(--slide-bg, #fff);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  box-sizing: border-box;
+  padding: 64px 96px 56px;
 }
-.slide.active,
-.slide.visible {
+.slide.active {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
   z-index: 1;
 }
-img, video, canvas, svg {
-  max-width: 100%;
-  max-height: 100%;
-}
-.deck-controls {
-  position: fixed;
-  left: 50%;
-  bottom: 22px;
-  transform: translateX(-50%);
-  z-index: 1000;
-}
+img, video, canvas, svg { max-width: 100%; max-height: 100%; }
 @media print {
   html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
   .deck-viewport { position: static; overflow: visible; background: #fff; }
@@ -87,467 +102,685 @@ img, video, canvas, svg {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .2s !important; }
 }
 
-/* ===========================================
-   SWISS MODERN DESIGN SYSTEM (中文版)
-   静态、无动效：翻页是即时的可见性切换，没有过渡、
-   没有 hover 动画、没有滚动触发的渐显。
-   =========================================== */
-:root {
-  --stage-bg: #000;
-  --slide-bg: #ffffff;
-  --ink: #0a0a0a;
-  --red: #ff3300;
-  --rule: #0a0a0a;
-  --muted: #4a4a4a;
-}
-
-.swiss-slide {
-  font-family: "Nunito", "Noto Sans SC", sans-serif;
-  color: var(--ink);
-  padding: 96px 120px;
-  box-sizing: border-box;
+/* —— Masthead (N6) —— */
+.masthead {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: auto 1fr auto;
-  column-gap: 40px;
-  row-gap: 30px;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: var(--space-md);
+  padding-bottom: 14px;
+  border-bottom: 3px double var(--color-rule-strong);
+  margin-bottom: var(--space-lg);
+}
+.masthead .brand {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+.masthead .brand em {
+  font-style: normal;
+  color: var(--color-accent);
+}
+.masthead .issue {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.masthead .folio {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--color-ink);
 }
 
-.swiss-topline {
-  grid-column: 1 / 7;
+/* —— Colophon (Ft4) —— */
+.colophon {
+  position: absolute;
+  left: 96px;
+  right: 96px;
+  bottom: 40px;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  border-bottom: 3px solid var(--rule);
-  padding-bottom: 22px;
-}
-.swiss-kicker { font-weight: 800; font-size: 21px; letter-spacing: 0.1em; }
-.swiss-kicker .dot { color: var(--red); }
-.swiss-index { font-weight: 800; font-size: 21px; letter-spacing: 0.08em; }
-
-.swiss-bottom {
-  grid-column: 1 / 7;
-  border-top: 3px solid var(--rule);
-  padding-top: 22px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 19px;
-  font-weight: 800;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-rule);
+  font-family: var(--font-mono);
+  font-size: 13px;
   letter-spacing: 0.04em;
+  color: var(--color-muted);
 }
 
-/* -- 封面：主标题 + 侧栏数据 -- */
-.swiss-main {
-  grid-column: 1 / 5;
+/* —— Stage label (Narrative Workflow) —— */
+.stage-rail {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 26px;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: 20px;
 }
-.swiss-title {
-  font-family: "Archivo", "Noto Sans SC", sans-serif;
-  font-weight: 900;
-  font-size: 150px;
-  line-height: 0.94;
-  letter-spacing: -0.01em;
+.stage-num {
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 0.9;
+  color: var(--color-accent);
+  letter-spacing: -0.02em;
+  font-style: normal;
+}
+.stage-label {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
   margin: 0;
+  color: var(--color-ink);
 }
-.swiss-title.size-cover { font-size: 168px; }
-.swiss-title span { color: var(--red); }
-.swiss-sub {
-  font-size: 27px;
-  font-weight: 600;
+.lede {
+  font-size: 24px;
+  font-weight: 400;
   line-height: 1.55;
-  max-width: 940px;
-  color: #1a1a1a;
+  max-width: 58ch;
+  color: var(--color-ink);
+  margin: 18px 0 0;
 }
-.swiss-side {
-  grid-column: 5 / 7;
-  border-left: 3px solid var(--rule);
-  padding-left: 40px;
+.lede.narrow { max-width: 46ch; }
+
+/* —— Cover —— */
+.cover-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 0.85fr;
+  gap: 72px;
+  align-items: end;
+  min-height: 720px;
+  padding-bottom: 48px;
+}
+.cover-title {
+  font-size: 168px;
+  line-height: 0.88;
+}
+.cover-title .os { color: var(--color-accent); }
+.cover-meta {
+  border-left: 2px solid var(--color-rule-strong);
+  padding-left: 36px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 30px;
+  gap: 28px;
 }
-.swiss-stat { display: flex; flex-direction: column; gap: 6px; }
-.swiss-stat .n { font-family: "Archivo", sans-serif; font-weight: 900; font-size: 52px; color: var(--red); line-height: 1; }
-.swiss-stat .l { font-size: 18px; font-weight: 800; letter-spacing: 0.02em; }
+.datum .n {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-accent);
+}
+.datum .l {
+  display: block;
+  margin-top: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
 
-/* -- 编号列表（右侧签名细节） -- */
-.swiss-list { display: flex; flex-direction: column; gap: 22px; }
-.swiss-list-item { display: flex; gap: 16px; align-items: baseline; }
-.swiss-list-item .idx { font-family: "Archivo", sans-serif; font-weight: 900; font-size: 26px; color: var(--red); min-width: 44px; }
-.swiss-list-item .txt { font-size: 19px; font-weight: 600; line-height: 1.55; color: #1a1a1a; }
-
-/* -- 纯文字大标题区块 -- */
-.swiss-heading-block {
-  grid-column: 1 / 7;
-  display: flex;
-  flex-direction: column;
+/* —— Two-column claim + list —— */
+.split-claim {
+  display: grid;
+  grid-template-columns: 1.15fr 0.95fr;
+  gap: 64px;
+  align-items: start;
+  min-height: 680px;
+}
+.split-claim .display { font-size: 72px; max-width: 12ch; }
+.claim-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+.claim-list li {
+  display: grid;
+  grid-template-columns: 56px 1fr;
   gap: 16px;
-  margin-bottom: 4px;
+  padding: 20px 0;
+  border-top: 1px solid var(--color-rule);
 }
-.swiss-heading-block .swiss-title { font-size: 68px; }
-.swiss-heading-block .swiss-sub { font-size: 24px; max-width: 1450px; }
+.claim-list li:last-child { border-bottom: 1px solid var(--color-rule); }
+.claim-list .idx {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-accent);
+  letter-spacing: 0.06em;
+}
+.claim-list .txt {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-ink);
+}
 
-/* -- 截图「标本」卡片 -- */
-.shot {
-  border: 3px solid var(--ink);
+/* —— Duo figures —— */
+.duo-body { display: flex; flex-direction: column; gap: 28px; min-height: 700px; }
+.duo-body .display { font-size: 64px; }
+.duo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+.figure { display: flex; flex-direction: column; gap: 12px; }
+.frame {
   position: relative;
+  border: 1px solid var(--color-rule-strong);
+  background: var(--color-paper-2);
   overflow: hidden;
-  background: #fff;
-  flex-shrink: 0;
 }
-.shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
-.shot .tag {
+.frame img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.frame .fig-tag {
   position: absolute;
   top: 0;
   left: 0;
-  background: var(--ink);
-  color: #fff;
-  font-weight: 800;
-  font-size: 15px;
-  letter-spacing: 0.06em;
-  padding: 7px 14px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  padding: 6px 10px;
 }
-.shot-caption { margin-top: 16px; }
-.shot-caption .head { font-size: 20px; font-weight: 800; letter-spacing: 0.01em; color: var(--ink); }
-.shot-caption .sub { display: block; margin-top: 5px; font-size: 17px; font-weight: 600; color: var(--muted); line-height: 1.5; }
+.cap-head {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  font-style: normal;
+}
+.cap-sub {
+  display: block;
+  margin-top: 4px;
+  font-size: 16px;
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+.duo-row .frame { height: 460px; }
 
-/* -- 双图并排行（第 03 页） -- */
-.swiss-duo-body {
-  grid-column: 1 / 7;
+/* —— Split proof —— */
+.proof-split {
+  display: grid;
+  grid-template-columns: 1.25fr 0.85fr;
+  gap: 48px;
+  align-items: start;
+  min-height: 700px;
+}
+.proof-split .display { font-size: 48px; margin-bottom: 18px; max-width: 16ch; }
+.proof-split .main-frame { height: 520px; }
+.proof-side { display: flex; flex-direction: column; gap: 22px; }
+.proof-side .side-frame { height: 280px; }
+.proof-side .claim-list li { padding: 14px 0; }
+.proof-side .claim-list .txt { font-size: 18px; }
+
+/* —— App catalogue grids —— */
+.catalog-head { margin-bottom: 18px; }
+.catalog-head .display { font-size: 44px; }
+.catalog-head .lede { font-size: 20px; margin-top: 10px; }
+.catalog {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 30px;
+  gap: 18px;
 }
-.swiss-duo-row { display: flex; gap: 48px; }
-.swiss-duo-row .col { flex: 1; display: flex; flex-direction: column; }
-.swiss-duo-row .shot { height: 540px; }
-
-/* -- 主图+侧栏（第 04、07 页） -- */
-.swiss-split-body { grid-column: 1 / 7; display: grid; grid-template-columns: repeat(6, 1fr); column-gap: 40px; align-items: center; }
-.swiss-split-main { grid-column: 1 / 5; }
-.swiss-split-main .shot { height: 480px; }
-.swiss-split-main h1 { margin: 0 0 16px; }
-.swiss-split-side { grid-column: 5 / 7; border-left: 3px solid var(--rule); padding-left: 40px; display: flex; flex-direction: column; gap: 24px; }
-.swiss-split-side .shot { height: 300px; }
-
-/* -- 图标/指针标本条 -- */
-.swatch-grid { display: flex; flex-wrap: wrap; gap: 16px; }
-.swatch {
-  width: 84px; height: 84px;
-  border: 2px solid var(--ink);
-  background: #f4f4f4;
-  display: flex; align-items: center; justify-content: center;
+.catalog-row {
+  display: flex;
+  gap: 22px;
 }
-.swatch img { width: 44px; height: 44px; object-fit: contain; image-rendering: pixelated; }
-.swatch.cursor img { width: 32px; height: 32px; image-rendering: auto; }
-.swatch-label { font-size: 15px; font-weight: 700; letter-spacing: 0.02em; color: var(--muted); margin-top: 10px; }
-
-/* -- 编号说明列表（第 08 页） -- */
-.spec-list { grid-column: 1 / 7; display: flex; flex-direction: column; }
-.spec-row { display: flex; align-items: flex-start; gap: 44px; padding: 22px 0; border-top: 2px solid rgba(10,10,10,0.15); }
-.spec-row:first-child { border-top: 2px solid var(--ink); }
-.spec-row .num { font-family: "Archivo", sans-serif; font-weight: 900; font-size: 40px; color: var(--red); min-width: 88px; }
-.spec-row .body-txt { font-size: 21px; font-weight: 600; line-height: 1.6; max-width: 1420px; color: #1a1a1a; }
-.spec-row .body-txt b { font-weight: 800; }
-
-/* -- 结语页 -- */
-.closing-body { grid-column: 1 / 7; display: grid; grid-template-columns: repeat(6, 1fr); column-gap: 40px; align-items: center; }
-.closing-main { grid-column: 1 / 4; display: flex; flex-direction: column; gap: 28px; }
-.closing-links { display: flex; flex-direction: column; gap: 18px; margin-top: 8px; }
-.closing-link-row { display: flex; align-items: baseline; gap: 16px; }
-.closing-link-row .l { font-size: 17px; font-weight: 800; letter-spacing: 0.02em; color: var(--muted); min-width: 100px; }
-.closing-link-row .v { font-size: 24px; font-weight: 700; color: var(--ink); }
-.closing-side { grid-column: 4 / 7; border-left: 3px solid var(--rule); padding-left: 40px; display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
-.closing-side .shot { height: 460px; width: 100%; }
-
-/* -- 应用全览：紧凑网格（第 05、06 页） -- */
-.app-grid-body { grid-column: 1 / 7; display: flex; flex-direction: column; gap: 14px; justify-content: center; }
-.app-grid-body .swiss-title { font-size: 48px; margin: 0; }
-.app-grid-body .swiss-sub { font-size: 20px; margin-top: 6px; max-width: 1500px; }
-.app-grid { display: flex; flex-direction: column; gap: 16px; margin-top: 2px; }
-.app-grid-row { display: flex; gap: 22px; }
-.app-grid-row.centered { justify-content: center; }
-.app-tile { flex: 0 0 403px; width: 403px; display: flex; flex-direction: column; gap: 6px; }
-.app-tile .shot-mini {
-  height: 260px;
-  border: 2.5px solid var(--ink);
+.catalog-row.centered { justify-content: center; }
+.tile {
+  flex: 0 0 403px;
+  width: 403px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tile .mini-frame {
+  height: 248px;
+  border: 1px solid var(--color-rule-strong);
   overflow: hidden;
-  background: #fff;
+  background: var(--color-paper-2);
 }
-.app-tile .shot-mini img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
-.app-tile .mini-cap { font-size: 16px; font-weight: 800; letter-spacing: 0.01em; color: var(--ink); }
-.app-tile .mini-cap .sub { display: block; margin-top: 3px; font-size: 13.5px; font-weight: 600; color: var(--muted); line-height: 1.35; }
+.tile .mini-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+.tile .name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  font-style: normal;
+}
+.tile .note {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  color: var(--color-muted);
+  line-height: 1.4;
+  font-weight: 400;
+}
 
-/* -- 导航（翻页控件，独立于幻灯片设计系统） -- */
+/* —— Detail / swatches —— */
+.detail-split {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr;
+  gap: 48px;
+  align-items: start;
+  min-height: 700px;
+}
+.detail-split .display { font-size: 44px; margin-bottom: 16px; }
+.detail-split .main-frame { height: 520px; }
+.detail-copy .lede { font-size: 19px; margin: 0 0 22px; }
+.swatch-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.swatch {
+  width: 72px;
+  height: 72px;
+  border: 1px solid var(--color-rule-strong);
+  background: var(--color-paper-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.swatch img { width: 40px; height: 40px; object-fit: contain; image-rendering: pixelated; }
+.swatch.cursor img { width: 28px; height: 28px; image-rendering: auto; }
+.swatch-note {
+  display: block;
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+
+/* —— Judgment list (slide 08) —— */
+.judgment-head { margin-bottom: 12px; }
+.judgment-head .display { font-size: 48px; }
+.judgment-head .lede { font-size: 20px; margin-top: 12px; max-width: 70ch; }
+.judgment-list { margin-top: 8px; }
+.judgment-row {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 28px;
+  padding: 22px 0;
+  border-top: 1px solid var(--color-rule);
+}
+.judgment-row:first-child { border-top: 2px solid var(--color-rule-strong); }
+.judgment-row:last-child { border-bottom: 1px solid var(--color-rule); }
+.judgment-row .num {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--color-accent);
+  line-height: 1;
+}
+.judgment-row .body {
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.55;
+  max-width: 68ch;
+}
+.judgment-row .body b { font-weight: 700; }
+.judgment-row code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--color-paper-2);
+  padding: 1px 6px;
+  border: 1px solid var(--color-rule);
+}
+
+/* —— Closing —— */
+.closing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 64px;
+  align-items: center;
+  min-height: 700px;
+}
+.closing-grid .display { font-size: 80px; }
+.contact-rows { margin-top: 36px; display: flex; flex-direction: column; gap: 16px; }
+.contact-row { display: flex; align-items: baseline; gap: 20px; }
+.contact-row .k {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  min-width: 96px;
+}
+.contact-row .v {
+  font-size: 26px;
+  font-weight: 600;
+}
+.closing-grid .frame { height: 460px; width: 100%; }
+
+/* —— Deck controls —— */
 .deck-controls {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 1000;
   display: flex;
   align-items: center;
   gap: 18px;
   padding: 10px 20px;
-  background: rgba(10,10,10,0.88);
+  background: oklch(18% 0.02 250 / 0.92);
   border-radius: 999px;
-  font-family: "Nunito", "Noto Sans SC", sans-serif;
+  font-family: var(--font-body);
 }
 .deck-controls button {
   appearance: none;
   border: none;
   background: transparent;
-  color: #fff;
+  color: oklch(96% 0.01 240);
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
   padding: 4px 10px;
   line-height: 1;
 }
-.deck-controls button:hover { color: var(--red); }
-.deck-counter { color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 0.06em; min-width: 56px; text-align: center; }
+.deck-controls button:hover { color: var(--color-accent); }
+.deck-controls button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.deck-counter {
+  color: oklch(96% 0.01 240);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  min-width: 64px;
+  text-align: center;
+  font-family: var(--font-mono);
+}
 </style>
 </head>
 <body>
 <div class="deck-viewport">
   <div class="deck-stage" id="stage">
 
-    <!-- ============ 第 01 页 — 封面 ============ -->
-    <section class="slide active swiss-slide" data-slide="1">
-      <div class="swiss-topline">
-        <span class="swiss-kicker">77-OS <span class="dot">·</span> 产品作品集案例</span>
-        <span class="swiss-index">01 / 09</span>
+    <!-- 01 · 封面 -->
+    <section class="slide active" data-slide="1">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">01 / 09</div>
+      </header>
+
+      <div class="cover-grid">
+        <div>
+          <div class="stage-rail">
+            <span class="stage-num">01</span>
+            <span class="stage-label">开场 · Opening</span>
+          </div>
+          <h1 class="display cover-title">77<span class="os">-OS</span></h1>
+          <p class="lede">开机动画、登录页、可拖拽窗口、能通关的扫雷——一个被做成完整操作系统的个人网站。</p>
+        </div>
+        <aside class="cover-meta">
+          <div class="datum"><span class="n">16</span><span class="l">个可以打开的应用</span></div>
+          <div class="datum"><span class="n">4</span><span class="l">段真实实习经历</span></div>
+          <div class="datum"><span class="n">1</span><span class="l">套手写桌面系统</span></div>
+        </aside>
       </div>
 
-      <div class="swiss-main">
-        <h1 class="swiss-title size-cover">77<span>-OS</span></h1>
-        <p class="swiss-sub">开机动画、登录页、可拖拽窗口、能通关的扫雷——一个被做成完整操作系统的个人网站。</p>
-      </div>
-
-      <div class="swiss-side">
-        <div class="swiss-stat"><span class="n">0</span><span class="l">UI 框架</span></div>
-        <div class="swiss-stat"><span class="n">4</span><span class="l">段真实实习经历</span></div>
-        <div class="swiss-stat"><span class="n">16</span><span class="l">个可以打开的应用</span></div>
-      </div>
-
-      <div class="swiss-bottom">
+      <footer class="colophon">
         <span>Jiaqi Huang</span>
         <span>Next.js 16 · 纯手写 CSS</span>
-      </div>
+      </footer>
     </section>
 
-    <!-- ============ 第 02 页 — 是什么 & 怎么做的 ============ -->
-    <section class="slide swiss-slide" data-slide="2">
-      <div class="swiss-topline">
-        <span class="swiss-kicker">77-OS <span class="dot">·</span> 产品作品集案例</span>
-        <span class="swiss-index">02 / 09</span>
+    <!-- 02 · 命题 -->
+    <section class="slide" data-slide="2">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">02 / 09</div>
+      </header>
+
+      <div class="stage-rail">
+        <span class="stage-num">02</span>
+        <span class="stage-label">命题 · Thesis</span>
       </div>
 
-      <div class="swiss-main">
-        <h1 class="swiss-title" style="font-size:88px;">手写还原的<br>Vista / 7<br>桌面体验</h1>
-        <p class="swiss-sub">半透明玻璃窗框、居中带光晕的标题栏、圆形开始球、双栏开始菜单——桌面、任务栏、开始菜单和每一个窗口的控件，视觉效果全部手写 CSS 还原，零 UI 框架、零组件库。</p>
-      </div>
-
-      <div class="swiss-side">
-        <div class="swiss-list">
-          <div class="swiss-list-item"><span class="idx">01</span><span class="txt">零 UI 框架，每个控件的视觉都是手写 CSS 还原</span></div>
-          <div class="swiss-list-item"><span class="idx">02</span><span class="txt">content/ 与 src/ 分层，更新站点内容不需要碰应用代码</span></div>
-          <div class="swiss-list-item"><span class="idx">03</span><span class="txt">玻璃效果只做在窗框上，窗口正文保持不透明，拖动全程流畅不掉帧</span></div>
-          <div class="swiss-list-item"><span class="idx">04</span><span class="txt">开机、登录、关机的视觉比桌面早一个时代，营造出时间感上的反差</span></div>
+      <div class="split-claim">
+        <div>
+          <h1 class="display">手写还原的 Vista / 7 桌面体验</h1>
+          <p class="lede narrow">半透明玻璃窗框、居中带光晕的标题栏、圆形开始球、双栏开始菜单——桌面、任务栏、开始菜单和每一个窗口的控件，视觉效果全部手写 CSS 还原。</p>
         </div>
+        <ol class="claim-list">
+          <li><span class="idx">01</span><span class="txt">每个控件的视觉都是手写 CSS 还原</span></li>
+          <li><span class="idx">02</span><span class="txt">content/ 与 src/ 分层，更新站点内容只改内容文件</span></li>
+          <li><span class="idx">03</span><span class="txt">玻璃效果只做在窗框上，窗口正文保持不透明，拖动全程流畅不掉帧</span></li>
+          <li><span class="idx">04</span><span class="txt">开机、登录、关机的视觉比桌面早一个时代，营造出时间感上的反差</span></li>
+        </ol>
       </div>
 
-      <div class="swiss-bottom">
+      <footer class="colophon">
         <span>Jiaqi Huang</span>
         <span>Next.js 16 · TypeScript</span>
-      </div>
+      </footer>
     </section>
 
-    <!-- ============ 第 03 页 — 最初的五秒钟（开机 → 登录） ============ -->
-    <section class="slide swiss-slide" data-slide="3">
-      <div class="swiss-topline">
-        <span class="swiss-kicker">77-OS <span class="dot">·</span> 产品作品集案例</span>
-        <span class="swiss-index">03 / 09</span>
-      </div>
+    <!-- 03 · 最初五秒 -->
+    <section class="slide" data-slide="3">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">03 / 09</div>
+      </header>
 
-      <div class="swiss-duo-body">
+      <div class="duo-body">
         <div>
-          <h1 class="swiss-title" style="font-size:76px;">最初的五秒钟</h1>
-          <p class="swiss-sub" style="margin-top:14px;">一段可以跳过的 XP 式开机动画，然后是一个只需要点一下用户名的登录页。</p>
+          <div class="stage-rail">
+            <span class="stage-num">03</span>
+            <span class="stage-label">入场 · First five seconds</span>
+          </div>
+          <h1 class="display">最初的五秒钟</h1>
+          <p class="lede">一段可以跳过的 XP 式开机动画，然后是一个只需要点一下用户名的登录页。</p>
         </div>
-        <div class="swiss-duo-row">
-          <div class="col">
-            <div class="shot"><span class="tag">Fig. 01</span><img src="assets/01-boot.png" alt="开机画面，77-OS 旗子 logo 与进度条"></div>
-            <div class="shot-caption"><span class="head">开机</span><span class="sub">3.2 秒自动播完，也可以随时点 Skip 跳到登录页</span></div>
-          </div>
-          <div class="col">
-            <div class="shot"><span class="tag">Fig. 02</span><img src="assets/02-login.png" alt="登录页，显示 Guest 用户图块"></div>
-            <div class="shot-caption"><span class="head">登录</span><span class="sub">点一下 Guest，先淡入黑屏，再淡入桌面</span></div>
-          </div>
+        <div class="duo-row">
+          <figure class="figure">
+            <div class="frame"><span class="fig-tag">Fig. 01</span><img src="assets/01-boot.png" alt="开机画面，77-OS 旗子 logo 与进度条"></div>
+            <figcaption><span class="cap-head">开机</span><span class="cap-sub">3.2 秒自动播完，也可以随时点 Skip 跳到登录页</span></figcaption>
+          </figure>
+          <figure class="figure">
+            <div class="frame"><span class="fig-tag">Fig. 02</span><img src="assets/02-login.png" alt="登录页，显示 Guest 用户图块"></div>
+            <figcaption><span class="cap-head">登录</span><span class="cap-sub">点一下 Guest，先淡入黑屏，再淡入桌面</span></figcaption>
+          </figure>
         </div>
       </div>
 
-      <div class="swiss-bottom">
+      <footer class="colophon">
         <span>Jiaqi Huang</span>
         <span>systemStore.ts — boot → login → desktop → shutdown</span>
-      </div>
+      </footer>
     </section>
 
-    <!-- ============ 第 04 页 — 一个真的像操作系统的桌面 ============ -->
-    <section class="slide swiss-slide" data-slide="4">
-      <div class="swiss-topline">
-        <span class="swiss-kicker">77-OS <span class="dot">·</span> 产品作品集案例</span>
-        <span class="swiss-index">04 / 09</span>
+    <!-- 04 · 桌面系统 -->
+    <section class="slide" data-slide="4">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">04 / 09</div>
+      </header>
+
+      <div class="stage-rail">
+        <span class="stage-num">04</span>
+        <span class="stage-label">桌面 · Window system</span>
       </div>
 
-      <div class="swiss-split-body">
-        <div class="swiss-split-main">
-          <h1 class="swiss-title" style="font-size:58px; margin-bottom:18px;">支持完整窗口操作的桌面系统</h1>
-          <div class="shot"><span class="tag">Fig. 03</span><img src="assets/03-desktop.png" alt="完整桌面，图标与壁纸"></div>
+      <div class="proof-split">
+        <div>
+          <h1 class="display">支持完整窗口操作的桌面系统</h1>
+          <div class="frame main-frame"><span class="fig-tag">Fig. 03</span><img src="assets/03-desktop.png" alt="完整桌面，图标与壁纸"></div>
         </div>
-        <div class="swiss-split-side">
-          <div class="shot"><span class="tag">Fig. 04</span><img src="assets/05b-project-detail.png" alt="两个叠在一起的窗口，展示焦点与层级"></div>
-          <div class="swiss-list">
-            <div class="swiss-list-item"><span class="idx">01</span><span class="txt">拖动、缩放、最小化、最大化、关闭一应俱全，和真实操作系统一样</span></div>
-            <div class="swiss-list-item"><span class="idx">02</span><span class="txt">焦点、层级、拖拽全部读同一个 windowStore，状态统一管理</span></div>
-            <div class="swiss-list-item"><span class="idx">03</span><span class="txt">拖拽全程锁定自定义指针样式，视觉体验连续顺滑</span></div>
-          </div>
+        <div class="proof-side">
+          <div class="frame side-frame"><span class="fig-tag">Fig. 04</span><img src="assets/05b-project-detail.png" alt="两个叠在一起的窗口，展示焦点与层级"></div>
+          <ol class="claim-list">
+            <li><span class="idx">01</span><span class="txt">拖动、缩放、最小化、最大化、关闭一应俱全</span></li>
+            <li><span class="idx">02</span><span class="txt">焦点、层级、拖拽全部读同一个 windowStore</span></li>
+            <li><span class="idx">03</span><span class="txt">拖拽全程锁定自定义指针，视觉连续顺滑</span></li>
+          </ol>
         </div>
       </div>
 
-      <div class="swiss-bottom">
+      <footer class="colophon">
         <span>Jiaqi Huang</span>
         <span>windowStore.ts — open / focus / minimize / z-index</span>
-      </div>
+      </footer>
     </section>
 
-    <!-- ============ 第 05 页 — 应用全览 · 内容与社区 ============ -->
-    <section class="slide swiss-slide" data-slide="5">
-      <div class="swiss-topline">
-        <span class="swiss-kicker">77-OS <span class="dot">·</span> 产品作品集案例</span>
-        <span class="swiss-index">05 / 09</span>
+    <!-- 05 · 内容与社区 -->
+    <section class="slide" data-slide="5">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">05 / 09</div>
+      </header>
+
+      <div class="catalog-head">
+        <div class="stage-rail">
+          <span class="stage-num">05</span>
+          <span class="stage-label">目录 · Content &amp; community</span>
+        </div>
+        <h1 class="display">应用全览 · 内容与社区</h1>
+        <p class="lede">「我的文件」是真实经历——双击就能看到美团、字节跳动豆包、蔚来、高校课题四段实习与项目复盘。</p>
       </div>
 
-      <div class="app-grid-body">
-        <div>
-          <h1 class="swiss-title">应用全览 · 内容与社区</h1>
-          <p class="swiss-sub">「我的文件」是真实经历——双击就能看到美团、字节跳动豆包、蔚来、高校课题四段实习与项目复盘。</p>
-        </div>
-        <div class="app-grid">
-          <div class="app-grid-row">
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-about.png" alt="About Me 窗口"></div>
-              <div class="mini-cap">关于我<span class="sub">用「系统属性表」的方式呈现个人经历</span></div>
-            </div>
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-projects.png" alt="My Documents 窗口"></div>
-              <div class="mini-cap">我的文件<span class="sub">四段真实实习，一句话概括核心成果</span></div>
-            </div>
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-project-detail.png" alt="项目详情窗口"></div>
-              <div class="mini-cap">项目详情<span class="sub">完整项目复盘，量化到具体数字</span></div>
-            </div>
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-blog.png" alt="Blog 窗口"></div>
-              <div class="mini-cap">博客<span class="sub">Markdown 文章，按发布日期自动排序</span></div>
-            </div>
+      <div class="catalog">
+        <div class="catalog-row">
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-about.png" alt="About Me 窗口"></div>
+            <div class="name">关于我<span class="note">用「系统属性表」的方式呈现个人经历</span></div>
           </div>
-          <div class="app-grid-row">
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-moments.png" alt="Moments 窗口"></div>
-              <div class="mini-cap">Moments<span class="sub">留言板与访客统计的入口</span></div>
-            </div>
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-guestbook.png" alt="Guestbook 窗口"></div>
-              <div class="mini-cap">留言板<span class="sub">访客可以留言，内置防刷限流保护</span></div>
-            </div>
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-visitor-counter.png" alt="Visitor Counter 窗口"></div>
-              <div class="mini-cap">访客计数器<span class="sub">记录访问人数，Cookie 自动去重</span></div>
-            </div>
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-contact.png" alt="Contact Me 窗口"></div>
-              <div class="mini-cap">联系我<span class="sub">写信表单，一键复制邮箱</span></div>
-            </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-projects.png" alt="My Documents 窗口"></div>
+            <div class="name">我的文件<span class="note">四段真实实习，一句话概括核心成果</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-project-detail.png" alt="项目详情窗口"></div>
+            <div class="name">项目详情<span class="note">完整项目复盘，量化到具体数字</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-blog.png" alt="Blog 窗口"></div>
+            <div class="name">博客<span class="note">Markdown 文章，按发布日期自动排序</span></div>
+          </div>
+        </div>
+        <div class="catalog-row">
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-moments.png" alt="Moments 窗口"></div>
+            <div class="name">Moments<span class="note">留言板与访客统计的入口</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-guestbook.png" alt="Guestbook 窗口"></div>
+            <div class="name">留言板<span class="note">访客可以留言，内置防刷限流保护</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-visitor-counter.png" alt="Visitor Counter 窗口"></div>
+            <div class="name">访客计数器<span class="note">记录访问人数，Cookie 自动去重</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-contact.png" alt="Contact Me 窗口"></div>
+            <div class="name">联系我<span class="note">写信表单，一键复制邮箱</span></div>
           </div>
         </div>
       </div>
 
-      <div class="swiss-bottom">
+      <footer class="colophon">
         <span>Jiaqi Huang</span>
         <span>content/site.ts — 一个文件驱动每一个窗口</span>
-      </div>
+      </footer>
     </section>
 
-    <!-- ============ 第 06 页 — 应用全览 · 娱乐与工具 ============ -->
-    <section class="slide swiss-slide" data-slide="6">
-      <div class="swiss-topline">
-        <span class="swiss-kicker">77-OS <span class="dot">·</span> 产品作品集案例</span>
-        <span class="swiss-index">06 / 09</span>
+    <!-- 06 · 娱乐与工具 -->
+    <section class="slide" data-slide="6">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">06 / 09</div>
+      </header>
+
+      <div class="catalog-head">
+        <div class="stage-rail">
+          <span class="stage-num">06</span>
+          <span class="stage-label">目录 · Play &amp; tools</span>
+        </div>
+        <h1 class="display">应用全览 · 娱乐与工具</h1>
+        <p class="lede">从一张复古播放列表，到一个真正能敲命令的终端——每一个都能玩、能用。</p>
       </div>
 
-      <div class="app-grid-body">
-        <div>
-          <h1 class="swiss-title">应用全览 · 娱乐与工具</h1>
-          <p class="swiss-sub">从一张复古播放列表，到一个真正能敲命令的终端——每一个都能玩、能用。</p>
-        </div>
-        <div class="app-grid">
-          <div class="app-grid-row">
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-now.png" alt="Now Learning 窗口"></div>
-              <div class="mini-cap">正在学习<span class="sub">仿 Winamp 播放列表，记录当前学习重点</span></div>
-            </div>
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-music.png" alt="Music 窗口"></div>
-              <div class="mini-cap">音乐<span class="sub">内嵌 Three.js 场景，还原黑胶播放器质感</span></div>
-            </div>
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/10-design.png" alt="design 图标展开的缩略图浮层" style="object-position:center;"></div>
-              <div class="mini-cap">design<span class="sub">双击图标，原地展开作品缩略图</span></div>
-            </div>
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-minesweeper.png" alt="Minesweeper 窗口"></div>
-              <div class="mini-cap">扫雷<span class="sub">完整实现的扫雷小游戏，规则与体验还原到位</span></div>
-            </div>
+      <div class="catalog">
+        <div class="catalog-row">
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-now.png" alt="Now Learning 窗口"></div>
+            <div class="name">正在学习<span class="note">仿 Winamp 播放列表，记录当前学习重点</span></div>
           </div>
-          <div class="app-grid-row centered">
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-paint.png" alt="Paint 窗口"></div>
-              <div class="mini-cap">画图<span class="sub">画笔、喷漆、贴纸、撤销一应俱全</span></div>
-            </div>
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-cmd.png" alt="Command Prompt 窗口"></div>
-              <div class="mini-cap">命令提示符<span class="sub">内置 help / tree / neofetch 等可执行命令</span></div>
-            </div>
-            <div class="app-tile">
-              <div class="shot-mini"><img src="assets/grid/grid-recycle.png" alt="Recycle Bin 窗口"></div>
-              <div class="mini-cap">回收站<span class="sub">收着几个主动放弃的想法，附带取舍理由</span></div>
-            </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-music.png" alt="Music 窗口"></div>
+            <div class="name">音乐<span class="note">内嵌 Three.js 场景，还原黑胶播放器质感</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/10-design.png" alt="design 图标展开的缩略图浮层" style="object-position:center;"></div>
+            <div class="name">design<span class="note">双击图标，原地展开作品缩略图</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-minesweeper.png" alt="Minesweeper 窗口"></div>
+            <div class="name">扫雷<span class="note">完整实现的扫雷小游戏，规则与体验还原到位</span></div>
+          </div>
+        </div>
+        <div class="catalog-row centered">
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-paint.png" alt="Paint 窗口"></div>
+            <div class="name">画图<span class="note">画笔、喷漆、贴纸、撤销一应俱全</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-cmd.png" alt="Command Prompt 窗口"></div>
+            <div class="name">命令提示符<span class="note">内置 help / tree / neofetch 等可执行命令</span></div>
+          </div>
+          <div class="tile">
+            <div class="mini-frame"><img src="assets/grid/grid-recycle.png" alt="Recycle Bin 窗口"></div>
+            <div class="name">回收站<span class="note">收着几个主动放弃的想法，附带取舍理由</span></div>
           </div>
         </div>
       </div>
 
-      <div class="swiss-bottom">
+      <footer class="colophon">
         <span>Jiaqi Huang</span>
         <span>appMeta.ts — 16 个应用共用一套元数据</span>
-      </div>
+      </footer>
     </section>
 
-    <!-- ============ 第 07 页 — 细节里的还原度 ============ -->
-    <section class="slide swiss-slide" data-slide="7">
-      <div class="swiss-topline">
-        <span class="swiss-kicker">77-OS <span class="dot">·</span> 产品作品集案例</span>
-        <span class="swiss-index">07 / 09</span>
+    <!-- 07 · 细节 -->
+    <section class="slide" data-slide="7">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">07 / 09</div>
+      </header>
+
+      <div class="stage-rail">
+        <span class="stage-num">07</span>
+        <span class="stage-label">细节 · Fidelity</span>
       </div>
 
-      <div class="swiss-split-body">
-        <div class="swiss-split-main">
-          <h1 class="swiss-title" style="font-size:52px; margin-bottom:18px;">细节里的还原度</h1>
-          <div class="shot"><span class="tag">Fig. 08</span><img src="assets/08-startmenu.png" alt="开始菜单打开，圆形开始球与任务栏玻璃质感"></div>
+      <div class="detail-split">
+        <div>
+          <h1 class="display">细节里的还原度</h1>
+          <div class="frame main-frame"><span class="fig-tag">Fig. 08</span><img src="assets/08-startmenu.png" alt="开始菜单打开，圆形开始球与任务栏玻璃质感"></div>
         </div>
-        <div class="swiss-split-side">
-          <p class="swiss-sub" style="font-size:18px;">图标和指针都是修复的历史位图，每一个指针热点都手动重新校准过，切换指针形状时视觉始终连续顺滑。</p>
-          <div class="swatch-grid">
+        <div class="detail-copy">
+          <p class="lede">图标和指针都是修复的历史位图，每一个指针热点都手动重新校准过，切换指针形状时视觉始终连续顺滑。</p>
+          <div class="swatch-row">
             <div class="swatch"><img src="assets/icon-computer.png" alt="电脑图标"></div>
             <div class="swatch"><img src="assets/icon-folder.png" alt="文件夹图标"></div>
             <div class="swatch"><img src="assets/icon-notepad.png" alt="记事本图标"></div>
@@ -557,78 +790,89 @@ img, video, canvas, svg {
             <div class="swatch cursor"><img src="assets/cursor-progress.png" alt="等待中光标"></div>
             <div class="swatch cursor"><img src="assets/cursor-wait.png" alt="忙碌光标"></div>
           </div>
-          <span class="swatch-label">图标：修复自 Win98/2000 位图 · 指针：XP「Hands」方案，热点已重新对齐</span>
+          <span class="swatch-note">图标：修复自 Win98/2000 位图 · 指针：XP「Hands」方案，热点已重新对齐</span>
         </div>
       </div>
 
-      <div class="swiss-bottom">
+      <footer class="colophon">
         <span>Jiaqi Huang</span>
         <span>--glass-* / --cur-* tokens in globals.css</span>
-      </div>
+      </footer>
     </section>
 
-    <!-- ============ 第 08 页 — 做这件事到底花了什么心思 ============ -->
-    <section class="slide swiss-slide" data-slide="8">
-      <div class="swiss-topline">
-        <span class="swiss-kicker">77-OS <span class="dot">·</span> 产品作品集案例</span>
-        <span class="swiss-index">08 / 09</span>
+    <!-- 08 · 产品判断 -->
+    <section class="slide" data-slide="8">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">08 / 09</div>
+      </header>
+
+      <div class="judgment-head">
+        <div class="stage-rail">
+          <span class="stage-num">08</span>
+          <span class="stage-label">判断 · Product judgment</span>
+        </div>
+        <h1 class="display">藏在代码结构里的产品判断</h1>
+        <p class="lede">四个不会出现在截图里，却支撑起整个项目可维护性的关键判断。</p>
       </div>
 
-      <div class="swiss-heading-block">
-        <h1 class="swiss-title">藏在代码结构里的产品判断</h1>
-        <p class="swiss-sub">四个不会出现在截图里，却支撑起整个项目可维护性的关键判断。</p>
-      </div>
-
-      <div class="spec-list">
-        <div class="spec-row">
+      <div class="judgment-list">
+        <div class="judgment-row">
           <span class="num">01</span>
-          <span class="body-txt"><b>内容和代码分开放。</b> 所有个人信息都放在 <code>content/site.ts</code> 里。加一个项目、写一篇博客，从来不用碰 <code>src/</code>——把「安全可编辑」的范围留给了不懂工程的自己。</span>
+          <span class="body"><b>内容和代码分开放。</b> 所有个人信息都放在 <code>content/site.ts</code> 里。加一个项目、写一篇博客，从来不用碰 <code>src/</code>——把「安全可编辑」的范围留给了不懂工程的自己。</span>
         </div>
-        <div class="spec-row">
+        <div class="judgment-row">
           <span class="num">02</span>
-          <span class="body-txt"><b>数据和组件故意拆开。</b> <code>appMeta.ts</code>（纯数据）和 <code>appRegistry.tsx</code>（组件）分开管理，让 <code>windowStore</code> 能直接读取应用元数据，同时避免循环依赖。</span>
+          <span class="body"><b>数据和组件故意拆开。</b> <code>appMeta.ts</code>（纯数据）和 <code>appRegistry.tsx</code>（组件）分开管理，让 <code>windowStore</code> 能直接读取应用元数据，同时避免循环依赖。</span>
         </div>
-        <div class="spec-row">
+        <div class="judgment-row">
           <span class="num">03</span>
-          <span class="body-txt"><b>给关键功能加了一层兜底设计。</b> 留言板和访客计数器接入了 Upstash Redis，外部服务出现波动时，首页其它功能完全不受影响，体验保持稳定。</span>
+          <span class="body"><b>给关键功能加了一层兜底设计。</b> 留言板和访客计数器接入了 Upstash Redis，外部服务出现波动时，首页其它功能完全不受影响，体验保持稳定。</span>
         </div>
-        <div class="spec-row">
+        <div class="judgment-row">
           <span class="num">04</span>
-          <span class="body-txt"><b>一个像素级的细节判断。</b> 指针热点全部手动重新校准过，切换指针形状时，鼠标的视觉落点始终精准一致。</span>
+          <span class="body"><b>一个像素级的细节判断。</b> 指针热点全部手动重新校准过，切换指针形状时，鼠标的视觉落点始终精准一致。</span>
         </div>
       </div>
 
-      <div class="swiss-bottom">
+      <footer class="colophon">
         <span>Jiaqi Huang</span>
         <span>产品思维，用在一个个人项目上</span>
-      </div>
+      </footer>
     </section>
 
-    <!-- ============ 第 09 页 — 结语 ============ -->
-    <section class="slide swiss-slide" data-slide="9">
-      <div class="swiss-topline">
-        <span class="swiss-kicker">77-OS <span class="dot">·</span> 产品作品集案例</span>
-        <span class="swiss-index">09 / 09</span>
+    <!-- 09 · 结语 -->
+    <section class="slide" data-slide="9">
+      <header class="masthead">
+        <div class="brand">77<em>-OS</em></div>
+        <div class="issue">产品作品集案例 · Vol. 01</div>
+        <div class="folio">09 / 09</div>
+      </header>
+
+      <div class="stage-rail">
+        <span class="stage-num">09</span>
+        <span class="stage-label">邀请 · Try it</span>
       </div>
 
-      <div class="closing-body">
-        <div class="closing-main">
-          <h1 class="swiss-title" style="font-size:80px;">欢迎<br>亲自体验</h1>
-          <div class="closing-links">
-            <div class="closing-link-row"><span class="l">线上地址</span><span class="v">77-os.vercel.app</span></div>
-            <div class="closing-link-row"><span class="l">邮箱</span><span class="v">1697429486@qq.com</span></div>
+      <div class="closing-grid">
+        <div>
+          <h1 class="display">欢迎<br>亲自体验</h1>
+          <div class="contact-rows">
+            <div class="contact-row"><span class="k">线上地址</span><span class="v">77-os.vercel.app</span></div>
+            <div class="contact-row"><span class="k">邮箱</span><span class="v">1697429486@qq.com</span></div>
           </div>
         </div>
-        <div class="closing-side">
-          <div class="shot"><span class="tag">Fig. 09</span><img src="assets/09-minesweeper.png" alt="桌面上正在进行的扫雷游戏"></div>
-          <div class="shot-caption"><span class="head">彩蛋</span><span class="sub">桌面里藏着一个完整可通关的扫雷。</span></div>
-        </div>
+        <figure class="figure">
+          <div class="frame"><span class="fig-tag">Fig. 09</span><img src="assets/09-minesweeper.png" alt="桌面上正在进行的扫雷游戏"></div>
+          <figcaption><span class="cap-head">彩蛋</span><span class="cap-sub">桌面里藏着一个完整可通关的扫雷。</span></figcaption>
+        </figure>
       </div>
 
-      <div class="swiss-bottom">
+      <footer class="colophon">
         <span>Jiaqi Huang</span>
         <span>Next.js 16 · 纯手写 CSS</span>
-      </div>
+      </footer>
     </section>
 
   </div>
@@ -641,7 +885,6 @@ img, video, canvas, svg {
 </nav>
 
 <script>
-/* ===== 固定舞台缩放：整体等比缩放以适配视口 ===== */
 function fitStage() {
   var stage = document.getElementById('stage');
   var scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
@@ -652,7 +895,6 @@ function fitStage() {
 window.addEventListener('resize', fitStage);
 fitStage();
 
-/* ===== 翻页：即时切换，没有过渡/动效 ===== */
 var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
 var current = 0;
 
