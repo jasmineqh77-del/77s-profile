@@ -11,8 +11,9 @@
   justify-content: space-between;
   width: 100%;
   padding: 5px 6px;
-  border: 2px inset #c0c0c0;
-  background: #c0c0c0;
+  border: 1px solid #cddced;
+  border-radius: var(--ctl-radius);
+  background: linear-gradient(180deg, #f7fbff, #e6eff8);
 }
 
 .counter {
@@ -23,48 +24,74 @@
   font-weight: bold;
   padding: 1px 5px;
   letter-spacing: 1px;
-  border: 1px inset #808080;
+  /* 红色 LED 数字牌是扫雷的标志，只把外框换成细边，配色留着 */
+  border: 1px solid #7d8894;
+  border-radius: 2px;
 }
 
 .face {
   width: 28px;
   height: 28px;
-  font-size: 15px;
-  line-height: 1;
   padding: 0;
-  cursor: pointer;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--ctl-border);
+  border-radius: var(--ctl-radius);
+  background: var(--ctl-face);
+  cursor: var(--cur-pointer);
+}
+
+.faceImage {
+  display: block;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.face:hover {
+  border-color: var(--ctl-border-hover);
+  background: var(--ctl-face-hover);
 }
 
 .board {
-  border: 3px inset #c0c0c0;
-  background: #c0c0c0;
-  padding: 2px;
+  border: 1px solid #b6c6d6;
+  border-radius: var(--ctl-radius);
+  background: #dee7ef;
+  padding: 3px;
 }
 
 .row {
   display: flex;
 }
 
+/* 未翻开的格子是一枚小玻璃片，翻开后塌成平的浅底 */
 .cell {
   width: 24px;
   height: 24px;
   padding: 0;
-  margin: 0;
+  margin: 1px;
   font-size: 13px;
   font-weight: bold;
   font-family: "Courier New", monospace;
   line-height: 1;
-  border: 2px outset #e8e8e8;
-  background: #c0c0c0;
-  cursor: pointer;
+  border: 1px solid #a9bccd;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #fbfdff, #dae7f2);
+  cursor: var(--cur-pointer);
   display: grid;
   place-items: center;
 }
 
-.revealed {
-  border: 1px solid #9a9a9a;
-  background: #d4d4d4;
-  cursor: default;
+.cell:hover {
+  border-color: var(--ctl-border-hover);
+  background: linear-gradient(180deg, #f2fbff, #cbe7fb);
+}
+
+.revealed,
+.revealed:hover {
+  border-color: #ccd7e1;
+  background: #f2f5f8;
+  cursor: var(--cur-default);
 }
 
 /* 经典扫雷的数字配色 */
@@ -80,5 +107,5 @@
 .hint {
   margin: 0;
   font-size: 11px;
-  color: #555;
+  color: #5a6470;
 }

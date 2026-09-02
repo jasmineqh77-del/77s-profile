@@ -5,14 +5,16 @@
   gap: 6px;
 }
 
-.toolbar {
+.toolbar,
+.stickerBar {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
   padding: 5px;
-  border: 2px outset #e8e8e8;
-  background: #ece9d8;
+  border: 1px solid #cddced;
+  border-radius: var(--ctl-radius);
+  background: linear-gradient(180deg, #f7fbff, #e6eff8);
 }
 
 .palette {
@@ -20,44 +22,95 @@
   grid-template-columns: repeat(6, 18px);
   grid-auto-rows: 18px;
   gap: 2px;
-  padding: 2px;
-  border: 2px inset #c0c0c0;
+  padding: 3px;
+  border: 1px solid var(--field-border);
+  border-radius: 2px;
+  background: #fff;
 }
 
 .swatch {
   width: 18px;
   height: 18px;
   padding: 0;
-  border: 1px solid #7f7f7f;
-  cursor: pointer;
+  border: 1px solid #9aa7b4;
+  border-radius: 2px;
+  cursor: var(--cur-pointer);
 }
 
 .swatchActive {
-  outline: 2px solid #316ac5;
-  outline-offset: -1px;
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
 }
 
+.brushes,
 .tools {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
 }
 
-.toolActive {
-  border-style: inset;
+.brushes button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+/*
+ * 选中的工具画成按下去的样子。带上父级前缀是为了压过 globals.css 里的
+ * button:not(.chrome-button)——那条是元素选择器，单类名压不住。
+ */
+.brushes .toolActive,
+.brushes .toolActive:hover,
+.tools .toolActive,
+.tools .toolActive:hover {
+  border-color: #6ba8d8;
+  background: var(--ctl-face-active);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
   font-weight: bold;
+}
+
+.sticker {
+  width: 36px;
+  height: 36px;
+  padding: 2px;
+  border: 1px solid #c5d3e0;
+  border-radius: 3px;
+  background: #fff;
+  cursor: var(--cur-pointer);
+}
+
+.sticker img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.stickerBar .stickerActive,
+.stickerBar .stickerActive:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.16);
 }
 
 .canvasWrap {
   flex: 1 1 auto;
   min-height: 0;
-  border: 2px inset #808080;
+  border: 1px solid var(--field-border);
+  border-radius: 2px;
   background: #fff;
   overflow: hidden;
 }
 
 .canvas {
   display: block;
-  cursor: crosshair;
+  cursor: var(--cur-crosshair);
   touch-action: none;
+}
+
+.canvasStamp {
+  cursor: var(--cur-pointer);
 }

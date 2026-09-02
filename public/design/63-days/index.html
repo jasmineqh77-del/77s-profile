@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>63 DAYS AFTER GRADUATION</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+<style>  /* CSS Variables for Themes */
+  :root {
+    --bg-base: #f4f4f0;
+    --text-base: #111111;
+    --accent: #ff4500;
+    --font-sans: 'Caveat', cursive;
+    --font-serif: 'Caveat', cursive;
+    --font-mono: 'Amatic SC', cursive;
+    --spacing-unit: 1rem;
+  }
+
+  /* Reset & Global */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-base);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    cursor: crosshair;
+    -webkit-font-smoothing: antialiased;
+  }
+/* Typography */
+  h1, h2, h3 {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+  }
+
+  p {
+    font-size: 1.5rem;
+    line-height: 1.3;
+    font-weight: 400;
+  }
+
+  .small-text {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+  }
+  /* Game UI / HUD */
+  .archive-label {
+    position: relative;
+    z-index: 1;
+  }
+  .archive-label::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150%;
+    height: 250%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(ellipse at center, var(--bg-base) 30%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(4px);
+  }
+
+  #hud {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem;
+  }
+
+  .hud-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+.memory-counter {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    background: rgba(0,0,0,0.1);    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+  }
+
+  .hud-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  /* Random Memory Button */.random-btn {
+    pointer-events: auto;
+    background: var(--text-base);
+    color: var(--bg-base);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 30px;
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    cursor: pointer;    text-transform: uppercase;
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+
+  .random-btn:hover {
+    transform: scale(1.05);
+    background: var(--accent);
+  }
+
+  /* Emotion Tracker */
+  .emotion-tracker {
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 150px;
+  }
+  .emotion-text {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    height: 1.2em; /* Reserve space */    color: var(--text-base);
+    transition: color 0.3s;
+  }
+
+  .emotion-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 30px;
+  }
+
+  .emotion-bar {
+    flex: 1;
+    background: var(--text-base);
+    opacity: 0.2;
+    border-radius: 1px;
+    cursor: crosshair;
+    transition: opacity 0.3s, transform 0.3s, background 0.3s;
+    transform-origin: bottom;
+  }
+  
+  .emotion-bar:hover {
+    opacity: 1;
+    background: var(--accent);
+    transform: scaleY(1.3);
+  }
+
+  /* Sections General */
+  section {
+    position: relative;
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    padding: 4rem 2rem;
+    overflow: hidden;
+  }
+
+  .memory-fragment {
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease;
+    z-index: 1;
+  }
+
+  .memory-fragment::before {
+    content: '✦';
+    display: inline-block;
+    margin-right: 6px;
+    color: var(--accent);
+    font-size: 0.9em;
+    animation: star-pulse 2s infinite ease-in-out;
+  }
+
+  .memory-fragment:hover {
+    color: var(--accent);
+  }
+
+  .memory-fragment:hover::before {
+    animation: none;
+    transform: scale(1.2) rotate(15deg);
+    transition: transform 0.3s ease;
+  }
+
+  .memory-fragment.collected {
+    color: var(--accent);
+  }
+
+  .memory-fragment.collected::before {
+    content: '✓';
+    animation: none;
+    transform: none;
+  }
+
+  @keyframes star-pulse {
+    0% { opacity: 0.3; transform: scale(0.9) rotate(0deg); }
+    50% { opacity: 0.9; transform: scale(1.1) rotate(15deg); }
+    100% { opacity: 0.3; transform: scale(0.9) rotate(0deg); }
+  }
+
+  /* Hero Section */
+  #hero {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 10vw;
+    z-index: 2;
+    mix-blend-mode: difference;
+    color: #fff;
+  }
+
+  .hero-subtitle {
+    font-family: var(--font-serif);
+    font-size: 3vw;
+    font-style: italic;
+    margin-top: 1rem;
+    z-index: 2;
+  }
+
+  .floating-img {
+    position: absolute;
+    opacity: 0;
+    width: 250px;
+    height: 350px;
+    object-fit: cover;
+    filter: grayscale(100%);
+    transition: opacity 1s ease, filter 0.5s ease;
+    z-index: 1;
+  }
+
+  /* Chapter 1: Graduation */
+  #ch1-graduation {
+    background: #ffffff;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+  }
+  .ch1-content {
+    padding-bottom: 10vh;
+  }.ch1-date {
+    font-family: var(--font-mono);
+    font-size: 20vw;
+    line-height: 0.75;
+    color: #f0f0f0;
+    position: absolute;    top: 10%;
+    left: -5%;
+    z-index: 0;
+  }
+  .ch1-text {
+    position: relative;
+    z-index: 1;
+    font-size: 2rem;
+    max-width: 400px;
+  }
+  .ch1-img-container {
+    position: relative;
+    height: 70vh;
+    width: 100%;
+  }
+  .ch1-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(10px) grayscale(100%);
+    transition: filter 1s ease, transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .ch1-img.unlocked {
+    filter: blur(0px) grayscale(0%);
+    cursor: pointer;
+  }
+  .ch1-img.unlocked:hover {
+    transform: scale(1.03);
+  }
+  .ch1-img.unlocked:active {
+    transform: scale(0.98);
+  }
+
+  /* Chapter 2: Home */
+  #ch2-home {
+    background: #f9ece4;
+    color: #3a2a22;
+    display: flex;
+    flex-direction: column;
+  }
+  .ch2-header {
+    margin-bottom: 4rem;
+  }
+  .ch2-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    width: 100%;
+  }
+  .archive-item {
+    position: relative;
+  }
+  .archive-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    opacity: 0.2;
+    filter: blur(15px) grayscale(100%);
+    transition: opacity 1s ease, filter 1s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+  }
+  .archive-item.unlocked img {
+    opacity: 1;
+    filter: blur(0px) grayscale(0%);
+    cursor: pointer;
+  }
+  .archive-item.unlocked img:hover {
+    transform: scale(1.08) translateY(-5px) rotate(2deg);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+  }
+  .archive-item.unlocked img:active {
+    transform: scale(0.95) translateY(0) rotate(0deg);
+  }.archive-note {
+    font-size: 1rem;
+    font-family: var(--font-mono);
+    margin-top: 0.5rem;
+  }
+  /* Chapter 3: Shenzhen */
+  #ch3-shenzhen {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  .data-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .data-item {
+    border-top: 1px solid #333;
+    padding-top: 1rem;
+  }.data-num {
+    font-size: 8vw;
+    font-weight: bold;
+    font-family: var(--font-mono);
+    color: transparent;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    transition: color 0.8s, text-shadow 0.8s;
+  }  .data-num.unlocked {
+    color: #4da6ff;
+    text-shadow: none;
+  }
+  .data-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Chapter 4: People */
+  #ch4-people {
+    background: #e8f0d8;
+    color: #1a3300;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .journal-spread {
+    display: flex;
+    width: 90vw;
+    max-width: 1000px;
+    height: 70vh;
+    background: #f4f4f0;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    position: relative;
+    margin-top: 2rem;
+    perspective: 2500px;
+  }
+  .flip-page {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+    cursor: pointer;
+  }
+  .flip-page.flipped {
+    transform: rotateY(-180deg);
+  }
+  .flip-front, .flip-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .flip-front {
+    transform: rotateY(0deg) translateZ(1px);
+    -webkit-transform: rotateY(0deg) translateZ(1px);
+  }
+  .flip-back {
+    transform: rotateY(180deg) translateZ(1px);
+    -webkit-transform: rotateY(180deg) translateZ(1px);
+  }
+  .page-hint {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    color: #999;
+    z-index: 30;
+    animation: star-pulse 2s infinite;
+    pointer-events: none;
+  }
+  .flip-back .page-hint {
+    right: auto;
+    left: 20px;
+  }
+  .spiral-binder {
+    position: absolute;
+    left: 50%;
+    top: 2%;
+    bottom: 2%;
+    width: 30px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 10;
+  }
+  .spiral-ring {
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(to bottom, #eee, #999);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  .journal-page {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-left {
+    background: #2a2a2a;
+    color: #eee;
+    border-radius: 10px 0 0 10px;
+  }
+  .page-right {
+    background: #fdfbf7;
+    color: #222;
+    border-radius: 0 10px 10px 0;
+    background-image: radial-gradient(#ccc 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  .washi-tape {
+    position: absolute;
+    width: 120px;
+    height: 30px;
+    background: rgba(200, 210, 180, 0.8);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    z-index: 12;
+    mix-blend-mode: multiply;
+  }
+  .sticker-dot {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    z-index: 5;
+  }
+  .polaroid {
+    position: absolute;
+    width: 160px;
+    background: #fff;
+    padding: 8px 8px 30px 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transform: rotate(calc(var(--rot) * 1deg));
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.5s, opacity 0.5s;
+    filter: grayscale(100%) blur(3px);
+    opacity: 0.4;
+    z-index: 10;
+  }
+  .polaroid.unlocked {
+    filter: grayscale(0%) blur(0px);
+    opacity: 1;
+    cursor: pointer;
+  }
+  .polaroid.unlocked:hover {
+    transform: rotate(0deg) scale(1.1) !important;
+    z-index: 20;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  }
+  .polaroid.unlocked:active {
+    transform: rotate(0deg) scale(1.02) !important;
+  }
+  .polaroid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .chat-bubble {
+    position: absolute;
+    background: #fff;
+    color: #333;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-family: var(--font-sans);
+    font-size: 1.2rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    z-index: 15;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+  .chat-bubble.unlocked {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .washi-tape, .sticker-dot {
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .washi-tape.unlocked, .sticker-dot.unlocked {
+    opacity: 1;
+  }
+  .journal-text {
+    position: absolute;
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: #333;
+    z-index: 12;
+    opacity: 0;
+    transition: opacity 0.5s;
+    transform: rotate(-2deg);
+  }
+  .journal-text.unlocked {
+    opacity: 1;
+  }
+  .flip-back .journal-text {
+    color: #eee;
+  }
+  .theme-el {
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .theme-el.unlocked {
+    opacity: 1;
+  }
+  .cute-sticker {
+    position: absolute;
+    font-size: 2.2rem;
+    z-index: 14;
+    opacity: 0;
+    transition: opacity 0.5s, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.12));
+    background: #fff;
+    border: 3px solid #fff;
+    border-radius: 8px 12px 10px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    line-height: 1;
+  }
+  .cute-sticker.unlocked {
+    opacity: 1;
+  }
+  .cute-sticker.unlocked:hover {
+    transform: scale(1.15) rotate(5deg) !important;
+    z-index: 25;
+  }
+
+  /* Chapter 5: First Times */
+  #ch5-first-times {
+    background: #dcdcdc;
+    color: #222;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .list-container {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .list-item {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #999;
+    padding: 2rem 0;
+    position: relative;
+  }
+  .list-header {
+    display: flex;
+    align-items: baseline;
+    width: 100%;
+  }
+  .list-num {
+    font-size: 2rem;
+    font-family: var(--font-mono);
+    width: 100px;
+    color: #666;
+  }
+  .list-title {
+    font-size: 3vw;
+    font-family: var(--font-serif);
+  }.handwritten {
+    margin-left: 100px;
+    margin-top: 1rem;
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    color: transparent;
+    transition: color 0.5s;
+  }  .handwritten.unlocked {
+    color: var(--accent);
+  }
+  
+  .ch5-photos {
+    display: flex;
+    gap: 1.5rem;
+    margin-left: 100px;
+    margin-top: 1.5rem;
+  }
+  .polaroid-mini {
+    position: relative;
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    border: 6px solid #fff;
+    border-bottom-width: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    filter: grayscale(100%) opacity(0.2);
+    transition: filter 0.5s, opacity 0.5s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 5;
+  }
+  .polaroid-mini.unlocked {
+    filter: grayscale(0%) opacity(1);
+    cursor: pointer;
+  }
+  .polaroid-mini.unlocked:hover {
+    transform: scale(1.05) rotate(0deg) !important;
+    z-index: 10;
+  }
+
+  /* Chapter 6: What's Next */
+  #ch6-whats-next {
+    background: #000;
+    color: #fff;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .final-message {
+    font-size: 4vw;
+    font-family: var(--font-serif);
+    max-width: 800px;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 2s, transform 2s;
+  }
+  .final-message.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }.tbc {
+    margin-top: 4rem;
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    letter-spacing: 0.2em;
+    opacity: 0;
+    transition: opacity 2s 1s;
+  }  .tbc.visible {
+    opacity: 1;
+  }
+  .locked-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    z-index: 10;
+    transition: opacity 1s;
+  }.locked-text {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    color: #666;
+  }
+  /* Random Memory Modal */
+  #random-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(244, 244, 240, 0.95);
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s;
+  }
+  #random-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal-content {
+    max-width: 500px;
+    padding: 2rem;
+    text-align: left;
+  }
+  .modal-date {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }.modal-text {
+    font-size: 2rem;
+    line-height: 1.4;
+    font-family: var(--font-serif);
+  }  .close-btn {
+    margin-top: 2rem;
+    background: none;
+    border: 1px solid #000;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    border-radius: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .journal-spread { flex-direction: row; height: 60vh; width: 95vw; }
+    .flip-page { width: 50%; height: 100%; right: 0; bottom: auto; top: 0; transform-origin: left center; }
+    .flip-page.flipped { transform: rotateY(-180deg); }
+    .polaroid { width: 110px; padding: 4px 4px 15px 4px; }
+    .chat-bubble { font-size: 0.9rem; padding: 4px 8px; }
+    .page-left { border-radius: 10px 0 0 10px; }
+    .page-right { border-radius: 0 10px 10px 0; }
+    .spiral-binder { flex-direction: column; width: 20px; height: 96%; left: 50%; top: 2%; transform: translateX(-50%); }
+    .spiral-ring { width: 100%; height: 6px; }
+    .ch5-photos { margin-left: 0; flex-wrap: wrap; }
+    .handwritten { margin-left: 0; }
+    .hero-title { font-size: 15vw; }
+    #ch1-graduation, #ch3-shenzhen { grid-template-columns: 1fr; }
+    .ch1-img-container { height: 40vh; }
+    .list-item { padding: 1.5rem 0; }
+    .hud-bottom { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .emotion-tracker { display: none; } /* Hide on mobile for space */
+  }
+</style>
+</head>
+<body><audio id="bgm" data-loot-bgm="true" data-loot-bgm-disabled="true" src="data:audio/wav;base64,UklGRiUAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQEAAACA" preload="auto" hidden></audio>
+
+<div id="hud">
+  <div class="hud-top">
+    <div class="small-text archive-label">ARCHIVE // 2026</div>
+    <div class="memory-counter">MEMORIES UNLOCKED: <span id="score">0</span> / 6</div>
+  </div>
+  <div class="hud-bottom">
+    <div class="emotion-tracker">
+      <div class="emotion-text" id="emotion-text">EMOTION LOG</div>
+      <div class="emotion-bars" id="emotion-bars"></div>
+    </div>
+    <button class="random-btn" id="btn-random">Random Memory</button>
+  </div>
+</div>
+
+<div id="random-modal">
+  <div class="modal-content">
+    <div class="modal-date" id="modal-date">AUGUST 17 // 14:32</div>
+    <div class="modal-text" id="modal-text">Nothing special happened today. Went to an interview. Took the subway. Ate. Went home. Realized "nothing happening" is also a way of life.</div>
+    <button class="close-btn" id="btn-close-modal">CLOSE</button>
+  </div>
+</div>
+
+<main id="app">
+  <!-- Intro -->
+  <section id="hero">
+    <!-- Shenzhen Skyline (Hero Top Left) -->
+    <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_7964-c7eda86311138a4dfe397036a798c763c8eb82e6e495fc5f9f1fb91cc3a93fe4.heic" crossorigin="anonymous" class="floating-img" style="top: 10%; left: 10%;" alt="Shenzhen Skyline">
+    <!-- Desk Setup (Hero Bottom Right) -->
+    <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_8067-e3a78e72389460af81898ee44282e1d709810805c2f577b1ce26a74242b5d079.heic" crossorigin="anonymous" class="floating-img" style="bottom: 10%; right: 10%;" alt="New Desk Setup">
+    <div class="small-text" style="margin-bottom: 2rem;">2026.06.30 // XUZHOU // GRADUATION</div>
+    <h1 class="hero-title">63 DAYS</h1>
+    <div class="hero-subtitle">After Graduation</div>
+    <p class="small-text" style="margin-top: 4rem;"><span class="memory-fragment" data-id="6">WHERE DID I GO?</span></p>
+    <p class="small-text" style="margin-top: 1rem; opacity: 0.5;">(Scroll to explore. Find the hidden fragments to unlock the archive.)</p>
+  </section>
+
+  <!-- Chapter 1 -->
+  <section id="ch1-graduation">
+    <div class="ch1-date">6.30</div>
+    <div class="ch1-content">
+      <div class="small-text">01 &mdash; GRADUATION</div>
+      <h2 style="font-size: 4vw; margin: 1rem 0;">THE END OF <br>AN ERA</h2>
+      <p class="ch1-text">
+        Took the graduation photos. The familiar student life suddenly stopped. 
+        <span class="memory-fragment" data-id="1" data-target=".ch1-img">Click to remember the feeling of leaving.</span>
+      </p>
+    </div>
+    <div class="ch1-img-container">
+      <!-- YOUR PHOTO HERE (Graduation Main): Replace the src URL below -->
+      <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_7688-fc6fb0277dad8d0f34b81dc2790773c27a1609ee7737d13ff7406771b097574c.heic" crossorigin="anonymous" class="ch1-img" alt="Graduation memories">
+    </div>
+  </section>
+
+  <!-- Chapter 2 -->
+  <section id="ch2-home">
+    <div class="ch2-header">
+      <div class="small-text">02 &mdash; HOME // SUZHOU</div>
+      <h2 style="font-size: 3vw; margin-top: 1rem;">ONE WEEK WITH PARENTS</h2>
+      <p style="max-width: 400px; margin-top: 1rem;">
+        Returned to Suzhou. A brief pause before the storm. 
+        <span class="memory-fragment" data-id="2" data-target=".archive-item">Unlock family archive.</span>
+      </p>
+    </div>
+    <div class="ch2-grid">
+      <div class="archive-item">
+        <!-- YOUR PHOTO HERE (Home 1): Replace the src URL below -->
+        <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/b89bf09a762f75d5cfeae710a96b87fb-da1d2bded6cc2434166c4739e5a6f40568782bf66f9552f465d3a8dc33b05fcb.jpg" crossorigin="anonymous" alt="Luggage at the station">
+        <div class="archive-note">Waiting at the station</div>
+      </div>
+      <div class="archive-item">
+        <!-- YOUR PHOTO HERE (Home 2): Replace the src URL below -->
+        <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/f259bd2a848b54fa5603518d9c8f02ee-d0b67f8ad031eda58a854f5c8a00ba5264686601561ec5ec643bf6e023b6778d.jpg" crossorigin="anonymous" alt="BBQ Food">
+        <div class="archive-note">Delicious BBQ</div>
+      </div>
+      <div class="archive-item">
+        <!-- YOUR PHOTO HERE (Home 3): Replace the src URL below -->
+        <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/b38643fbbe09182bd5c2e09663952764-7816511d057180469cfc0636ab6ac958f878568732a4c698d38caadf33dbb7e3.jpg" crossorigin="anonymous" alt="Bubble Tea">
+        <div class="archive-note">Afternoon bubble tea</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chapter 3 -->
+  <section id="ch3-shenzhen">
+    <div>
+      <div class="small-text">03 &mdash; SHENZHEN & HONG KONG</div>
+      <h2 style="font-size: 4vw; margin: 1rem 0;">INTO THE<br>UNKNOWN</h2>
+      <p style="margin-bottom: 2rem;">
+        Arrived in a completely unfamiliar city to find an internship. Commuting back and forth to HK. 
+        <span class="memory-fragment" data-id="3" data-target=".data-num">Reveal the numbers.</span>
+      </p>
+    </div>
+    <div class="data-board">
+      <div class="data-item">
+        <div class="data-num">10+</div>
+        <div class="data-label">Applications</div>
+      </div>
+      <div class="data-item">
+        <div class="data-num">5+</div>
+        <div class="data-label">Interviews</div>
+      </div>
+      <div class="data-item">
+        <div class="data-num">2</div>
+        <div class="data-label">Rejections</div>
+      </div>
+      <div class="data-item">
+        <div class="data-num">1</div>
+        <div class="data-label">Offer</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chapter 4 -->
+  <section id="ch4-people">
+    <div style="width: 90vw; max-width: 1000px; z-index: 20; text-align: left; margin-bottom: 1rem;">
+      <div class="small-text">04 &mdash; PEOPLE</div>
+      <h2 style="font-size: clamp(1.8rem, 3vw, 4rem); margin-top: 0.5rem;">STRANGERS BECAME<br>PART OF LIFE</h2>
+      <p style="margin-top: 0.5rem;">
+        <span class="memory-fragment" data-id="4" data-target=".polaroid, .chat-bubble, .washi-tape, .sticker-dot, .journal-text, .theme-el, .cute-sticker">Bring colors to the memories.</span>
+      </p>
+    </div>
+    <div class="journal-spread" style="margin-top: 0;">
+      <div class="spiral-binder">
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+        <div class="spiral-ring"></div>
+      </div>
+      <!-- Base pages underneath -->
+      <div class="journal-page page-left" style="position: absolute; left: 0; width: 50%; height: 100%;">
+        <div class="theme-el" style="position: absolute; top: 35%; left: 10%; width: 80%; text-align: center;">
+          <h3 style="font-size: 3.5rem; color: #fff; margin-bottom: 1rem; border-bottom: 2px solid #444; padding-bottom: 1rem; transform: rotate(-3deg);">SUMMER ARCHIVE</h3>
+          <p style="font-family: var(--font-mono); font-size: 1.5rem; color: #aaa; letter-spacing: 0.2em;">VOL. 1 // SHENZHEN</p>
+          <div class="sticker-dot" style="position: absolute; top: -10px; right: 10%; background: var(--accent);"></div>
+          <div class="washi-tape" style="position: absolute; bottom: -40px; left: 20%; transform: rotate(5deg); width: 100px; background: rgba(255,255,255,0.2);"></div>
+        </div>
+      </div>
+      <div class="journal-page page-right" style="position: absolute; right: 0; width: 50%; height: 100%;"></div>
+
+      <!-- Leaf 4 -->
+      <div class="flip-page" style="z-index: 1;">
+        <div class="flip-front page-right">
+          <div class="journal-text" style="top: 15%; right: 5%; transform: rotate(3deg); width: 100px;">Treat yourself!</div>
+          <div class="cute-sticker" style="top: 35%; left: 45%; transform: rotate(-10deg);">🐻</div>
+          <div class="sticker-dot" style="background: #ffd700; top: 45%; left: 30%;"></div>
+          <div class="polaroid" style="--rot: 2; top: 10%; left: 15%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_8327-70766caa13c9dc922ed571423dcfc67d9d670c0c3a2b44bfebdd2c257b9a7e39.heic" crossorigin="anonymous" alt="Boba">
+          </div>
+          <div class="polaroid" style="--rot: -5; bottom: 10%; right: 10%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_8258-a7fdeac7372dae135fce4989fc5b78e87c1d0f9bf5fc2dccf577d8f1b68b6fe9.jpg" crossorigin="anonymous" alt="Nail lamp">
+          </div>
+          <div class="washi-tape" style="bottom: 5%; left: 40%; transform: rotate(-5deg); width: 90px; background: rgba(255,182,193,0.8);"></div>
+        </div>
+        <div class="flip-back page-left">
+          <div class="polaroid" style="--rot: 4; top: 20%; left: 25%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_7923-2a2a78cdb7fed78c155c7de246bc5b0bffcb8a61fa425b085ed2a2f57c44d6a5.heic" crossorigin="anonymous" alt="Shrimp porridge">
+          </div>
+          <div class="journal-text" style="top: 5%; left: 10%; transform: rotate(-4deg);">Comfort food...</div>
+          <div class="cute-sticker" style="bottom: 25%; left: 15%; transform: rotate(15deg);">🍲</div>
+          <div class="chat-bubble" style="bottom: 30%; right: 15%;">"End of Vol. 1"</div>
+          <div class="sticker-dot" style="background: #fff; bottom: 20%; left: 30%;"></div>
+        </div>
+      </div>
+
+      <!-- Leaf 3 -->
+      <div class="flip-page" style="z-index: 2;">
+        <div class="flip-front page-right">
+          <div class="journal-text" style="top: 10%; left: 10%; transform: rotate(-5deg); width: 100px;">Caffeine fueled days!</div>
+          <div class="polaroid" style="--rot: -3; top: 12%; right: 15%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_8254-7efcf3e0065993351692bde0b00ee4eea7ee4778ca2c63cedd453f38b15dbf5a.heic" crossorigin="anonymous" alt="McD Coffee">
+          </div>
+          <div class="cute-sticker" style="top: 40%; right: 35%; transform: rotate(8deg);">☕</div>
+          <div class="washi-tape" style="bottom: 45%; left: 20%; transform: rotate(-15deg); width: 80px;"></div>
+          <div class="sticker-dot" style="background: #ff9900; top: 40%; right: 25%;"></div>
+          <div class="polaroid" style="--rot: 6; bottom: 10%; left: 15%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_8283-0bfad8cf038b86177476875a10797da0ecea1d4c1fdaab0cfd3b6dec964036f5.heic" crossorigin="anonymous" alt="Coffee stand">
+          </div>
+          <div class="journal-text" style="bottom: 15%; right: 10%; transform: rotate(2deg);">Too much iced latte</div>
+        </div>
+        <div class="flip-back page-left">
+          <div class="polaroid" style="--rot: -2; top: 15%; left: 15%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_8284-dcbdf9774bd10c253d704a3475f0fa97311c884a2bb5491929c83e928feaec35.heic" crossorigin="anonymous" alt="Coffee cup">
+          </div>
+          <div class="washi-tape" style="top: 10%; left: 40%; transform: rotate(12deg); width: 70px; background: rgba(200,200,200,0.3);"></div>
+          <div class="journal-text" style="top: 50%; left: 5%; transform: rotate(-3deg);">Quick lunch breaks</div>
+          <div class="cute-sticker" style="bottom: 40%; right: 45%; transform: rotate(-12deg);">✨</div>
+          <div class="polaroid" style="--rot: 5; bottom: 15%; right: 15%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_8299-a48300e5f6f1c769d4ceca29a6b62f1a01a6a86ee594132c36e0e989f46d596c.heic" crossorigin="anonymous" alt="Rice bowls">
+          </div>
+        </div>
+      </div>
+
+      <!-- Leaf 2 -->
+      <div class="flip-page" style="z-index: 3;">
+        <div class="flip-front page-right">
+          <div class="washi-tape" style="top: 5%; left: 30%; transform: rotate(8deg); width: 110px; background: rgba(150,200,250,0.6);"></div>
+          <div class="polaroid" style="--rot: 4; top: 10%; left: 15%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_8198-584054f1a568e5b0d60c35b9276c9b3b227c608fd1ea54acc72309fb12e249ba.heic" crossorigin="anonymous" alt="Jajangmyeon">
+          </div>
+          <div class="journal-text" style="top: 45%; right: 5%; transform: rotate(-3deg);">Food marathon!</div>
+          <div class="cute-sticker" style="bottom: 30%; left: 25%; transform: rotate(-5deg);">🍖</div>
+          <div class="sticker-dot" style="background: #ff6b6b; bottom: 45%; left: 20%;"></div>
+          <div class="polaroid" style="--rot: -4; bottom: 12%; right: 15%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_8200-132dbe1a8daaaa8400378afb4681eada68f3936c0ce168d3f4ef7197a794b21a.heic" crossorigin="anonymous" alt="KBBQ">
+          </div>
+        </div>
+        <div class="flip-back page-left">
+          <div class="sticker-dot" style="background: #4da6ff; top: 12%; left: 25%;"></div>
+          <div class="journal-text" style="top: 20%; left: 10%; transform: rotate(4deg); width: 100px;">Warm noodles</div>
+          <div class="polaroid" style="--rot: -6; top: 15%; right: 15%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_8237-98b3e57a547dd93f2ed2b65c0c05a64829a1e6f9acd611861702b5969eb0685c.heic" crossorigin="anonymous" alt="Noodle soup">
+          </div>
+          <div class="cute-sticker" style="top: 35%; left: 40%; transform: rotate(10deg);">🍦</div>
+          <div class="washi-tape" style="bottom: 40%; right: 20%; transform: rotate(-10deg); width: 90px; background: rgba(255,255,255,0.2);"></div>
+          <div class="polaroid" style="--rot: 3; bottom: 10%; left: 15%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_8242-246a4aa53ab1ba00ce57f25c28eed0f38dff5866ae5aabbbefba20c36375c2b5.heic" crossorigin="anonymous" alt="Ice cream">
+          </div>
+          <div class="journal-text" style="bottom: 10%; right: 10%; transform: rotate(-2deg);">Sweet tooth!</div>
+        </div>
+      </div>
+
+      <!-- Leaf 1 -->
+      <div class="flip-page" style="z-index: 4;">
+        <div class="flip-front page-right">
+          <div class="journal-text" style="top: 4%; left: 10%; transform: rotate(-2deg);">First day in the city.</div>
+          <div class="sticker-dot" style="background: #ff6b6b; top: 10%; right: 25%;"></div>
+          <div class="cute-sticker" style="top: 45%; right: 20%; transform: rotate(-15deg);">🧸</div>
+          <div class="polaroid" style="--rot: -2; top: 15%; left: 15%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_7964-c7eda86311138a4dfe397036a798c763c8eb82e6e495fc5f9f1fb91cc3a93fe4.heic" crossorigin="anonymous" alt="Shenzhen Skyline">
+            <div class="archive-note" style="margin-top: 5px; font-size: 0.85rem;">Shenzhen Bay</div>
+          </div>
+          <div class="washi-tape" style="bottom: 25%; right: 20%; transform: rotate(10deg);"></div>
+          <div class="chat-bubble" style="bottom: 10%; left: 10%;">"New city, new life!"</div>
+          <div class="page-hint">Click page to flip ➔</div>
+        </div>
+        <div class="flip-back page-left">
+          <div class="journal-text" style="top: 15%; left: 15%; transform: rotate(3deg); width: 120px;">Crossing borders</div>
+          <div class="polaroid" style="--rot: 5; top: 10%; right: 15%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_7995-beef42dac140c6a671aff0be6b0f1fbf031a4491c4ab0d9f3bda26c10c71c53c.heic" crossorigin="anonymous" alt="HK Bus">
+            <div class="archive-note" style="margin-top: 5px; font-size: 0.85rem;">HK Night Bus</div>
+          </div>
+          <div class="washi-tape" style="top: 45%; left: 25%; transform: rotate(-8deg); width: 80px; background: rgba(255,255,255,0.2);"></div>
+          <div class="cute-sticker" style="top: 40%; left: 40%; transform: rotate(20deg);">🥟</div>
+          <div class="polaroid" style="--rot: -4; bottom: 15%; left: 15%;">
+            <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_7937-7f15da625ea520d2e6988731f41f8960721ae5b608f02ff3ee3d061791ef5f61.heic" crossorigin="anonymous" alt="Dim Sum">
+            <div class="archive-note" style="margin-top: 5px; font-size: 0.85rem;">Dim Sum</div>
+          </div>
+          <div class="journal-text" style="bottom: 10%; right: 10%; transform: rotate(-5deg);">Late night bites</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chapter 5 -->
+  <section id="ch5-first-times">
+    <div style="position: absolute; top: 4rem; left: 2rem;">
+      <div class="small-text">05 &mdash; FIRST TIMES</div>
+    </div>
+    <div class="list-container">
+      <div class="list-item">
+        <div class="list-header">
+          <div class="list-num">01</div>
+          <div class="list-title">First flatshare.</div>
+        </div>
+        <div class="handwritten">Finding a place with two other girls.</div>
+        <div class="ch5-photos">
+          <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_7911-6ed3a0ce9ac6b218883a0106a1ef6cb8da8d970b40d6e617f5e4bd584c6c2012.heic" crossorigin="anonymous" class="polaroid-mini" style="transform: rotate(-4deg);" alt="Empty room">
+          <img src="https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/jk3daplpw8vg27pn/assets/IMG_7870-4f5acf72489a33592149ecfe4edc20e5a320b120fea4a7d9f7aa107058ab0270.heic" crossorigin="anonymous" class="polaroid-mini" style="transform: rotate(3deg);" alt="IKEA shopping">
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-header">
+          <div class="list-num">02</div>
+          <div class="list-title">First time traveling with parents as an adult.</div>
+        </div>
+        <div class="handwritten">Qiandao Lake, Hangzhou.</div>
+      </div>
+      <div class="list-item">
+        <div class="list-header">
+          <div class="list-num">03</div>
+          <div class="list-title">First time facing the future.</div>
+        </div>
+        <div class="handwritten">
+          <span class="memory-fragment" data-id="5" data-target=".handwritten, .polaroid-mini">Realizing my path is mine to walk alone.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chapter 6 -->
+  <section id="ch6-whats-next">
+    <div class="locked-overlay" id="end-lock">
+      <div class="locked-text">COLLECT ALL 6 MEMORIES TO UNLOCK THE FUTURE (<span id="lock-score">0</span>/6)</div>
+    </div>
+    
+    <div class="small-text" style="color: #666; margin-bottom: 2rem;">06 &mdash; WHAT'S NEXT?</div>
+    <div class="final-message" id="final-msg">
+      The summer vacation of life has ended.<br><br>
+      <span style="color: #666; font-size: 0.5em; font-family: var(--font-sans); text-transform: none;">
+        Autumn recruitment. Future. Lost. Love. Work.<br>
+        <span style="color: #fff; text-transform: uppercase;">What will welcome me next?</span>
+      </span>
+    </div>
+    <div class="tbc" id="tbc-text">TO BE CONTINUED</div>
+  </section>
+</main>
+
+<script src="./gsap.min.js"></script>
+<script type="application/json" id="loot-scene-manifest">
+{
+  "schema_version": "loot_scene_authoring.v4",
+  "selection_contract": {
+    "schema_version": "selection_contract.v1",
+    "requirement": "required",
+    "required_node_ids": ["hero.img1", "hero.img2", "ch1.img", "ch2.img1", "ch2.img2", "ch2.img3"]
+  },
+  "nodes": [
+    {
+      "node_id": "hero.img1",
+      "role": "image",
+      "semantic_kind": "image",
+      "runtime_kind": "dom",
+      "runtime_symbol": "heroImg1",
+      "source_binding_id": "binding.hero.img1",
+      "selection_mode": "direct",
+      "capture_descendants": false,
+      "dependency_node_ids": []
+    },
+    {
+      "node_id": "hero.img2",
+      "role": "image",
+      "semantic_kind": "image",
+      "runtime_kind": "dom",
+      "runtime_symbol": "heroImg2",
+      "source_binding_id": "binding.hero.img2",
+      "selection_mode": "direct",
+      "capture_descendants": false,
+      "dependency_node_ids": []
+    },
+    {
+      "node_id": "ch1.img",
+      "role": "image",
+      "semantic_kind": "image",
+      "runtime_kind": "dom",
+      "runtime_symbol": "ch1Img",
+      "source_binding_id": "binding.ch1.img",
+      "selection_mode": "direct",
+      "capture_descendants": false,
+      "dependency_node_ids": []
+    },
+    {
+      "node_id": "ch2.img1",
+      "role": "image",
+      "semantic_kind": "image",
+      "runtime_kind": "dom",
+      "runtime_symbol": "ch2Img1",
+      "source_binding_id": "binding.ch2.img1",
+      "selection_mode": "direct",
+      "capture_descendants": false,
+      "dependency_node_ids": []
+    },
+    {
+      "node_id": "ch2.img2",
+      "role": "image",
+      "semantic_kind": "image",
+      "runtime_kind": "dom",
+      "runtime_symbol": "ch2Img2",
+      "source_binding_id": "binding.ch2.img2",
+      "selection_mode": "direct",
+      "capture_descendants": false,
+      "dependency_node_ids": []
+    },
+    {
+      "node_id": "ch2.img3",
+      "role": "image",
+      "semantic_kind": "image",
+      "runtime_kind": "dom",
+      "runtime_symbol": "ch2Img3",
+      "source_binding_id": "binding.ch2.img3",
+      "selection_mode": "direct",
+      "capture_descendants": false,
+      "dependency_node_ids": []
+    }
+  ]
+}
+</script>
+<script>
+  // Game State
+  let memoriesCollected = 0;
+  const totalMemories = 6;
+  const collectedIds = new Set();
+
+  // Random Memories Data
+  const randomMemories = [
+    { date: "AUGUST 17 // 14:32", text: "Nothing special happened today. Went to an interview. Took the subway. Ate. Went home. Realized 'nothing happening' is also a way of life." },
+    { date: "JULY 05 // 23:15", text: "Looking at old photos with my parents. Suddenly burst into tears in the middle of the night. A quiet, sad moment." },
+    { date: "JULY 22 // 09:00", text: "Woke up in a new bed in Shenzhen. The ceiling looks different. No one tells me what time class starts anymore." },
+    { date: "AUGUST 02 // 18:45", text: "Got the CUHK student card. A new identity, a new stage." },
+    { date: "AUGUST 10 // 19:30", text: "Bought a nice BM shirt and took a great selfie in the mirror. Small joys matter." }
+  ];
+
+  // Initialize Scene Binding (Loot Contract)
+  const lootScene = window.__LOOT_SCENE__?.v2;
+  if (lootScene) {
+    const heroImg1 = document.querySelectorAll('.floating-img')[0];
+    const heroImg2 = document.querySelectorAll('.floating-img')[1];
+    const ch1Img = document.querySelector('.ch1-img');
+    const ch2Img1 = document.querySelectorAll('.archive-item img')[0];
+    const ch2Img2 = document.querySelectorAll('.archive-item img')[1];
+    const ch2Img3 = document.querySelectorAll('.archive-item img')[2];
+    
+    if (heroImg1) lootScene.registerNode({ node_id: 'hero.img1', runtime_ref: heroImg1 });
+    if (heroImg2) lootScene.registerNode({ node_id: 'hero.img2', runtime_ref: heroImg2 });
+    if (ch1Img) lootScene.registerNode({ node_id: 'ch1.img', runtime_ref: ch1Img });
+    if (ch2Img1) lootScene.registerNode({ node_id: 'ch2.img1', runtime_ref: ch2Img1 });
+    if (ch2Img2) lootScene.registerNode({ node_id: 'ch2.img2', runtime_ref: ch2Img2 });
+    if (ch2Img3) lootScene.registerNode({ node_id: 'ch2.img3', runtime_ref: ch2Img3 });
+
+    lootScene.registerAdapter(lootScene.createDomAdapter({}));
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // 1. Setup GSAP Scroll Animations
+    const sections = document.querySelectorAll('section');
+    
+    // Floating images on hero
+    document.addEventListener('mousemove', (e) => {
+      const x = e.clientX / window.innerWidth;
+      const y = e.clientY / window.innerHeight;
+      gsap.to('.floating-img', {
+        x: (i) => (i === 0 ? x * 50 : x * -50),
+        y: (i) => (i === 0 ? y * 50 : y * -50),
+        opacity: 0.6,
+        duration: 2,
+        ease: 'power2.out'
+      });
+    });
+
+    // 2. Memory Collection Logic (The "Game" loop)
+    const fragments = document.querySelectorAll('.memory-fragment');
+    fragments.forEach(frag => {
+      frag.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        if (collectedIds.has(id)) return;
+
+        collectedIds.add(id);
+        memoriesCollected++;
+        
+        // Update UI
+        document.getElementById('score').innerText = memoriesCollected;
+        document.getElementById('lock-score').innerText = memoriesCollected;
+        
+        // Visual feedback on the fragment
+        this.classList.add('collected');
+        this.innerText = "Memory Unlocked.";
+        
+        // Reveal target elements in the chapter
+        const targetSelector = this.getAttribute('data-target');
+        if (targetSelector) {
+          const targets = this.closest('section').querySelectorAll(targetSelector);
+          targets.forEach(t => t.classList.add('unlocked'));
+        }
+
+        // Check Win Condition
+        if (memoriesCollected >= totalMemories) {
+          unlockEnding();
+        }
+      });
+    });
+
+    // 3. Unlock Ending
+    function unlockEnding() {
+      const overlay = document.getElementById('end-lock');
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.getElementById('final-msg').classList.add('visible');
+        document.getElementById('tbc-text').classList.add('visible');
+      }, 1000);
+    }
+
+    // 4. Random Memory Modal
+    const btnRandom = document.getElementById('btn-random');
+    const modal = document.getElementById('random-modal');
+    const btnClose = document.getElementById('btn-close-modal');
+    const modalDate = document.getElementById('modal-date');
+    const modalText = document.getElementById('modal-text');
+
+    btnRandom.addEventListener('click', () => {
+      const random = randomMemories[Math.floor(Math.random() * randomMemories.length)];
+      modalDate.innerText = random.date;
+      modalText.innerText = random.text;
+      modal.classList.add('active');
+    });
+
+    btnClose.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+
+    // 5. Emotion Tracker Initialization
+    initEmotionTracker();
+
+    // 6. Flipbook Logic
+    const flipPages = document.querySelectorAll('.flip-page');
+    flipPages.forEach((page) => {
+      const z = parseInt(page.style.zIndex || 1);
+      let flipTimeout;
+      page.addEventListener('click', function() {
+        clearTimeout(flipTimeout);
+        if (!this.classList.contains('flipped')) {
+          this.style.zIndex = 30 + z; // Bring to absolute front while animating
+          this.classList.add('flipped');
+          flipTimeout = setTimeout(() => {
+            this.style.zIndex = 10 + (5 - z); // Stack correctly on the left side after animation
+          }, 800);
+        } else {
+          this.style.zIndex = 30 + z; // Bring to absolute front while animating back
+          this.classList.remove('flipped');
+          flipTimeout = setTimeout(() => {
+            this.style.zIndex = z; // Restore original stack on the right side
+          }, 800);
+        }
+      });
+    });
+  });
+
+  function initEmotionTracker() {
+    const container = document.getElementById('emotion-bars');
+    const textDisplay = document.getElementById('emotion-text');
+    const emotions = [
+      { label: 'Excited', val: 0.8 },
+      { label: 'Lost', val: 0.2 },
+      { label: 'Busy', val: 0.9 },
+      { label: 'Tired', val: 0.3 },
+      { label: 'Lonely', val: 0.4 },
+      { label: 'Happy', val: 0.7 },
+      { label: 'Curious', val: 0.8 },
+      { label: 'Figuring it out', val: 0.5 }
+    ];
+
+    emotions.forEach(e => {
+      const bar = document.createElement('div');
+      bar.className = 'emotion-bar';
+      // Minimum height of 10% so the bar is always clickable/visible
+      bar.style.height = `${Math.max(10, e.val * 100)}%`;
+      
+      bar.addEventListener('mouseenter', () => {
+        textDisplay.innerText = e.label;
+        textDisplay.style.color = 'var(--accent)';
+      });
+      
+      bar.addEventListener('mouseleave', () => {
+        textDisplay.innerText = 'EMOTION LOG';
+        textDisplay.style.color = 'var(--text-base)';
+      });
+
+      container.appendChild(bar);
+    });
+  }
+</script>
+</body>
+</html>

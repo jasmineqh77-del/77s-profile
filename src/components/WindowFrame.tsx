@@ -6,6 +6,7 @@ import AppSurface from "@/os/appRegistry";
 import { MIN_WINDOW_SIZE, startPointerDrag, type ResizeDirection } from "@/os/pointerDrag";
 import { TASKBAR_HEIGHT, useWindowStore, type WindowInstance } from "@/os/windowStore";
 
+import AppIcon from "./AppIcon";
 import styles from "./WindowFrame.module.css";
 
 const RESIZE_DIRECTIONS: ResizeDirection[] = ["n", "s", "e", "w", "ne", "nw", "se", "sw"];
@@ -93,31 +94,49 @@ export default function WindowFrame({ win, isActive, isMobile }: Props) {
 
   return (
     <div
-      className={`window ${styles.frame}`}
+      className={`${styles.frame} ${isActive ? "" : styles.frameInactive} ${
+        maximized ? styles.frameMaximized : ""
+      } ${win.minimized ? styles.frameMinimized : ""}`}
       style={frameStyle}
       onPointerDown={() => focus(win.id)}
       role="dialog"
       aria-label={win.title}
+      aria-hidden={win.minimized}
     >
       <div
-        className={`title-bar ${isActive ? "" : "inactive"} ${styles.titleBar}`}
+        className={styles.titleBar}
         onPointerDown={handleTitlePointerDown}
         onDoubleClick={() => !isMobile && toggleMaximize(win.id)}
       >
-        <div className="title-bar-text">{win.title}</div>
-        <div className="title-bar-controls">
-          <button aria-label="Minimize" onClick={() => minimize(win.id)} />
+        <AppIcon icon={win.icon} size={16} className={styles.titleIcon} />
+        <div className={`${styles.titleText} ${isActive ? "" : styles.titleTextInactive}`}>
+          {win.title}
+        </div>
+        <div className={styles.controls}>
+          <button
+            type="button"
+            className={`chrome-button ${styles.control}`}
+            aria-label="Minimize"
+            onClick={() => minimize(win.id)}
+          />
           {!isMobile && (
             <button
+              type="button"
+              className={`chrome-button ${styles.control}`}
               aria-label={win.maximized ? "Restore" : "Maximize"}
               onClick={() => toggleMaximize(win.id)}
             />
           )}
-          <button aria-label="Close" onClick={() => close(win.id)} />
+          <button
+            type="button"
+            className={`chrome-button ${styles.control} ${styles.close}`}
+            aria-label="Close"
+            onClick={() => close(win.id)}
+          />
         </div>
       </div>
 
-      <div className={`window-body ${styles.body}`}>
+      <div className={styles.body}>
         <AppSurface appId={win.appId} payload={win.payload} windowId={win.id} />
       </div>
 

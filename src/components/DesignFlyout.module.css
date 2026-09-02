@@ -1,0 +1,87 @@
+/*
+ * design 文件夹原地展开出来的缩略图列。定位跟 .desktop 一致用 fixed，
+ * left/top 走内联样式（Desktop.tsx 量出来的坐标），这里只管外观。
+ */
+.flyout {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 视觉上要像「长在桌面上的图标」，跟 DesktopIcon 的 .icon 同一套白字+阴影，
+ * 不是窗口里那种实底 Aero 卡片 */
+.tile {
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: var(--cur-pointer);
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  animation: tileIn 0.22s ease-out both;
+}
+
+.tile:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.thumbWrap {
+  position: relative;
+  width: 100%;
+}
+
+.thumb {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 8 / 5;
+  object-fit: cover;
+  border-radius: 3px;
+  display: block;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.badge {
+  position: absolute;
+  left: -4px;
+  bottom: -4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: #1c1c1c;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.label {
+  text-align: center;
+  line-height: 1.3;
+  padding: 1px 3px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+  overflow-wrap: break-word;
+}
+
+@keyframes tileIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    animation: none;
+  }
+}

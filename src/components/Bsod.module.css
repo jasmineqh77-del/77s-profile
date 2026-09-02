@@ -7,7 +7,7 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  cursor: pointer;
+  cursor: var(--cur-pointer);
   font-family: "Lucida Console", "Courier New", monospace;
   font-size: 14px;
   line-height: 1.7;

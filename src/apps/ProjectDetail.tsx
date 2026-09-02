@@ -9,7 +9,7 @@ export default function ProjectDetail({ payload }: AppProps) {
   const project = projects.find((p) => p.id === payload?.projectId);
 
   if (!project) {
-    return <p>找不到这个项目。</p>;
+    return <p>Project not found.</p>;
   }
 
   return (

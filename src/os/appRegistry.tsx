@@ -4,13 +4,18 @@ import About from "@/apps/About";
 import Blog from "@/apps/Blog";
 import Cmd from "@/apps/Cmd";
 import Contact from "@/apps/Contact";
+import Guestbook from "@/apps/Guestbook";
 import Minesweeper from "@/apps/Minesweeper";
+import Moments from "@/apps/Moments";
+import Music from "@/apps/Music";
 import NowPlaying from "@/apps/NowPlaying";
 import Paint from "@/apps/Paint";
 import ProjectDetail from "@/apps/ProjectDetail";
 import Projects from "@/apps/Projects";
 import RecycleBin from "@/apps/RecycleBin";
 import Resume from "@/apps/Resume";
+import VisitorCounter from "@/apps/VisitorCounter";
+import WebFrame from "@/apps/WebFrame";
 import type { AppProps } from "@/apps/types";
 
 type Props = AppProps & { appId: string };
@@ -31,10 +36,18 @@ export default function AppSurface({ appId, payload, windowId }: Props) {
       return <Projects />;
     case "project-detail":
       return <ProjectDetail payload={payload} windowId={windowId} />;
+    case "moments":
+      return <Moments />;
+    case "guestbook":
+      return <Guestbook />;
+    case "visitor-counter":
+      return <VisitorCounter />;
     case "blog":
       return <Blog />;
     case "now":
       return <NowPlaying />;
+    case "music":
+      return <Music />;
     case "resume":
       return <Resume />;
     case "contact":
@@ -44,10 +57,12 @@ export default function AppSurface({ appId, payload, windowId }: Props) {
     case "minesweeper":
       return <Minesweeper />;
     case "paint":
-      return <Paint />;
+      return <Paint windowId={windowId} />;
     case "cmd":
       return <Cmd windowId={windowId} />;
+    case "web-frame":
+      return <WebFrame payload={payload} />;
     default:
-      return <p>这个窗口还没做好。</p>;
+      return <p>This window isn&apos;t built yet.</p>;
   }
 }

@@ -1,12 +1,13 @@
 .terminal {
   background: #000;
-  color: #c0c0c0;
+  /* 黑底留着，正文从 98 的银灰提到接近白，配 Aero 的整体亮度 */
+  color: #e8ecf0;
   font-family: "Courier New", monospace;
   font-size: 13px;
   height: 100%;
   padding: 6px 8px;
   overflow: hidden;
-  cursor: text;
+  cursor: var(--cur-text);
 }
 
 .scroll {

@@ -22,8 +22,54 @@
   justify-content: center;
   /* 上下留白不对称，让整组内容比正中心略微偏上，和参考图一致 */
   padding: 4vh 16px 11vh;
-  gap: clamp(34px, 14vh, 148px);
+  /* 徽标区和进度条之间的距离，收得比参考图紧一些 */
+  gap: clamp(22px, 6vh, 64px);
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, Helvetica, sans-serif;
+  /* 系统还没起来，指针是敲手指等待的那只手；跳过按钮自己会覆盖回可点的手势 */
+  cursor: var(--cur-wait);
+}
+
+/*
+  CRT 质感分两层叠在内容之上：
+  ::before 是像素点阵（横竖各一组 1px 亮线，3px 一个周期，交叉出荫罩网格），
+  ::after  是扫描线（每 4px 压暗一次，比点阵更明显，负责「隔行」的观感）。
+  两层都不吃鼠标事件，否则会挡住跳过按钮。
+*/
+.boot::before,
+.safeOff::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 3px);
+}
+
+.boot::after,
+.safeOff::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0 2px,
+    rgba(0, 0, 0, 0.19) 2px 4px
+  );
+  /* 亮度极缓慢地起伏，模拟显像管电压不稳 */
+  animation: crtFlicker 5.5s steps(1) infinite;
+}
+
+@keyframes crtFlicker {
+  0%,
+  100% { opacity: 1; }
+  46% { opacity: 0.93; }
+  47% { opacity: 1; }
+  72% { opacity: 0.96; }
+  73% { opacity: 1; }
 }
 
 /*
@@ -31,7 +77,7 @@
   这样整组内容缩放时比例不会走形。
 */
 .brand {
-  --os: clamp(40px, 11.5vw, 126px);
+  --os: clamp(30px, 7.6vw, 84px);
   display: block;
   text-align: left;
   max-width: 100%;
@@ -96,9 +142,9 @@
 /* XP 那条来回跑的进度条 */
 .progressTrack {
   position: relative;
-  width: clamp(186px, 37vw, 380px);
+  width: clamp(160px, 25vw, 268px);
   max-width: 100%;
-  height: clamp(18px, 3.1vw, 32px);
+  height: clamp(15px, 2.1vw, 23px);
   border: 2px solid #9a9a9a;
   border-radius: 999px;
   background: transparent;
@@ -142,6 +188,13 @@
   height: auto;
 }
 
+/* 关机画面是纯黑底,这张是透明 PNG,直接浮在上面 */
+.shutdownIp {
+  display: block;
+  width: clamp(96px, 21vw, 150px);
+  height: auto;
+}
+
 .shutdownText {
   margin: 0;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, Helvetica, "PingFang SC",
@@ -158,7 +211,7 @@
   border: 1px solid #555;
   color: #aaa;
   padding: 5px 12px;
-  cursor: pointer;
+  cursor: var(--cur-pointer);
   font-size: 12px;
 }
 
@@ -245,7 +298,7 @@
   border: 2px solid transparent;
   border-radius: 4px;
   padding: 8px 14px 8px 8px;
-  cursor: pointer;
+  cursor: var(--cur-pointer);
   color: inherit;
   font: inherit;
   text-align: left;
@@ -261,10 +314,7 @@
 .userAvatar {
   width: 54px;
   height: 54px;
-  display: grid;
-  place-items: center;
-  font-size: 28px;
-  background: #fff;
+  display: block;
   border: 2px solid #fff;
   border-radius: 4px;
   flex: 0 0 auto;
@@ -326,7 +376,7 @@
   border: 1px solid #555;
   color: #aaa;
   padding: 7px 16px;
-  cursor: pointer;
+  cursor: var(--cur-pointer);
   font-size: 12px;
 }
 
@@ -341,5 +391,11 @@
     left: 0;
     width: 100%;
     gap: 0;
+  }
+
+  /* 闪烁对光敏感人群不友好，网格和扫描线本身保留 */
+  .boot::after,
+  .safeOff::after {
+    animation: none;
   }
 }

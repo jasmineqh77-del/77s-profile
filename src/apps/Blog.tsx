@@ -14,9 +14,9 @@ export default function Blog() {
   if (posts.length === 0) {
     return (
       <div className={styles.page}>
-        <p className={styles.headline}>还没有文章</p>
+        <p className={styles.headline}>No posts yet</p>
         <p className={styles.paragraph}>
-          往 <code>content/posts/</code> 里丢一个 <code>.md</code> 文件就会出现在这里。
+          Drop a <code>.md</code> file into <code>content/posts/</code> and it shows up here.
         </p>
       </div>
     );
@@ -31,7 +31,7 @@ export default function Blog() {
           <li key={post.slug}>
             <button
               type="button"
-              className={`${blogStyles.sidebarItem} ${
+              className={`chrome-button ${blogStyles.sidebarItem} ${
                 post.slug === active.slug ? blogStyles.sidebarItemActive : ""
               }`}
               onClick={() => setActiveSlug(post.slug)}

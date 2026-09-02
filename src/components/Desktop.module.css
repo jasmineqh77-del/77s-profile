@@ -2,11 +2,48 @@
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background-image: url("/wallpaper/bliss.jpg");
-  background-size: cover;
-  background-position: center;
-  /* 图片没加载出来时也不会是白屏 */
-  background-color: #4a86d8;
+  /* 图片没加载出来时也不会是白屏，退到经典主题的墨绿桌面 */
+  background-color: #008080;
+}
+
+/* 真图用 <img> 层拉，好设 priority / decode；暗角仍是纯 CSS */
+.wallpaper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /*
+   * 壁纸上面叠一层径向渐变当暗角，像老 CRT 那样四角收一点。
+   * farthest-corner 让渐变终点落在四角，所以角比边中点更暗。
+   */
+  background-image: radial-gradient(
+    ellipse farthest-corner at 50% 50%,
+    rgba(0, 0, 0, 0) 42%,
+    rgba(0, 0, 0, 0.18) 72%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+/* 活壁纸开启：Bliss 让位给底层 canvas；暗角改由 InteractiveWallpaper 自己画 */
+.desktopLive {
+  background-color: #000;
+}
+
+.desktopLive .wallpaper,
+.desktopLive .vignette {
+  display: none;
 }
 
 .iconGrid {
@@ -14,16 +51,43 @@
   top: 10px;
   left: 10px;
   bottom: 48px;
+  z-index: 2;
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: flex-start;
   align-content: flex-start;
   gap: 4px;
   /* 图标本身要能点，但容器空白处的点击要穿透到桌面上去做取消选中 */
   pointer-events: none;
 }
 
-.iconGrid > * {
+.iconColumn {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-self: stretch;
+  gap: 4px;
+  max-height: 100%;
+  pointer-events: none;
+}
+
+/* 文件夹列：不换列，三枚竖着单独一列；再空出一列间距，避免贴着 app 换列 */
+.iconColumnFolders {
+  flex-wrap: nowrap;
+  flex: 0 0 auto;
+  margin-left: 96px; /* 一枚图标 92px + gap 4px */
+}
+
+/* 其余 app：竖排满了再往右开新列；width:max-content 让换列后容器真的变宽 */
+.iconColumnApps {
+  flex: 0 0 auto;
+  width: max-content;
+  min-width: auto;
+}
+
+.iconGrid > *,
+.iconColumn > * {
   pointer-events: auto;
 }
 
@@ -57,5 +121,9 @@
     gap: 8px;
     align-content: start;
     overflow-y: auto;
+  }
+
+  .iconColumn {
+    display: contents;
   }
 }

@@ -11,7 +11,7 @@ export default function NowPlaying() {
       <div className={nowStyles.display}>
         <div className={nowStyles.status}>▶ {nowPlaying.status}</div>
         <div className={nowStyles.marquee}>
-          <span>{nowPlaying.items.map((i) => i.title).join("　···　")}　···　</span>
+          <span>{nowPlaying.items.map((i) => i.title).join(" ··· ")} ··· </span>
         </div>
       </div>
 

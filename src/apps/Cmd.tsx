@@ -4,17 +4,52 @@ import { useEffect, useRef, useState } from "react";
 
 import { about, projects, site } from "@content/site";
 
+import { useSystemStore } from "@/os/systemStore";
 import { useWindowStore } from "@/os/windowStore";
 
 import type { AppProps } from "./types";
 import styles from "./Cmd.module.css";
 
 const BANNER = [
-  `${site.osName} [版本 5.1.2600]`,
-  "(C) 版权所有 2026 " + site.userName,
+  `${site.osName} [Version 5.1.2600]`,
+  "(C) Copyright 2026 " + site.userName,
   "",
-  "输入 help 查看可用命令。",
+  "Type help for a list of commands.",
 ];
+
+function neofetchLines(): string[] {
+  const specs = Object.fromEntries(about.specs.map((row) => [row.label, row.value]));
+  return [
+    `${site.userName}@${site.osName}`,
+    "-".repeat(site.userName.length + site.osName.length + 1),
+    `OS: ${specs.System ?? site.osName}`,
+    `Host: ${site.userName}`,
+    "Kernel: 5.1.2600",
+    "Shell: cmd.exe",
+    `CPU: ${specs.Status ?? site.userTagline}`,
+    `Locale: ${specs.Location ?? ""}`,
+    `Now: ${specs.Currently ?? ""}`,
+    "WM: Aero",
+  ];
+}
+
+function treeLines(): string[] {
+  const lines = [
+    `Folder PATH listing for volume ${site.osName}`,
+    "Volume serial number is 0777-2026",
+    `C:\\${site.osName}`,
+    "├── My Documents",
+  ];
+  projects.forEach((project, index) => {
+    const last = index === projects.length - 1;
+    lines.push(`│   ${last ? "└──" : "├──"} ${project.name}`);
+  });
+  lines.push("├── Moments");
+  lines.push("│   ├── Guestbook");
+  lines.push("│   └── Visitor Counter");
+  lines.push("└── Recycle Bin");
+  return lines;
+}
 
 export default function Cmd({ windowId }: AppProps) {
   const [lines, setLines] = useState<string[]>(BANNER);
@@ -24,13 +59,21 @@ export default function Cmd({ windowId }: AppProps) {
 
   const close = useWindowStore((s) => s.close);
   const open = useWindowStore((s) => s.open);
+  const triggerBsod = useSystemStore((s) => s.triggerBsod);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const formatTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [lines]);
+
+  useEffect(() => {
+    return () => {
+      if (formatTimer.current) clearTimeout(formatTimer.current);
+    };
+  }, []);
 
   const run = (raw: string) => {
     const command = raw.trim();
@@ -42,40 +85,74 @@ export default function Cmd({ windowId }: AppProps) {
         break;
       case "help":
         output.push(
-          "可用命令：",
-          "  help        显示这份帮助",
-          "  whoami      我是谁",
-          "  dir         列出所有项目",
-          "  open <应用>  打开一个窗口，比如 open blog",
-          "  echo <文本>  原样输出",
-          "  date        当前时间",
-          "  cls         清屏",
-          "  exit        关闭这个窗口",
+          "Available commands:",
+          "  help        Show this help",
+          "  whoami      Who I am",
+          "  dir         List every project",
+          "  tree        Folder tree",
+          "  neofetch    System summary",
+          "  open <app>  Open a window, e.g. open blog",
+          "  echo <text> Print the text back",
+          "  date        Current date and time",
+          "  sudo        Elevated prompt",
+          "  format c:   Format the disk (not recommended)",
+          "  cls         Clear the screen",
+          "  exit        Close this window",
         );
         break;
       case "whoami":
-        output.push(`${site.userName} —— ${site.userTagline}`, "", ...about.intro);
+        output.push(`${site.userName} — ${site.userTagline}`, "", ...about.intro);
         break;
       case "dir":
-        output.push(` ${site.osName} 的项目目录`, "");
-        projects.forEach((p) => output.push(`  ${p.name.padEnd(16)} ${p.kind}  ${p.summary}`));
-        output.push("", `        ${projects.length} 个文件`);
+        output.push(` Directory of C:\\${site.osName}\\Projects`, "");
+        projects.forEach((p) => {
+          output.push(`  ${p.name.padEnd(30)} ${p.kind}`);
+          output.push(`  ${" ".repeat(4)}${p.summary}`);
+        });
+        output.push("", `        ${projects.length} File(s)`);
         break;
+      case "tree":
+        output.push(...treeLines());
+        break;
+      case "neofetch":
+        output.push(...neofetchLines());
+        break;
+      case "sudo":
+        output.push(
+          `${site.userName} is not in the sudoers file. This incident will be reported.`,
+        );
+        break;
+      case "format": {
+        const target = (args[0] ?? "").replace(/\\/g, "").toLowerCase();
+        if (target !== "c:" && target !== "c") {
+          output.push("Usage: FORMAT C:");
+          break;
+        }
+        output.push(
+          "WARNING, ALL DATA ON NON-REMOVABLE DISK",
+          "DRIVE C: WILL BE LOST!",
+          "Proceeding with format...",
+          "Verifying 77-OS Professional.",
+        );
+        if (formatTimer.current) clearTimeout(formatTimer.current);
+        formatTimer.current = setTimeout(() => triggerBsod(), 800);
+        break;
+      }
       case "open": {
         const target = args[0];
         if (!target) {
-          output.push("用法：open <应用名>，比如 open blog");
+          output.push("Usage: open <app>, e.g. open blog");
           break;
         }
         open(target);
-        output.push(`正在打开 ${target}…`);
+        output.push(`Opening ${target}…`);
         break;
       }
       case "echo":
         output.push(args.join(" "));
         break;
       case "date":
-        output.push(new Date().toLocaleString("zh-CN"));
+        output.push(new Date().toLocaleString("en-US"));
         break;
       case "cls":
         setLines([]);
@@ -84,7 +161,9 @@ export default function Cmd({ windowId }: AppProps) {
         close(windowId);
         return;
       default:
-        output.push(`'${name}' 不是内部或外部命令，也不是可运行的程序。`);
+        output.push(
+          `'${name}' is not recognized as an internal or external command, operable program or batch file.`,
+        );
     }
 
     setLines((prev) => [...prev, ...output, ""]);
@@ -100,7 +179,6 @@ export default function Cmd({ windowId }: AppProps) {
       setHistoryIndex(-1);
       return;
     }
-    // 上下方向键翻历史命令
     if (event.key === "ArrowUp") {
       event.preventDefault();
       const next = Math.min(historyIndex + 1, history.length - 1);
@@ -136,7 +214,7 @@ export default function Cmd({ windowId }: AppProps) {
             onKeyDown={handleKeyDown}
             spellCheck={false}
             autoComplete="off"
-            aria-label="命令输入"
+            aria-label="Command input"
           />
         </div>
       </div>

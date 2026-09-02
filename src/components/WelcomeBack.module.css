@@ -1,0 +1,103 @@
+/*
+ * 深色兜底背景很重要：WebGL 素材来自运行时 CDN 拉取，网络慢/被墙/浏览器
+ * 不支持时 canvas 会是空的，这层背景色顶上去就不会露白屏或者穿帮到桌面。
+ */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9600;
+  display: grid;
+  place-items: center;
+  background: #050507;
+  cursor: var(--cur-pointer);
+  animation: fadeIn 0.35s ease both;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 0 24px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-pixel);
+  font-size: clamp(16px, 3vw, 28px);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: #fff;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.55), 0 0 32px rgba(120, 170, 255, 0.35);
+  user-select: none;
+}
+
+.dots {
+  display: inline-block;
+}
+
+.dots span {
+  display: inline-block;
+  animation: blink 1.4s infinite;
+}
+
+.dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.hint {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+  animation: fadeIn 0.4s ease both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0%,
+  20% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .hint {
+    animation: none;
+  }
+
+  .dots span {
+    animation: none;
+    opacity: 1;
+  }
+}

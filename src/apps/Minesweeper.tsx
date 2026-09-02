@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import styles from "./Minesweeper.module.css";
@@ -7,6 +8,13 @@ import styles from "./Minesweeper.module.css";
 const ROWS = 9;
 const COLS = 9;
 const MINES = 10;
+
+/** 接替经典的 🙂😎😵 三态黄脸 */
+const FACES = {
+  ready: "/ip/expr-happy.png",
+  won: "/ip/expr-celebrate.png",
+  lost: "/ip/expr-shocked.png",
+} as const;
 
 type Cell = {
   mine: boolean;
@@ -149,7 +157,7 @@ export default function Minesweeper() {
     );
   };
 
-  const face = status === "lost" ? "😵" : status === "won" ? "😎" : "🙂";
+  const face = FACES[status === "lost" || status === "won" ? status : "ready"];
 
   return (
     <div className={styles.game}>
@@ -157,8 +165,22 @@ export default function Minesweeper() {
         <span className={styles.counter}>
           {String(Math.max(0, MINES - flagCount)).padStart(3, "0")}
         </span>
-        <button type="button" className={styles.face} onClick={reset} aria-label="重新开始">
-          {face}
+        <button
+          type="button"
+          className={`chrome-button ${styles.face}`}
+          onClick={reset}
+          aria-label="New game"
+        >
+          <Image
+            src={face}
+            alt=""
+            aria-hidden
+            width={26}
+            height={26}
+            unoptimized
+            draggable={false}
+            className={styles.faceImage}
+          />
         </button>
         <span className={styles.counter}>{String(seconds).padStart(3, "0")}</span>
       </div>
@@ -171,7 +193,7 @@ export default function Minesweeper() {
                 key={ci}
                 type="button"
                 role="gridcell"
-                className={`${styles.cell} ${cell.revealed ? styles.revealed : ""}`}
+                className={`chrome-button ${styles.cell} ${cell.revealed ? styles.revealed : ""}`}
                 data-adjacent={cell.revealed && !cell.mine ? cell.adjacent : undefined}
                 onClick={() => handleReveal(ri, ci)}
                 onContextMenu={(e) => handleFlag(e, ri, ci)}
@@ -191,10 +213,10 @@ export default function Minesweeper() {
 
       <p className={styles.hint}>
         {status === "won"
-          ? "扫干净了，厉害。"
+          ? "All clear. Nicely done."
           : status === "lost"
-            ? "炸了。点笑脸再来一局。"
-            : "左键翻开，右键插旗。"}
+            ? "Boom. Click the face for a new game."
+            : "Left-click to reveal, right-click to flag."}
       </p>
     </div>
   );

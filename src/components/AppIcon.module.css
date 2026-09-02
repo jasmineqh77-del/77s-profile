@@ -1,0 +1,12 @@
+.icon {
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+/*
+ * 位图放大必须走最近邻，否则浏览器会做平滑插值，像素图糊成一团。
+ * 缩小时反过来，最近邻会丢掉一半像素，交给浏览器默认的平滑算法更好看。
+ */
+.pixelated {
+  image-rendering: pixelated;
+}

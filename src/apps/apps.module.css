@@ -5,35 +5,65 @@
   height: 100%;
 }
 
+/* About 这种比窗口高的长页：随内容撑开，交给窗框客户区滚动 */
+.pageStack {
+  height: auto;
+  min-height: 100%;
+}
+
+/* 内容还在取的时候，指针换成握秒表的那只手 */
+.loading {
+  cursor: var(--cur-progress);
+}
+
 .headline {
   font-size: 15px;
   font-weight: bold;
   margin: 0;
 }
 
+/* 像素字体标题，只有它切到 Pixelify Sans，其余正文保持系统字体栈 */
+.pixelHeadline {
+  margin: 0;
+  font-family: var(--font-pixel);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: inherit;
+}
+
+/*
+ * 照片独占一行，开场白紧跟在下方，不再并排。间距靠 .page 的 flex gap 统一控制。
+ * 不加实体边框，靠两层 box-shadow 叠出立体相框的悬浮感：
+ * 一层贴近的紧阴影模拟相框厚度，一层更散的阴影模拟离开桌面的投影。
+ */
+.photo {
+  display: block;
+  width: 200px;
+  height: 267px;
+  object-fit: cover;
+  border: none;
+  border-radius: 2px;
+  background: none;
+  padding: 0;
+  box-shadow:
+    0 2px 5px rgba(20, 30, 45, 0.22),
+    0 12px 26px rgba(20, 30, 45, 0.3);
+  margin: 0;
+}
+
+/* 和站点默认的 Segoe UI 不一样，是刻意还原 p1 的字体栈，只作用于这一行 */
+.hook {
+  margin: 0;
+  font-family: Tahoma, "MS Sans Serif", Geneva, Verdana, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
 .paragraph {
   margin: 0 0 8px;
   line-height: 1.7;
-}
-
-.hero {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  padding: 12px;
-  background: linear-gradient(180deg, #eef4fd 0%, #dbe7fa 100%);
-  border: 1px solid #b6cbe8;
-}
-
-.heroAvatar {
-  width: 56px;
-  height: 56px;
-  display: grid;
-  place-items: center;
-  font-size: 28px;
-  background: #fff;
-  border: 1px solid #b6cbe8;
-  flex: 0 0 auto;
 }
 
 /* 仿 XP「系统属性」的两栏信息表 */
@@ -52,15 +82,19 @@
 
 .specTable th {
   width: 84px;
-  color: #444;
+  color: #3a3a3a;
   white-space: nowrap;
 }
 
-/* 文件夹样式的列表项 */
+/* 文件夹样式的列表项。Aero 的资源管理器列表是平的白底 + 一条细边，没有凹槽 */
 .fileList {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
+  padding: 2px;
+  border: 1px solid var(--field-border);
+  border-radius: 2px;
+  background: #fff;
 }
 
 .fileRow {
@@ -69,20 +103,21 @@
   gap: 10px;
   padding: 6px 8px;
   border: 1px solid transparent;
-  cursor: pointer;
+  border-radius: 3px;
+  cursor: var(--cur-pointer);
   text-align: left;
   background: none;
   font: inherit;
   width: 100%;
 }
 
+/* Aero 选中是一层淡蓝底，文字保持深色——不再反白 */
 .fileRow:hover {
-  background: #e8f0fe;
-  border-color: #b6cbe8;
+  border-color: rgba(120, 190, 245, 0.75);
+  background: var(--accent-soft);
 }
 
 .fileIcon {
-  font-size: 22px;
   flex: 0 0 auto;
 }
 
@@ -100,6 +135,6 @@
 }
 
 .muted {
-  color: #666;
+  color: #5a6470;
   font-size: 11px;
 }

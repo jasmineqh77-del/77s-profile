@@ -1,23 +1,204 @@
+/*
+ * Aero 窗口：外面一圈玻璃边框，里面一块不透明的客户区。
+ * 原版就是这么分的——玻璃只在边框和标题栏，正文从来不透。
+ * 顺带也意味着 backdrop-filter 只有外壳这一层，开十个窗口不会叠十层实时模糊。
+ */
 .frame {
   position: absolute;
   display: flex;
   flex-direction: column;
-  /* XP.css 默认没有阴影，加一点让窗口从壁纸上浮起来 */
-  box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.35);
+  /* 左右和底部这 6px 就是玻璃边框本身的厚度 */
+  padding: 0 6px 6px;
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--glass-radius) var(--glass-radius) 0 0;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  /* 第一层是紧贴外框的内高光，Aero 的边框就是这内外两条线 */
+  box-shadow:
+    inset 0 0 0 1px var(--glass-edge-inner),
+    var(--glass-shadow);
+}
+
+.frameInactive {
+  background: var(--glass-bg-inactive);
+  box-shadow:
+    inset 0 0 0 1px var(--glass-edge-inner),
+    0 4px 14px rgba(0, 0, 0, 0.28);
+}
+
+/* 最大化后窗口贴着屏幕边，圆角和投影都没有落脚的地方。
+   必须排在 .frameInactive 之后，否则非活动的最大化窗口会漏出投影 */
+.frameMaximized {
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  box-shadow: none;
+}
+
+/* 缩小：藏起来但不卸载，iframe/音频可继续跑 */
+.frameMinimized {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .titleBar {
+  position: relative;
   flex: 0 0 auto;
-  cursor: default;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  /* 标题栏要铺满整个窗口宽度，所以把 .frame 的左右内边距顶回去 */
+  margin: 0 -6px;
+  padding: 0 4px 0 8px;
+  user-select: none;
+  cursor: var(--cur-default);
   touch-action: none;
 }
 
+.titleIcon {
+  flex: 0 0 auto;
+}
+
+/*
+ * 标题在整个窗口宽度上居中（Vista/7 的特征，95 到 XP 都是左对齐）。
+ * 用 left:50% + translateX 而不是 left:0;right:0，是为了让它真的以窗口为准居中；
+ * max-width 卡住之后长标题会省略号收尾，不会压到右边的按钮上。
+ */
+.titleText {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 190px);
+  font-size: 13px;
+  color: #0b2545;
+  /* 深色字靠这圈白色外发光才能浮在玻璃上，去掉就糊进背景了 */
+  text-shadow: var(--title-glow);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+.titleTextInactive {
+  color: #5a6675;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+
+/*
+ * 权重要压过 globals.css 里的 .chrome-button 复位，所以带上父级选择器，
+ * 免得依赖样式表的加载顺序。
+ */
+.controls .control {
+  width: 27px;
+  height: 19px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 3px;
+  /* 两层背景：上面是字形，下面是按钮面 */
+  background-image: var(--glyph), var(--face);
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+  background-size: auto, cover;
+  /* 一条极淡的内描边，不然浅色按钮会糊进同样浅的标题栏里 */
+  box-shadow: inset 0 0 0 1px rgba(56, 96, 138, 0.16);
+  cursor: var(--cur-pointer);
+  --face: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.66),
+    rgba(222, 236, 249, 0.38) 48%,
+    rgba(150, 190, 230, 0.46) 52%,
+    rgba(216, 234, 250, 0.6)
+  );
+}
+
+.controls .control:hover {
+  border-color: #fff;
+  --face: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(214, 238, 255, 0.6) 48%,
+    rgba(140, 200, 245, 0.55) 52%,
+    rgba(238, 249, 255, 0.75)
+  );
+}
+
+.controls .control:active {
+  --face: linear-gradient(
+    180deg,
+    rgba(150, 195, 235, 0.75),
+    rgba(120, 175, 220, 0.6) 48%,
+    rgba(100, 160, 210, 0.6) 52%,
+    rgba(170, 210, 240, 0.7)
+  );
+}
+
+.controls .close {
+  width: 43px;
+  --face: linear-gradient(
+    180deg,
+    rgba(255, 170, 150, 0.92),
+    rgba(226, 90, 60, 0.92) 45%,
+    rgba(186, 46, 26, 0.92) 55%,
+    rgba(238, 126, 100, 0.92)
+  );
+}
+
+.controls .close:hover {
+  --face: linear-gradient(
+    180deg,
+    rgba(255, 200, 185, 0.97),
+    rgba(244, 116, 84, 0.97) 45%,
+    rgba(212, 62, 38, 0.97) 55%,
+    rgba(252, 158, 134, 0.97)
+  );
+}
+
+.controls .close:active {
+  --face: linear-gradient(
+    180deg,
+    rgba(206, 78, 52, 0.95),
+    rgba(176, 44, 24, 0.95) 45%,
+    rgba(150, 32, 16, 0.95) 55%,
+    rgba(198, 82, 58, 0.95)
+  );
+}
+
+/*
+ * 最小化/最大化的字形用深色。原版 Aero 是白字描深边，那套在深色主题下才成立；
+ * 这里的玻璃偏浅，纯白字形基本看不见（第一版就是这个问题）。
+ * 关闭按钮底色是红的，白字形留着。
+ */
+.controls .control[aria-label="Minimize"] {
+  --glyph: url("data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='3' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='11' height='3' fill='%2325415e'/%3E%3C/svg%3E");
+}
+
+.controls .control[aria-label="Maximize"] {
+  --glyph: url("data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='11' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' fill='%2325415e' d='M0 0h11v11H0V0zm1 3h9v7H1V3z'/%3E%3C/svg%3E");
+}
+
+.controls .control[aria-label="Restore"] {
+  --glyph: url("data:image/svg+xml;charset=utf-8,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' fill='%2325415e' d='M3 0h9v9H9V8h2V3H4v1H3V0zM0 3h9v9H0V3zm1 3h7v5H1V6z'/%3E%3C/svg%3E");
+}
+
+.controls .close[aria-label="Close"] {
+  --glyph: url("data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='11' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23fff' d='M1.4 0L0 1.4 4.1 5.5 0 9.6 1.4 11l4.1-4.1L9.6 11 11 9.6 6.9 5.5 11 1.4 9.6 0 5.5 4.1z'/%3E%3C/svg%3E");
+}
+
+/* 客户区：不透明，靠一条暗线和外面的玻璃分开 */
 .body {
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
   margin: 0;
-  padding: 8px;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.32);
   background: #fff;
 }
 
@@ -31,7 +212,7 @@
   left: 6px;
   right: 6px;
   height: 5px;
-  cursor: ns-resize;
+  cursor: var(--cur-ns-resize);
 }
 .resize_n {
   top: -2px;
@@ -45,7 +226,7 @@
   top: 6px;
   bottom: 6px;
   width: 5px;
-  cursor: ew-resize;
+  cursor: var(--cur-ew-resize);
 }
 .resize_e {
   right: -2px;
@@ -64,20 +245,20 @@
 .resize_ne {
   top: -2px;
   right: -2px;
-  cursor: nesw-resize;
+  cursor: var(--cur-nesw-resize);
 }
 .resize_nw {
   top: -2px;
   left: -2px;
-  cursor: nwse-resize;
+  cursor: var(--cur-nwse-resize);
 }
 .resize_se {
   bottom: -2px;
   right: -2px;
-  cursor: nwse-resize;
+  cursor: var(--cur-nwse-resize);
 }
 .resize_sw {
   bottom: -2px;
   left: -2px;
-  cursor: nesw-resize;
+  cursor: var(--cur-nesw-resize);
 }

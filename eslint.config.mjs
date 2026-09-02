@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // 换 distDir 调试时留下的 .next-isolated / .next-wallpaper 之类的构建产物
+    ".next-*/**",
+    // 原样照搬的静态资源：作品页存档、第三方压缩包，不按本项目的规矩写
+    "public/**",
   ]),
 ]);
 

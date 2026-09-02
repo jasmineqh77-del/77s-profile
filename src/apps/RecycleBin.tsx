@@ -4,6 +4,8 @@ import { useState } from "react";
 
 import { recycled } from "@content/site";
 
+import AppIcon from "@/components/AppIcon";
+
 import styles from "./apps.module.css";
 
 export default function RecycleBin() {
@@ -12,7 +14,8 @@ export default function RecycleBin() {
   return (
     <div className={styles.page}>
       <p className={styles.muted}>
-        放弃掉的想法都在这儿。留着提醒自己，砍掉需求也是一种能力。
+        Ideas I gave up on live here. I keep them around as a reminder that cutting scope is a
+        skill too.
       </p>
 
       <div className={styles.fileList}>
@@ -20,9 +23,11 @@ export default function RecycleBin() {
           const isRestored = restored.includes(item.name);
           return (
             <div key={item.name} className={styles.fileRow}>
-              <span className={styles.fileIcon} aria-hidden>
-                {isRestored ? "📄" : "🗑️"}
-              </span>
+              <AppIcon
+                icon={isRestored ? "document" : "recycle"}
+                size={32}
+                className={styles.fileIcon}
+              />
               <span>
                 <span
                   className={styles.fileName}
@@ -32,7 +37,7 @@ export default function RecycleBin() {
                 </span>
                 <br />
                 <span className={styles.fileMeta}>
-                  {isRestored ? "已还原 —— 也许可以再试一次" : item.reason}
+                  {isRestored ? "Restored — maybe worth another try" : item.reason}
                 </span>
               </span>
               <span className={styles.spacer} />
@@ -44,7 +49,7 @@ export default function RecycleBin() {
                   )
                 }
               >
-                {isRestored ? "再删一次" : "还原"}
+                {isRestored ? "Delete Again" : "Restore"}
               </button>
             </div>
           );

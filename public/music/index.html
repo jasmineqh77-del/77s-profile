@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Premium Organizer Hero Scene</title>
+    <style>
+        :root {
+            --bg-color: #E85A1A;
+            --text-color: #111111;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100dvh;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+            box-sizing: border-box;
+            color: var(--text-color);
+        }
+
+        .nav {
+            align-self: flex-end;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav span {
+            cursor: pointer;
+            pointer-events: auto;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav span:hover {
+            opacity: 0.6;
+        }
+
+        .nav span.active {
+            color: #ffffff;
+            opacity: 1;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            pointer-events: auto;
+        }
+
+        .social-icons svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .social-icons svg:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .ui-layer {
+                padding: 1.5rem;
+            }
+            .nav {
+                gap: 0.8rem;
+            }
+            .footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .social-icons {
+                align-self: center;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+    
+    <!-- Import Maps for Three.js and GSAP -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://preview.loot.alrite.fun/vendor/npm/three/0.180.0/build/three.module.js",
+            "three/addons/": "https://preview.loot.alrite.fun/vendor/npm/three/0.180.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script src="https://preview.loot.alrite.fun/vendor/npm/gsap/3.12.4/gsap.min.js" defer></script>
+
+    <!-- Loot Scene Manifest -->
+    <script type="application/json" id="loot-scene-manifest">
+    {
+      "schema_version": "loot_scene_authoring.v4",
+      "selection_contract": {
+        "schema_version": "selection_contract.v1",
+        "requirement": "required",
+        "required_node_ids": ["organizer.main", "card.01", "card.02", "card.03", "card.04"]
+      },
+      "nodes": [
+        {
+          "node_id": "organizer.main",
+          "role": "element",
+          "semantic_kind": "organizer",
+          "runtime_kind": "three",
+          "runtime_symbol": "organizerGroup",
+          "source_binding_id": "bind.org",
+          "selection_mode": "direct",
+          "capture_descendants": false,
+          "dependency_node_ids": []
+        },
+        {
+          "node_id": "card.01",
+          "role": "element",
+          "semantic_kind": "card",
+          "runtime_kind": "three",
+          "runtime_symbol": "card1",
+          "source_binding_id": "bind.c1",
+          "selection_mode": "direct",
+          "capture_descendants": true,
+          "dependency_node_ids": []
+        },
+        {
+          "node_id": "card.02",
+          "role": "element",
+          "semantic_kind": "card",
+          "runtime_kind": "three",
+          "runtime_symbol": "card2",
+          "source_binding_id": "bind.c2",
+          "selection_mode": "direct",
+          "capture_descendants": true,
+          "dependency_node_ids": []
+        },
+        {
+          "node_id": "card.03",
+          "role": "element",
+          "semantic_kind": "card",
+          "runtime_kind": "three",
+          "runtime_symbol": "card3",
+          "source_binding_id": "bind.c3",
+          "selection_mode": "direct",
+          "capture_descendants": true,
+          "dependency_node_ids": []
+        },
+        {
+          "node_id": "card.04",
+          "role": "element",
+          "semantic_kind": "card",
+          "runtime_kind": "three",
+          "runtime_symbol": "card4",
+          "source_binding_id": "bind.c4",
+          "selection_mode": "direct",
+          "capture_descendants": true,
+          "dependency_node_ids": []
+        }
+      ]
+    }
+    </script>
+</head>
+<body>
+    <audio id="bgm" crossorigin="anonymous" loop></audio>
+    <div id="canvas-container"></div>
+
+    <div class="ui-layer">
+        <div class="nav">
+            <span data-target="card1">Season of Loneliness</span>
+            <span data-target="card2">Wall</span>
+            <span data-target="card3">Come Back To Me</span>
+            <span data-target="card4">Yukon</span>
+        </div>
+        
+        <div class="footer">
+            <div class="bottom-left">Reserved &copy; Tiehan</div>
+            
+            <div class="social-icons">
+                <!-- Music Note -->
+                <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                <!-- Play -->
+                <svg id="play-btn" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <!-- Grid -->
+                <svg viewBox="0 0 24 24"><path d="M4 4h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 10h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 16h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4z"/></svg>
+            </div>
+
+            <div class="bottom-right">2026 | SPRING</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // --- SCENE SETUP ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color('#E85A1A');
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 2.5, 12);
+        camera.lookAt(0, -0.5, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        container.appendChild(renderer.domElement);
+
+        // --- ORBIT CONTROLS ---
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.enablePan = false;
+        controls.minDistance = 5;
+        controls.maxDistance = 25;
+        controls.maxPolarAngle = Math.PI / 2 + 0.1; // Prevent going completely below ground
+        controls.target.set(0, -0.5, 0); // Center around the organizer
+
+        // --- LIGHTING ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xfff0dd, 1.2);
+        dirLight.position.set(5, 10, 7);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 1024;
+        dirLight.shadow.mapSize.height = 1024;
+        dirLight.shadow.camera.near = 0.5;
+        dirLight.shadow.camera.far = 25;
+        dirLight.shadow.camera.left = -5;
+        dirLight.shadow.camera.right = 5;
+        dirLight.shadow.camera.top = 5;
+        dirLight.shadow.camera.bottom = -5;
+        dirLight.shadow.bias = -0.001;
+        scene.add(dirLight);
+
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+        fillLight.position.set(-5, 3, -5);
+        scene.add(fillLight);
+
+        // --- MATERIALS ---
+        const glassMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            transmission: 0.85,
+            opacity: 1,
+            metalness: 0.1,
+            roughness: 0.25,
+            ior: 1.5,
+            thickness: 0.2,
+            specularIntensity: 1,
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+
+        const darkOrangeMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFF6B2B, // Brighter, stylized orange jelly
+            emissive: 0x2A0A00,
+            roughness: 0.25,
+            metalness: 0.1,
+            transmission: 0.6,
+            thickness: 0.5,
+            transparent: true,
+            opacity: 0.95,
+            clearcoat: 0.8,
+            clearcoatRoughness: 0.2
+        });
+
+        // --- ORGANIZER CONSTRUCTION ---
+        window.organizerGroup = new THREE.Group();
+        
+        // Dimensions
+        const orgWidth = 3.8;
+        const orgHeight = 2.8;
+        const orgDepth = 2.4;
+        const wallThick = 0.15;
+        const radius = 0.12; // Rounded corners for a softer, stylized look
+        const gap = 0.12; // Floating gap between panels to make it less rigid
+
+        // Base
+        const baseGeom = new RoundedBoxGeometry(orgWidth, wallThick, orgDepth, 4, radius);
+        const baseMesh = new THREE.Mesh(baseGeom, darkOrangeMaterial);
+        baseMesh.position.y = wallThick / 2;
+        baseMesh.castShadow = true;
+        baseMesh.receiveShadow = true;
+        organizerGroup.add(baseMesh);
+
+        // Back wall
+        const backGeom = new RoundedBoxGeometry(orgWidth, orgHeight, wallThick, 4, radius);
+        const backMesh = new THREE.Mesh(backGeom, darkOrangeMaterial);
+        backMesh.position.set(0, orgHeight/2 + gap, -orgDepth/2 + wallThick/2 - gap);
+        backMesh.castShadow = true;
+        backMesh.receiveShadow = true;
+        organizerGroup.add(backMesh);
+
+        // Right wall
+        const rightGeom = new RoundedBoxGeometry(wallThick, orgHeight, orgDepth - wallThick, 4, radius);
+        const rightMesh = new THREE.Mesh(rightGeom, darkOrangeMaterial);
+        rightMesh.position.set(orgWidth/2 - wallThick/2 + gap, orgHeight/2 + gap, wallThick/2);
+        rightMesh.castShadow = true;
+        rightMesh.receiveShadow = true;
+        organizerGroup.add(rightMesh);
+
+        // Front wall (Low)
+        const frontHeight = 1.2;
+        const frontGeom = new RoundedBoxGeometry(orgWidth, frontHeight, wallThick, 4, radius);
+        const frontMesh = new THREE.Mesh(frontGeom, darkOrangeMaterial);
+        frontMesh.position.set(0, frontHeight/2 + gap, orgDepth/2 - wallThick/2 + gap);
+        frontMesh.castShadow = true;
+        frontMesh.receiveShadow = true;
+        organizerGroup.add(frontMesh);
+
+        // Front Grooves (Stylized as floating glowing pills instead of rigid cuts)
+        const grooveGeom = new RoundedBoxGeometry(orgWidth - 1.2, 0.06, 0.06, 4, 0.03);
+        const grooveMat = new THREE.MeshPhysicalMaterial({ color: 0xFFFFFF, transmission: 0.9, opacity: 1, transparent: true, roughness: 0.1 });
+        for(let i=0; i<3; i++) {
+            const groove = new THREE.Mesh(grooveGeom, grooveMat);
+            groove.position.set(-0.2, 0.4 + i*0.25 + gap, orgDepth/2 - wallThick/2 + gap + 0.08);
+            organizerGroup.add(groove);
+        }
+
+        // Left wall (Frosted Glass)
+        const leftGeom = new RoundedBoxGeometry(wallThick, orgHeight, orgDepth - wallThick, 4, radius);
+        const leftMesh = new THREE.Mesh(leftGeom, glassMaterial);
+        leftMesh.position.set(-orgWidth/2 + wallThick/2 - gap, orgHeight/2 + gap, wallThick/2);
+        leftMesh.castShadow = true;
+        leftMesh.receiveShadow = true;
+        organizerGroup.add(leftMesh);
+        
+        // Save references for floating/breathing animation
+        [baseMesh, backMesh, rightMesh, frontMesh, leftMesh].forEach(mesh => {
+            mesh.userData.basePos = mesh.position.clone();
+        });
+        organizerGroup.userData.panels = { back: backMesh, front: frontMesh, left: leftMesh, right: rightMesh };
+
+        // Position and rotate organizer
+        organizerGroup.position.set(0, -1.5, 0);
+        organizerGroup.rotation.y = -Math.PI / 6; // ~30 degrees left
+        organizerGroup.userData.baseY = -1.5;
+        organizerGroup.userData.baseRotY = -Math.PI / 6;
+        scene.add(organizerGroup);
+
+        // Contact Shadow Plane
+        const shadowGeom = new THREE.PlaneGeometry(8, 8);
+        const shadowMat = new THREE.MeshBasicMaterial({ 
+            color: 0x8A2200, 
+            transparent: true, 
+            opacity: 0.4,
+            depthWrite: false
+        });
+        const shadowPlane = new THREE.Mesh(shadowGeom, shadowMat);
+        shadowPlane.rotation.x = -Math.PI / 2;
+        shadowPlane.position.y = -1.49; // Just below organizer
+        scene.add(shadowPlane);
+
+        // --- MUSIC & AMBIENT DECOR ---
+        const decorGroup = new THREE.Group();
+        scene.add(decorGroup);
+
+        // 1. Sleek Floating Vinyl Record
+        function createVinylTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, 1024, 1024);
+            
+            // Draw subtle vinyl grooves
+            for(let r = 180; r < 490; r += 5) {
+                ctx.strokeStyle = `rgba(255,255,255,${Math.random() * 0.06 + 0.01})`;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.arc(512, 512, r, 0, Math.PI*2);
+                ctx.stroke();
+            }
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            return tex;
+        }
+
+        const vinylGroup = new THREE.Group();
+        const vinylGeom = new THREE.CylinderGeometry(2.8, 2.8, 0.04, 64);
+        const vinylMat = new THREE.MeshStandardMaterial({ 
+            map: createVinylTexture(), 
+            roughness: 0.2, 
+            metalness: 0.5 
+        });
+        const vinylMesh = new THREE.Mesh(vinylGeom, vinylMat);
+        vinylMesh.castShadow = true;
+        
+        const labelGeom = new THREE.CylinderGeometry(0.9, 0.9, 0.042, 32);
+        const labelMat = new THREE.MeshStandardMaterial({ color: 0xFF6B2B, roughness: 0.8 });
+        const labelMesh = new THREE.Mesh(labelGeom, labelMat);
+        
+        const holeGeom = new THREE.CylinderGeometry(0.08, 0.08, 0.05, 16);
+        const holeMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        const holeMesh = new THREE.Mesh(holeGeom, holeMat);
+        
+        vinylGroup.add(vinylMesh, labelMesh, holeMesh);
+        vinylGroup.position.set(-5.5, 2.8, -5);
+        vinylGroup.rotation.set(Math.PI / 2.5, 0, Math.PI / 8);
+        vinylGroup.userData.baseY = 2.8;
+        decorGroup.add(vinylGroup);
+
+        // 2. Soundwave Rings (Glassy Toruses)
+        const rings = [];
+        const ringMat = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            transmission: 0.9,
+            opacity: 1,
+            transparent: true,
+            roughness: 0.1,
+            metalness: 0.1,
+            clearcoat: 1.0
+        });
+        for(let i=0; i<3; i++) {
+            const ringGeom = new THREE.TorusGeometry(3.8 + i*1.2, 0.015, 32, 100);
+            const ring = new THREE.Mesh(ringGeom, ringMat);
+            ring.rotation.x = Math.PI / 2.1;
+            ring.position.y = -1.2;
+            decorGroup.add(ring);
+            rings.push({ mesh: ring, speed: 1 + i*0.5, baseRotX: ring.rotation.x });
+        }
+
+        // 3. Floating Beats (Metallic Spheres)
+        const spheres = [];
+        const metalMat = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            metalness: 1.0,
+            roughness: 0.15
+        });
+        for(let i=0; i<7; i++) {
+            const radius = 0.08 + Math.random() * 0.15;
+            const sphere = new THREE.Mesh(new THREE.SphereGeometry(radius, 32, 32), metalMat);
+            // Distribute outside the center organizer
+            const signX = i % 2 === 0 ? 1 : -1;
+            sphere.position.set(
+                signX * (3.5 + Math.random() * 4), 
+                Math.random() * 6 - 1,           
+                Math.random() * 8 - 4            
+            );
+            sphere.castShadow = true;
+            decorGroup.add(sphere);
+            spheres.push({
+                mesh: sphere,
+                baseY: sphere.position.y,
+                speed: 1.5 + Math.random(),
+                offset: Math.random() * Math.PI * 2
+            });
+        }
+
+        window.musicDecor = { vinylGroup, rings, spheres };
+
+
+        // --- CARDS (FILMS) ---
+        const cardWidth = 2.6;
+        const cardHeight = 3.6;
+        const cardRadius = 0.15;
+        const cardThick = 0.04;
+
+        function createRoundedRectShape(width, height, radius) {
+            const shape = new THREE.Shape();
+            const x = -width/2, y = -height/2;
+            shape.moveTo(x, y + radius);
+            shape.lineTo(x, y + height - radius);
+            shape.quadraticCurveTo(x, y + height, x + radius, y + height);
+            shape.lineTo(x + width - radius, y + height);
+            shape.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+            shape.lineTo(x + width, y + radius);
+            shape.quadraticCurveTo(x + width, y, x + width - radius, y);
+            shape.lineTo(x + radius, y);
+            shape.quadraticCurveTo(x, y, x, y + radius);
+            return shape;
+        }
+
+        function createCoverTexture(url) {
+            const canvas = document.createElement('canvas');
+            // Match card aspect ratio: 2.6 / 3.6. Use high res for no quality loss.
+            canvas.width = 1040;
+            canvas.height = 1440;
+            const ctx = canvas.getContext('2d');
+
+            // Dark background while loading
+            ctx.fillStyle = '#111111';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            tex.colorSpace = THREE.SRGBColorSpace; // Ensure rich colors
+            
+            // ExtrudeGeometry uses raw x,y coordinates for UVs. Map them to 0-1.
+            tex.repeat.set(1 / cardWidth, 1 / cardHeight);
+            tex.offset.set(0.5, 0.5);
+
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => {
+                // 1. Draw completely blurred background
+                // Use a tiny offscreen canvas to force an extreme, abstract gradient blur
+                const tinyCanvas = document.createElement('canvas');
+                tinyCanvas.width = 32;
+                tinyCanvas.height = 32 * (canvas.height / canvas.width);
+                const tinyCtx = tinyCanvas.getContext('2d');
+                
+                const scaleTiny = Math.max(tinyCanvas.width / img.width, tinyCanvas.height / img.height);
+                const wTiny = img.width * scaleTiny;
+                const hTiny = img.height * scaleTiny;
+                tinyCtx.drawImage(img, (tinyCanvas.width - wTiny) / 2, (tinyCanvas.height - hTiny) / 2, wTiny, hTiny);
+                
+                // Draw the tiny canvas stretched over the main canvas, adding heavy CSS blur and brightness
+                // Draw it larger than the canvas bounds to prevent dark edge bleeding from the blur
+                ctx.filter = 'blur(120px) brightness(1.2)';
+                ctx.drawImage(tinyCanvas, -150, -150, canvas.width + 300, canvas.height + 300);
+                ctx.filter = 'none';
+                
+                // 2. Draw crisp image centered (contain mode)
+                // Since cards are taller than they are wide, width is the constraint
+                const padding = 80;
+                const wContain = canvas.width - padding * 2;
+                const hContain = (img.height / img.width) * wContain;
+                const xContain = padding;
+                const yContain = (canvas.height - hContain) / 2;
+                
+                // Add a subtle shadow behind the album art
+                ctx.shadowColor = 'rgba(0,0,0,0.6)';
+                ctx.shadowBlur = 40;
+                ctx.shadowOffsetY = 20;
+                
+                // Boost brightness and contrast of the crisp image
+                ctx.filter = 'brightness(1.15) contrast(1.05)';
+                
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, xContain, yContain, wContain, hContain);
+                
+                // Reset filter
+                ctx.filter = 'none';
+                
+                tex.needsUpdate = true;
+            };
+            img.src = url;
+
+            return tex;
+        }
+
+        const cardShape = createRoundedRectShape(cardWidth, cardHeight, cardRadius);
+        
+        const extrudeSettings = {
+            depth: cardThick,
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: 0.01,
+            bevelThickness: 0.01
+        };
+        const cardGeometry = new THREE.ExtrudeGeometry(cardShape, extrudeSettings);
+        // Center geometry depth
+        cardGeometry.translate(0, 0, -cardThick/2);
+
+        const cardData = [
+            { id: 'card1', url: 'https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/fedfh4bcxepyhuxl/assets/-bac1b4ecced9e9820cae663b5de97cffdbb0a9b7c89669ee734e2303c12a6bc1.bin', audioUrl: 'https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/fedfh4bcxepyhuxl/audio/-9492ab095bdb45501084dc7b31e5347970aea49908b4e6239e2db0ad4af1f445.mp3' },
+            { id: 'card2', url: 'https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/fedfh4bcxepyhuxl/assets/-530cc09e0259e8a1cc14a14a7db1232a72e77aae8a261a95948810092c4b753f.bin', audioUrl: 'https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/fedfh4bcxepyhuxl/audio/-7ccf804c8f1ead62531db7a973d151f84ba84e9496a73f7f018664adc6b275af.mp3' },
+            { id: 'card3', url: 'https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/fedfh4bcxepyhuxl/assets/come-back-to-me-c129dcc9fd640c6a9c79735135c7bfe6b86d223a8a3c40172cf39ca4ab5d32c0.jpg', audioUrl: 'https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/fedfh4bcxepyhuxl/audio/come-back-to-me-51fa31a81125cd56504f10f0b13821e3984a0180ad144f80c00c7a01adcd2c1e.mp3' },
+            { id: 'card4', url: 'https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/fedfh4bcxepyhuxl/assets/yukon.svg-484c4eb3eaeb9c16920ae99b1c96ef2b7aa62cef999fa8a59ad05f916d3335f2.png', audioUrl: 'https://loot-prod.oss-ap-southeast-1.aliyuncs.com/nzfz19qmntsn16y0/works/fedfh4bcxepyhuxl/audio/Justin-Bieber---YUKON-b7d2ee71a71057f9a0ec6005a8eaf872a58f421e5c050277440f6504a26773ae.mp3' },
+        ];
+
+        const cards = [];
+        const zSpacing = 0.45;
+        const startZ = orgDepth/2 - wallThick - 0.4;
+        
+        cardData.forEach((data, index) => {
+            const texture = createCoverTexture(data.url);
+            
+            // Front face material uses texture, others use solid color
+            const frontMat = new THREE.MeshStandardMaterial({ 
+                map: texture, 
+                roughness: 0.3, 
+                metalness: 0.1,
+                emissive: 0xffffff,
+                emissiveMap: texture,
+                emissiveIntensity: 0.25 // Boost overall brightness of the film
+            });
+            const sideMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.8 });
+            
+            // ExtrudeGeometry materials: index 0 is front/back faces, index 1 is extruded sides
+            const cardMesh = new THREE.Mesh(cardGeometry, [frontMat, sideMat]);
+            cardMesh.castShadow = true;
+            cardMesh.receiveShadow = true;
+            
+            const cardGroup = new THREE.Group();
+            cardGroup.add(cardMesh);
+            
+            // Base positions inside organizer
+            const baseY = wallThick + cardHeight/2 + (index * 0.15); // Staggered height
+            const baseZ = startZ - (index * zSpacing);
+            const baseX = 0.1;
+
+            cardGroup.position.set(baseX, baseY, baseZ);
+            
+            // Store original transform for animations
+            cardGroup.userData = {
+                basePos: new THREE.Vector3(baseX, baseY, baseZ),
+                baseRot: new THREE.Euler(0, 0, 0),
+                isHovered: false,
+                id: data.id
+            };
+            
+            organizerGroup.add(cardGroup);
+            cards.push(cardGroup);
+            
+            // Expose globally for Loot Manifest
+            window[data.id] = cardGroup;
+        });
+
+        // --- INTERACTION ---
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        let selectedCard = null;
+        let isAnimating = false;
+        let pointerDownPos = new THREE.Vector2();
+        let isDragging = false;
+
+        function updateRaycaster(event) {
+            const rect = renderer.domElement.getBoundingClientRect();
+            let clientX = event.clientX;
+            let clientY = event.clientY;
+            
+            // Fallback for touch events if standard pointer events aren't fully populated
+            if (event.touches && event.touches.length > 0) {
+                clientX = event.touches[0].clientX;
+                clientY = event.touches[0].clientY;
+            } else if (event.changedTouches && event.changedTouches.length > 0) {
+                clientX = event.changedTouches[0].clientX;
+                clientY = event.changedTouches[0].clientY;
+            }
+            
+            mouse.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+        }
+
+        function onPointerMove(event) {
+            if (event.target !== renderer.domElement) return;
+            if (selectedCard || isAnimating) {
+                document.body.style.cursor = 'default';
+                return;
+            }
+            
+            updateRaycaster(event);
+            
+            // Detect if user is dragging to rotate the camera
+            if (pointerDownPos.distanceTo(mouse) > 0.02) {
+                isDragging = true;
+            }
+
+            // Only hover on desktop (pointer: fine)
+            if (window.matchMedia('(pointer: coarse)').matches) return;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            // Get all meshes inside card groups
+            const cardMeshes = cards.map(c => c.children[0]);
+            const intersects = raycaster.intersectObjects(cardMeshes);
+
+            let hitCard = null;
+            if (intersects.length > 0) {
+                hitCard = intersects[0].object.parent;
+            }
+
+            cards.forEach(card => {
+                if (card === hitCard) {
+                    if (!card.userData.isHovered) {
+                        card.userData.isHovered = true;
+                        document.body.style.cursor = 'pointer';
+                        gsap.to(card.position, {
+                            y: card.userData.basePos.y + 0.6,
+                            z: card.userData.basePos.z + 0.1,
+                            duration: 0.4,
+                            ease: "power2.out"
+                        });
+                        gsap.to(card.rotation, {
+                            x: -0.05,
+                            duration: 0.4,
+                            ease: "power2.out"
+                        });
+                    }
+                } else {
+                    if (card.userData.isHovered) {
+                        card.userData.isHovered = false;
+                        gsap.to(card.position, {
+                            y: card.userData.basePos.y,
+                            z: card.userData.basePos.z,
+                            duration: 0.4,
+                            ease: "power2.out"
+                        });
+                        gsap.to(card.rotation, {
+                            x: 0,
+                            duration: 0.4,
+                            ease: "power2.out"
+                        });
+                    }
+                }
+            });
+            
+            if (!hitCard) {
+                document.body.style.cursor = 'default';
+            }
+        }
+
+        function onPointerDown(event) {
+            if (event.target !== renderer.domElement) return;
+            if (isAnimating) return;
+            updateRaycaster(event);
+            pointerDownPos.copy(mouse);
+            isDragging = false;
+        }
+
+        function onPointerUp(event) {
+            if (event.target !== renderer.domElement) return;
+            if (isAnimating) return;
+            
+            updateRaycaster(event);
+            
+            // If the user was dragging the camera, do not trigger a card click
+            if (isDragging) {
+                isDragging = false;
+                return;
+            }
+            
+            raycaster.setFromCamera(mouse, camera);
+            
+            const cardMeshes = cards.map(c => c.children[0]);
+            const intersects = raycaster.intersectObjects(cardMeshes);
+
+            if (selectedCard) {
+                // Put back
+                putCardBack(selectedCard);
+            } else if (intersects.length > 0) {
+                // Select card
+                const hitCard = intersects[0].object.parent;
+                pullCardOut(hitCard);
+            }
+        }
+
+        function updateNavUI(activeCard) {
+            document.querySelectorAll('.nav span').forEach(el => {
+                if (activeCard && el.getAttribute('data-target') === activeCard.userData.id) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+        }
+
+        // --- WEB AUDIO API SETUP ---
+        let audioCtx, analyser, dataArray;
+        let audioInitialized = false;
+
+        function initAudio() {
+            if (audioInitialized) return;
+            const audioEl = document.getElementById('bgm');
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const source = audioCtx.createMediaElementSource(audioEl);
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 256;
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+            
+            const recordDest = audioCtx.createMediaStreamDestination();
+            source.connect(analyser);
+            analyser.connect(audioCtx.destination);
+            analyser.connect(recordDest);
+            window.__lootAudioStream = recordDest.stream; // Expose for recorder
+            
+            audioInitialized = true;
+        }
+
+        function togglePlay() {
+            const audioEl = document.getElementById('bgm');
+            if (!audioEl.src) return;
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            if (audioEl.paused) {
+                gsap.killTweensOf(audioEl);
+                audioEl.volume = 1;
+                audioEl.play().catch(e => console.log("Play failed:", e));
+            } else {
+                audioEl.pause();
+            }
+        }
+        
+        const playBtn = document.getElementById('play-btn');
+        const playBtnPath = playBtn.querySelector('path');
+        const bgmEl = document.getElementById('bgm');
+        
+        playBtn.addEventListener('click', togglePlay);
+        
+        bgmEl.addEventListener('play', () => {
+            playBtnPath.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z');
+        });
+        
+        bgmEl.addEventListener('pause', () => {
+            playBtnPath.setAttribute('d', 'M8 5v14l11-7z');
+        });
+
+        function pullCardOut(card) {
+            isAnimating = true;
+            selectedCard = card;
+            document.body.style.cursor = 'default';
+            updateNavUI(card);
+            
+            // Prepare Audio Playback (Wait for user action)
+            const audioEl = document.getElementById('bgm');
+            const cData = cardData.find(d => d.id === card.userData.id);
+            if (cData) {
+                gsap.killTweensOf(audioEl);
+                if (audioEl.src !== cData.audioUrl) {
+                    audioEl.src = cData.audioUrl;
+                }
+                audioEl.volume = 1;
+                // Auto-play removed. User must click the play button to start.
+            }
+            
+            // Move card from organizerGroup space to world space while maintaining transform
+            scene.attach(card);
+
+            // Lock controls and animate camera back to center view
+            controls.enabled = false;
+            gsap.to(camera.position, {
+                x: 0, y: 2.5, z: 12, duration: 0.8, ease: "power3.inOut"
+            });
+            gsap.to(controls.target, {
+                x: 0, y: -0.5, z: 0, duration: 0.8, ease: "power3.inOut"
+            });
+
+            // Animate card to camera (centered and scaled down)
+            gsap.to(card.position, {
+                x: 0,
+                y: 1.125,
+                z: 6.5,
+                duration: 0.8,
+                ease: "power3.inOut"
+            });
+            gsap.to(card.rotation, {
+                x: 0, // Flat and directly facing front
+                y: 0,
+                z: 0,
+                duration: 0.8,
+                ease: "power3.inOut",
+                onComplete: () => { isAnimating = false; }
+            });
+            
+            // Blur/Dim background slightly
+            gsap.to(organizerGroup.userData, {
+                baseY: -1.8,
+                duration: 0.8,
+                ease: "power2.inOut"
+            });
+        }
+
+        function putCardBack(card) {
+            isAnimating = true;
+            selectedCard = null;
+            updateNavUI(null);
+            
+            // Fade out and pause audio
+            const audioEl = document.getElementById('bgm');
+            gsap.to(audioEl, { volume: 0, duration: 0.7, onComplete: () => audioEl.pause() });
+
+            // Reparent immediately to organizer while maintaining current world transform
+            organizerGroup.attach(card);
+
+            // Now animate local position/rotation to base
+            gsap.to(card.position, {
+                x: card.userData.basePos.x,
+                y: card.userData.basePos.y,
+                z: card.userData.basePos.z,
+                duration: 0.7,
+                ease: "power3.inOut"
+            });
+            
+            gsap.to(card.rotation, {
+                x: 0,
+                y: 0,
+                z: 0,
+                duration: 0.7,
+                ease: "power3.inOut",
+                onComplete: () => {
+                    card.userData.isHovered = false;
+                    isAnimating = false;
+                    controls.enabled = true; // Re-enable drag orbit
+                }
+            });
+
+            gsap.to(organizerGroup.userData, {
+                baseY: -1.5,
+                duration: 0.7,
+                ease: "power2.inOut"
+            });
+        }
+
+        window.addEventListener('pointermove', onPointerMove, { passive: true });
+        window.addEventListener('pointerdown', onPointerDown, { passive: true });
+        window.addEventListener('pointerup', onPointerUp, { passive: true });
+        
+        // Prevent default touch behavior to avoid scrolling
+        document.addEventListener('touchmove', function(e) { e.preventDefault(); }, { passive: false });
+
+        // --- UI INTERACTION ---
+        document.querySelectorAll('.nav span').forEach(el => {
+            el.addEventListener('click', (e) => {
+                if (isAnimating) return;
+                const targetId = e.target.getAttribute('data-target');
+                const targetCard = window[targetId];
+                if (!targetCard) return;
+
+                if (selectedCard === targetCard) {
+                    putCardBack(selectedCard);
+                } else if (selectedCard) {
+                    // Put back current, then pull out new
+                    putCardBack(selectedCard);
+                    setTimeout(() => {
+                        pullCardOut(targetCard);
+                    }, 750); // Wait for putCardBack animation to complete
+                } else {
+                    pullCardOut(targetCard);
+                }
+            });
+        });
+
+        // --- ANIMATION LOOP ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+            
+            controls.update(); // Update orbit controls
+
+            // Continuous idle micro-sway and breathing panels (always runs to prevent snapping)
+            organizerGroup.rotation.y = organizerGroup.userData.baseRotY + Math.sin(time * 0.5) * 0.02;
+            organizerGroup.position.y = organizerGroup.userData.baseY + Math.sin(time * 0.8) * 0.03;
+            
+            // Make the panels "breathe" slightly to feel less rigid
+            if (organizerGroup.userData.panels) {
+                const { back, front, left, right } = organizerGroup.userData.panels;
+                const breathe = Math.sin(time * 1.5) * 0.025;
+                back.position.z = back.userData.basePos.z - breathe;
+                front.position.z = front.userData.basePos.z + breathe;
+                left.position.x = left.userData.basePos.x - breathe;
+                right.position.x = right.userData.basePos.x + breathe;
+            }
+
+            // Music decor animation
+            let bass = 0;
+            let mid = 0;
+            if (audioInitialized && analyser && !document.getElementById('bgm').paused) {
+                analyser.getByteFrequencyData(dataArray);
+                bass = dataArray[2] / 255.0; // low freq
+                mid = dataArray[15] / 255.0; // mid freq
+            }
+
+            if (window.musicDecor) {
+                // Spin and float vinyl record (spin faster with heavy bass)
+                const spinSpeed = 0.005 + (bass * 0.02);
+                window.musicDecor.vinylGroup.rotateY(spinSpeed);
+                window.musicDecor.vinylGroup.position.y = window.musicDecor.vinylGroup.userData.baseY + Math.sin(time * 0.8) * 0.2 + (bass * 0.1);
+                
+                // Rotate and wobble soundwave rings (pulse with music)
+                window.musicDecor.rings.forEach((ringData, i) => {
+                    ringData.mesh.rotation.z -= ringData.speed * 0.005;
+                    ringData.mesh.rotation.x = ringData.baseRotX + Math.sin(time * 0.5 + i) * 0.03;
+                    
+                    // Audio pulse scale
+                    const pulse = audioInitialized ? (dataArray[i * 8 + 5] / 255.0) * 0.15 : 0;
+                    ringData.mesh.scale.setScalar(1 + pulse);
+                });
+
+                // Bobbing metallic beat spheres (bounce with bass/mid)
+                window.musicDecor.spheres.forEach((sphereData, i) => {
+                    const audioOffset = (audioInitialized && i % 2 === 0) ? bass * 0.4 : mid * 0.4;
+                    sphereData.mesh.position.y = sphereData.baseY + Math.sin(time * sphereData.speed + sphereData.offset) * 0.3 + audioOffset;
+                    sphereData.mesh.scale.setScalar(1 + (audioOffset * 0.5));
+                });
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // --- RESIZE HANDLER ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- LOOT SCENE REGISTRATION ---
+        function currentThreeWitnesses(runtimeRef, camera) {
+            runtimeRef.updateWorldMatrix(true, true);
+            const points = [];
+            runtimeRef.traverse(object => {
+                if (points.length >= 5 || !object.visible || !object.geometry) return;
+                if (object.isMesh) {
+                    if (!object.geometry.boundingSphere) object.geometry.computeBoundingSphere();
+                    const sphere = object.geometry.boundingSphere;
+                    if (!sphere) return;
+                    const p = sphere.center.clone().applyMatrix4(object.matrixWorld).project(camera);
+                    const point = { x: (p.x + 1) / 2, y: (1 - p.y) / 2 };
+                    if (Number.isFinite(point.x) && Number.isFinite(point.y) && point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1) {
+                        points.push(point);
+                    }
+                }
+            });
+            return points;
+        }
+
+        const lootScene = window.__LOOT_SCENE__?.v2;
+        if (lootScene) {
+            lootScene.registerNode({ node_id: 'organizer.main', runtime_ref: window.organizerGroup });
+            lootScene.registerNode({ node_id: 'card.01', runtime_ref: window.card1 });
+            lootScene.registerNode({ node_id: 'card.02', runtime_ref: window.card2 });
+            lootScene.registerNode({ node_id: 'card.03', runtime_ref: window.card3 });
+            lootScene.registerNode({ node_id: 'card.04', runtime_ref: window.card4 });
+            
+            lootScene.registerAdapter(lootScene.createThreeRaycastAdapter({
+                raycaster: new THREE.Raycaster(),
+                camera,
+                renderer,
+                projectBounds: runtimeRef => currentThreeWitnesses(runtimeRef, camera),
+            }));
+        }
+
+    </script>
+</body>
+</html>

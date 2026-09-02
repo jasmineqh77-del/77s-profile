@@ -11,36 +11,45 @@ export const site = {
   /** 登录画面和开始菜单顶部显示的用户名 */
   userName: "77",
   /** 登录画面用户名下面的一行小字 */
-  userTagline: "产品实习生 · 港中文数学（大数据）26 级",
+  userTagline: "Product intern · Incoming MSc Mathematics (Big Data), CUHK",
   /** 搜索引擎摘要 */
   description:
-    "黄家琦（77）的个人主页：数据科学背景的产品实习生，做过美团商业化广告、豆包 AI 导购、蔚来销售运营。一台可以开机、可以玩的 Windows XP。",
+    "Jiaqi Huang (77) — a product intern with a data science background. Ad monetization at Meituan, the Doubao AI shopping assistant at ByteDance, sales ops at NIO. A Windows XP you can actually boot up and play with.",
   /** 页面底部的致敬声明 */
-  disclaimer: "纯属个人致敬作品，与 Microsoft 无关。",
+  disclaimer: "A personal tribute project. Not affiliated with Microsoft.",
 };
 
 /** 「关于我」窗口，仿 XP 的「系统属性」面板 */
 export const about = {
-  headline: "你好，我是 77（黄家琦）",
+  headline: "Hi, I'm 77 (Jiaqi Huang)",
+  /** 顶部照片墙区域：真实小时候的照片 + 一句怀旧开场白 */
+  photo: "/photos/childhood.jpg",
+  photoAlt: "77 at age three or four, on Tiger Hill in Suzhou with her dad",
+  hook: "Hi, I'm 77. I was three or four, on Tiger Hill in Suzhou with my dad.",
+  caption:
+    "It wouldn't be the last time I stood at a railing looking out over a skyline that wasn't mine yet. Twenty-odd cities later, the habit's the same — find a vantage point ⛰️, watch how the place actually runs.",
   intro: [
-    "数据科学与大数据技术本科出身，2026 年 9 月去香港中文大学读数学（大数据）。本科 GPA 3.8/5，专业前 10%，机器学习与深度学习、数据结构、数据库原理这些课都在 94 分以上。",
-    "过去一年多在做产品实习：美团商业化增值做过信息流广告的链路解耦、排序策略和展示频控；字节豆包移动端做过 AI 导购的商品卡；更早在蔚来做销售运营，从 0 到 1 搭过一套运营数据报表。共同点是都要一边看数据一边做判断——我比较擅长这种把模糊问题拆成可衡量指标的活。",
-    "工具上比较杂食：SQL、Python、Power BI 用来算数，Figma、Axure、墨刀、XMind 用来把想法画出来，Claude Code、Codex、Cursor 这类 AI 工具已经长进日常工作流里了。这个网站也是这么做出来的。",
-    "线下是个 ESFP，去过 20 多个城市，独自旅行过，习惯在路上观察人和服务的细节；也做旅行攻略 PPT 和拼豆，能在很碎的事情上坐得住。",
+    "I studied Data Science and Big Data Technology as an undergrad, and in September 2026 I start an MSc in Mathematics (Big Data) at the Chinese University of Hong Kong. Undergrad GPA 3.8/5, top 10% of my major, with 94+ in machine learning and deep learning, data structures, and database systems.",
+    "The past year and a half has been product internships. On Meituan's monetization team I worked on decoupling the feed-ad pipeline, ranking strategy, and display frequency capping; on Doubao mobile at ByteDance I built the product cards for an AI shopping assistant; earlier, at NIO, I built a sales-ops reporting system from scratch. What they have in common is that you have to read the data and make a judgment call at the same time — turning a fuzzy problem into something measurable is the part I'm good at.",
+    "My tooling is omnivorous: SQL, Python, and Power BI for the numbers; Figma, Axure, Modao, and XMind for turning ideas into pictures; Claude Code, Codex, and Cursor have become a permanent part of the daily workflow. This site was built that way too.",
+    "Offline I'm an ESFP. I've been to 20-odd cities, some of them alone, and I've picked up the habit of watching how people and services actually behave on the road. I also make travel-guide decks and perler-bead art — I can sit still for a very long time on very small things.",
   ],
   /** 左边是标签，右边是内容，会渲染成 XP 系统属性那种两栏表格 */
   specs: [
-    { label: "系统", value: "77-OS Professional" },
-    { label: "身份", value: "在读学生 / 产品实习生" },
+    { label: "System", value: "77-OS Professional" },
+    { label: "Status", value: "MSc student, CUHK" },
     {
-      label: "学校",
-      value: "香港中文大学（2026.09-2027.06）· 江苏师范大学（2022.09-2026.06）",
+      label: "School",
+      value: "CUHK (Sep 2026 – Jun 2027) · Jiangsu Normal University (Sep 2022 – Jun 2026)",
     },
-    { label: "专业", value: "数学（大数据）· 本科数据科学与大数据技术" },
-    { label: "所在地", value: "江苏徐州 → 香港" },
     {
-      label: "在忙什么",
-      value: "准备港中文入学、复盘实习项目、做这个网站",
+      label: "Major",
+      value: "MSc Mathematics (Big Data) · BSc Data Science and Big Data Technology",
+    },
+    { label: "Location", value: "Xuzhou, Jiangsu → Hong Kong" },
+    {
+      label: "Currently",
+      value: "In Hong Kong for the new term, writing up past internships, building this site",
     },
   ],
 };
@@ -53,28 +62,25 @@ export type ContactLink = {
 };
 
 /**
- * 简历里的手机号和微信号都没有放进来——这个文件会随网站公开发布，
- * 这两样一旦上线就很难收回。想公开的话，自己在下面填上即可。
+ * Contact 窗口是写信表，只读这一条邮箱当 To。
+ * 微信 / GitHub / 小红书有了再加回来；简历里的手机号不要放进这个会公开发布的文件。
  */
 export const contacts: ContactLink[] = [
   {
-    label: "邮箱",
+    label: "Email",
     value: "1697429486@qq.com",
     href: "mailto:1697429486@qq.com",
   },
-  { label: "微信", value: "（待补充）" },
-  { label: "GitHub", value: "（待补充）" },
-  { label: "小红书", value: "（待补充）" },
 ];
 
 /** 「正在学习」窗口，仿 Winamp 的播放列表 */
 export const nowPlaying = {
-  status: "正在学习",
+  status: "Now learning",
   items: [
-    { title: "Claude Code / Codex / Cursor", meta: "工具 · 每天都在用" },
-    { title: "港中文数学（大数据）先修", meta: "课 · 开学前恶补" },
-    { title: "旅行攻略 PPT", meta: "副本 · 更新中" },
-    { title: "拼豆", meta: "手工 · 治疗焦虑用" },
+    { title: "Claude Code / Codex / Cursor", meta: "Tools · daily driver" },
+    { title: "CUHK Math (Big Data) prerequisites", meta: "Coursework · cramming before term" },
+    { title: "Travel guide decks", meta: "Side quest · in progress" },
+    { title: "Perler beads", meta: "Craft · anxiety management" },
   ],
 };
 
@@ -94,53 +100,90 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: "doubao-shopping-card",
-    name: "豆包 AI 导购商品卡",
-    kind: "实习项目 · 字节跳动",
-    summary: "让 AI 助手从「给建议」变成「能帮你做购物决策」",
+    name: "Doubao AI Shopping Cards",
+    kind: "Internship · ByteDance",
+    summary: "Turning an AI assistant from \"here's some advice\" into \"I can help you decide\"",
     body: [
-      "2026.02-2026.05，在字节跳动豆包移动端做产品实习生。当时的问题很具体：用户在豆包里问「买什么」，AI 只能回一段文字，用户看完还得自己去别的 App 搜一遍，后续的决策链路是断的。我们想验证的是——把真实商品数据结构化地塞进对话里（图片、标题、价格、跳转入口），AI 导购这个最小闭环到底成不成立。",
-      "我负责的第一块是购物意图的分层识别方案。把用户需求拆成强意图、弱意图、非购物意图和风险敏感意图四类，明确每一层下面商品卡的触发条件和路由逻辑。这件事的难点不在于分类本身，而在于「宁可少触发也别乱触发」——最后意图识别准确率 87.0%，非购物场景的误触发率压在 3% 以内。",
-      "第二块是把自然语言需求变成结构化字段：品类、预算、人群、场景，并且要区分显性条件和隐性条件。这里踩过坑——模型太爱「推理」，用户只说了预算，它会自己脑补人群和场景，结果召回范围越推越窄。所以 Prompt 迭代了好几轮，最后规定推荐理由必须包含商品基本信息、需求匹配点、可信信号和行动入口这四件事。",
-      "第三块是可信供给和风险兜底。大模型会编商品，这是硬伤。我参与搭了真实商品供给池和多层校验机制，对接电商真实数据，对标题、价格、库存、链接有效性做事实校验，再加上异常商品降级、无依据推荐拦截和高风险场景兜底。最终商品事实错误率 0.3%，低于 0.5% 的目标线。",
-      "最后是实验验收。围绕商品卡的展示数量、排序方式和表达方案设计了多组 AB 对照实验，搭了意图识别、推荐召回、卡片点击、详情浏览、负反馈这一整条链路的评估指标。结论是「首屏露出 + 横滑拓展」最优，用户正向接受度 72%，有效详情浏览率 4.1%——够证明这个闭环能落地。",
+      "Feb–May 2026, product intern on Doubao mobile at ByteDance. The problem was concrete: when someone asked Doubao \"what should I buy,\" the AI could only reply with a paragraph of text, and they still had to go search another app themselves — the decision path broke off halfway. What we wanted to validate was whether the minimum viable loop for AI-assisted shopping holds up once you put real, structured product data into the conversation: images, titles, prices, and a way through to checkout.",
+      "My first piece was a tiered scheme for recognizing shopping intent. I split requests into four classes — strong intent, weak intent, non-shopping, and risk-sensitive — and defined the trigger conditions and routing logic for product cards under each. The hard part wasn't the classification itself but the principle of \"better to under-trigger than to trigger wrongly.\" We landed at 87.0% intent-recognition accuracy, with false triggers in non-shopping contexts held under 3%.",
+      "The second piece was turning natural language into structured fields — category, budget, audience, scenario — while distinguishing explicit conditions from implicit ones. This is where I hit a wall: the model loves to reason. If a user only mentioned a budget, it would invent an audience and a scenario on its own, and the recall set narrowed with every inference. So the prompt went through several rounds, and we ended up requiring that every recommendation rationale contain exactly four things: basic product info, the match to the stated need, a trust signal, and a way to act.",
+      "The third piece was trustworthy supply and risk fallbacks. Large models make up products; that's a hard failure. I helped build a pool of real product supply plus a multi-layer validation mechanism, hooked into live e-commerce data and fact-checking titles, prices, stock, and link validity, on top of downgrading anomalous items, blocking unsupported recommendations, and falling back in high-risk scenarios. The final product-fact error rate was 0.3%, under our 0.5% target.",
+      "Last was experimental validation. I designed several A/B groups around how many cards to show, how to order them, and how to phrase them, and built an evaluation chain covering intent recognition, recall, card clicks, detail views, and negative feedback. The winner was \"one card above the fold plus horizontal swipe to expand\": 72% positive user acceptance and a 4.1% effective detail-view rate — enough to show the loop can ship.",
     ],
   },
   {
     id: "meituan-feed-ads",
-    name: "美团信息流广告商业化",
-    kind: "实习项目 · 美团",
-    summary: "链路解耦、多路召回、排序重构、展示频控，四件事一起做",
+    name: "Meituan Feed Ad Monetization",
+    kind: "Internship · Meituan",
+    summary: "Pipeline decoupling, multi-channel recall, ranking rework, frequency capping — all at once",
     body: [
-      "2025.08-2025.12，在美团商业化增值做产品实习生，场景是首页信息流和本地生活团购。当时有两个绕不开的痛点：广告和自然推荐的底层链路耦合太深，改一边动另一边；医美这类低频高客单的类目，广告转化差，还带着合规风险。目标是在不伤用户体验的前提下把变现效率提上去。",
-      "链路解耦与多路召回：协同技术团队推进解耦，我负责广告召回索引的日常维护和数据校验。为了扩候选集，引入了文本倒排召回、向量语义召回和基于 LBS 空间约束的多路召回通道，另外搭了广告冷启动候选池来保证供给多样性。上线后信息流 PVR 提升 4.02%，广告加载率提升 27.8%。",
-      "排序策略重构与价格带匹配：和算法团队一起重构广告排序逻辑，设计并落地了「预估 GMV × 用户价格带匹配因子」，用历史消费行为把用户锚到一个价格层级上，再推动价格偏离惩罚机制上线——超出用户消费区间的广告直接降权。美食频道和医美频道的广告 ROI 分别提升 7.41% 和 11.65%，低效曝光少了很多。",
-      "医美广告的 AI 意图识别与合规风控：这块是「AI 意图模型 + 硬规则」的双重拦截。用用户行为序列辅助模型判断真实购买意愿，拦掉低意向流量；同时引入 OCR 图像识别和 NLP 语义分析，自动筛查物料里的违规图文和虚假宣传话术，再配合硬规则过滤无资质广告。变美健康频道收入增长 12.18%，而投诉率和退款率没有上浮——后面这半句才是我最在意的。",
-      "展示频控与 AB 实验：设计并推行了「单店单 SKU 聚合」和「同类目广告展示上限 2 条」的频控机制，加上疲劳度衰减干预，避免同类广告反复砸给同一个人。我也负责跟进多组 AB 实验的流量分配方案和数据回收分析。策略规模化上线后，美食和医美频道收入分别提升 23.64% 和 18.15%，浏览时长、点击率这些体验指标没有负向。",
-      "这段实习给我最大的收获是：商业化不是「广告多塞一点」，而是找到那个用户体验和收入同时还能往上走的窄区间，然后用实验反复确认自己没有在自欺欺人。",
+      "Aug–Dec 2025, product intern on Meituan's monetization team, working on the homepage feed and local-services group buying. Two problems were unavoidable: ads and organic recommendations were coupled so deeply at the pipeline level that touching one moved the other; and low-frequency, high-ticket categories like medical aesthetics converted badly while carrying compliance risk. The goal was to lift monetization efficiency without hurting the user experience.",
+      "Pipeline decoupling and multi-channel recall: I worked with engineering to push the decoupling through, and owned day-to-day maintenance and data validation for the ad recall index. To widen the candidate set we added text inverted-index recall, vector semantic recall, and an LBS-constrained geographic channel, plus a cold-start candidate pool to keep supply diverse. After launch, feed PVR rose 4.02% and ad load rose 27.8%.",
+      "Ranking rework and price-band matching: with the algorithm team I reworked the ad ranking logic and shipped an \"estimated GMV × user price-band match factor,\" anchoring each user to a price tier from their purchase history, then pushed through a price-deviation penalty — ads outside a user's spending range get demoted outright. Ad ROI rose 7.41% in the food channel and 11.65% in medical aesthetics, with far fewer low-value impressions.",
+      "AI intent detection and compliance controls for medical-aesthetics ads: a double filter of \"AI intent model plus hard rules.\" Behavioral sequences helped the model judge real purchase intent so we could screen out low-intent traffic; alongside that, OCR and NLP automatically flagged non-compliant imagery and false claims in creatives, with hard rules filtering out unlicensed advertisers. Revenue in the beauty-and-health channel grew 12.18% while complaint and refund rates did not move — that second half is the part I care about most.",
+      "Frequency capping and A/B testing: I designed and rolled out \"one SKU per merchant, aggregated\" plus a cap of two ads per category, with fatigue decay on top, so the same person doesn't get hit with the same kind of ad over and over. I also owned traffic allocation and results analysis across several A/B tests. Once the strategy rolled out at scale, revenue rose 23.64% in food and 18.15% in medical aesthetics, with no regression in session length or click-through.",
+      "The biggest thing I took away: monetization isn't \"cram in more ads.\" It's finding the narrow band where user experience and revenue can both still go up, then using experiments to keep checking that you aren't fooling yourself.",
     ],
   },
   {
     id: "nio-sales-ops",
-    name: "蔚来销售运营数据体系",
-    kind: "实习项目 · 蔚来汽车",
-    summary: "从 0 到 1 搭一线销售的过程与结果指标报表",
+    name: "NIO Sales-Ops Data System",
+    kind: "Internship · NIO",
+    summary: "Building process and outcome metrics for frontline sales from scratch",
     body: [
-      "2025.03-2025.05，在蔚来汽车用户与服务体验团队做销售运营实习生，面向苏北地区的一线销售小组。",
-      "主要做了三件事。一是数据基建：把「锁单」「用户运营」等多源数据梳理到一起，从 0 到 1 搭了一套同时包含过程指标和结果指标的监控报表体系，让产品和销售运营能拿到高时效的数据。二是指标运营：做业绩可视化看板，追踪锁单完成率等核心转化指标，用「四象限」分类法对销售做分层运营，定位业务瓶颈。三是决策支持：制定定量评估模型，协助完成月度评级和绩效盘点，把数据转成能直接执行的方案。",
-      "这段时间不长，但它是我第一次真切理解「一线要的不是漂亮的看板，是能立刻据此调整动作的那两三个数」。",
+      "Mar–May 2025, sales-ops intern on NIO's User and Service Experience team, supporting frontline sales groups across northern Jiangsu.",
+      "Three things, mainly. Data plumbing: I pulled together multiple sources — order locks, user operations, and others — and built a monitoring and reporting system from scratch covering both process metrics and outcome metrics, so product and sales ops could get numbers while they were still fresh. Metrics operations: I built a performance dashboard, tracked core conversion metrics like order-lock completion rate, and used a four-quadrant classification to segment the sales team and locate bottlenecks. Decision support: I put together a quantitative evaluation model and helped run monthly ratings and performance reviews, turning data into plans someone could act on directly.",
+      "It wasn't a long stint, but it was the first time I really understood that the frontline doesn't want a pretty dashboard — it wants the two or three numbers it can immediately change its behavior on.",
     ],
   },
   {
     id: "clinic-ux-research",
-    name: "智能化门诊系统用户体验洞察与优化策略",
-    kind: "校园项目 · 项目负责人",
-    summary: "KANO + IPA + SLOPE 趋势算法，把「体验」量化成业务指标",
+    name: "Smart Outpatient UX Research",
+    kind: "University project · Project lead",
+    summary: "KANO + IPA + a SLOPE trend algorithm, turning \"experience\" into business metrics",
     body: [
-      "2024.12-2025.05，我是项目负责人，研究对象是江苏省 13 个市的智能化门诊系统。问题很明确：系统上线了，但用户的使用深度上不去，而「体验不好」这句话本身没法指导产品迭代。",
-      "我独立设计了一套融合 KANO 模型与 IPA 分析的量化评估框架，把主观的用户体验翻译成能指导产品生命周期运营的客观指标。工程这边基于 Python 实现了 SLOPE 趋势量化算法模块，打通从底层数据接入到模型训练的端到端流程，最终模型 R² 达到 0.981。",
-      "输出上，我画了 KANO 属性分类图和 IPA 四象限矩阵，定位出真正影响访问频次与满意度的「必备功能」和「痛点环节」，据此产出了产品运营建议报告，给挂号流程优化和精细化用户引导策略提供数据支撑。",
-      "现在回头看，这个项目是我做产品方法论的起点：先想清楚拿什么指标衡量，再去动方案。",
+      "Dec 2024 – May 2025, as project lead, studying the smart outpatient systems used across 13 cities in Jiangsu province. The problem was clear: the systems had shipped, but usage depth wasn't rising — and \"the experience is bad\" is not a statement you can iterate a product on.",
+      "I designed a quantitative evaluation framework combining the KANO model with IPA analysis, translating subjective user experience into objective metrics that could guide product lifecycle operations. On the engineering side I implemented a SLOPE trend-quantification module in Python and wired up an end-to-end flow from raw data ingestion through model training; the final model reached an R² of 0.981.",
+      "For output I produced a KANO attribute classification chart and an IPA four-quadrant matrix, identifying the must-have features and the pain points that genuinely drive visit frequency and satisfaction, then wrote a product operations report on that basis — data to back up registration-flow improvements and more targeted user guidance.",
+      "Looking back, this project is where my product methodology started: work out what you're going to measure before you touch the solution.",
     ],
+  },
+];
+
+export type DesignItem = {
+  id: string;
+  title: string;
+  /** 缩略图，320×200 左右，风格是深色/影调，直接给人「设计作品」的观感 */
+  thumbnail: string;
+  /**
+   * demo = 点击触发站内已有的交互效果
+   * link = 点击后跳外链
+   * site = 在 77-OS 里开一个内嵌网页窗口浏览（手机上直接开新标签看同一个页面）
+   */
+  kind: "demo" | "link" | "site";
+  /** link 的外链地址；site 则是要内嵌的页面地址（public 下的同源静态页） */
+  href?: string;
+};
+
+/**
+ * 「design」文件夹里的作品，一件一件加，网格会自动排下去。
+ * Welcome Back 点开是站内本来就有的全屏过场特效，可以现场演示；
+ * 63 Days 是一份存档在 public 下的独立网页，装进窗口里看。
+ */
+export const designs: DesignItem[] = [
+  {
+    id: "welcome-back",
+    title: "Welcome Back",
+    thumbnail: "/design/welcome-back.jpg",
+    kind: "demo",
+  },
+  {
+    id: "63-days",
+    title: "63 Days After Graduation",
+    thumbnail: "/design/63-days.jpg",
+    kind: "site",
+    // 存档自 LootAI 上的原作品页；原站禁止被 iframe 内嵌，所以窗口里放同源副本
+    href: "/design/63-days/index.html",
   },
 ];
 
@@ -149,13 +192,13 @@ export const projects: Project[] = [
  * 手机上没有双击和拖拽，所以涉及这些操作的提示要写明「在电脑上」。
  */
 export const assistantTips = [
-  "桌面上的图标点开就是一个窗口，在电脑上还能拖着标题栏到处跑。",
-  "在电脑上，窗口边缘能拖动缩放，双击标题栏可以最大化。",
-  "试试「扫雷」，是能真的玩通关的那种。",
-  "「回收站」里放的是我放弃掉的想法，比作品集本身诚实。",
-  "命令提示符里输入 help，有一堆命令可以玩。",
-  "开始菜单里那个「别点这个」，真的别点。",
-  "开始菜单最下面有「关闭计算机」，会有个惊喜画面。",
+  "Every icon on the desktop opens a window. On a computer you can drag them around by the title bar.",
+  "On a computer, window edges resize, and double-clicking the title bar maximizes.",
+  "Try Minesweeper — it's the real thing, you can actually win.",
+  "The Recycle Bin holds ideas I gave up on. More honest than the portfolio itself.",
+  "Type help in the Command Prompt. There's a pile of commands to play with.",
+  "That \"Don't Click This\" in the Start menu — really, don't.",
+  "\"Shut Down\" at the bottom of the Start menu has a surprise waiting.",
 ];
 
 /**
@@ -165,11 +208,11 @@ export const assistantTips = [
  */
 export const recycled = [
   {
-    name: "一个没做完的 App 想法",
-    reason: "想清楚之后发现没人需要，先删了",
+    name: "An app idea I never finished",
+    reason: "Thought it through, realized nobody needed it, deleted it",
   },
   {
-    name: "写了三篇就断更的公众号",
-    reason: "高估了自己的更新频率",
+    name: "A newsletter that stopped after three posts",
+    reason: "Overestimated how often I'd write",
   },
 ];

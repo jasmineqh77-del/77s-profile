@@ -11,7 +11,8 @@
   margin: 0;
   padding: 0;
   overflow: auto;
-  border: 2px inset #808080;
+  border: 1px solid var(--field-border);
+  border-radius: 2px;
   background: #fff;
 }
 
@@ -23,21 +24,19 @@
   border: none;
   font: inherit;
   padding: 7px 9px;
-  cursor: pointer;
-  border-bottom: 1px solid #e6e6e6;
+  cursor: var(--cur-pointer);
+  border-bottom: 1px solid #eef2f6;
 }
 
 .sidebarItem:hover {
-  background: #e8f0fe;
+  background: rgba(51, 153, 255, 0.12);
 }
 
-.sidebarItemActive {
-  background: #316ac5;
-  color: #fff;
-}
-
+/* 选中项是淡蓝底 + 左侧一条重色，文字不反白 */
+.sidebarItemActive,
 .sidebarItemActive:hover {
-  background: #316ac5;
+  background: var(--accent-soft);
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 
 .postTitle {
@@ -55,7 +54,8 @@
   flex: 1 1 auto;
   min-width: 0;
   overflow: auto;
-  border: 2px inset #808080;
+  border: 1px solid var(--field-border);
+  border-radius: 2px;
   background: #fff;
   padding: 14px 16px;
 }
@@ -101,22 +101,24 @@
 }
 
 .prose :global(code) {
-  background: #f0f0f0;
+  background: #eef3f8;
+  border-radius: 2px;
   padding: 1px 4px;
   font-family: "Courier New", monospace;
 }
 
 .prose :global(pre) {
-  background: #f0f0f0;
+  background: #f4f8fb;
   padding: 10px;
   overflow: auto;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #dbe5ee;
+  border-radius: var(--ctl-radius);
 }
 
 .prose :global(blockquote) {
   margin: 0 0 12px;
   padding-left: 12px;
-  border-left: 3px solid #b6cbe8;
+  border-left: 3px solid #b8cadd;
   color: #555;
 }
 

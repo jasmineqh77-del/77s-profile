@@ -36,11 +36,18 @@ export default function ContextMenu({ x, y, items, onClose }: Props) {
   }, [x, y]);
 
   useEffect(() => {
-    const handlePointerDown = () => onClose();
+    const handlePointerDown = (event: globalThis.PointerEvent) => {
+      const target = event.target as Node;
+      // 点在菜单里面时这里绝对不能关：pointerdown 早于 click，这一步就把菜单卸载掉的话，
+      // 按钮还没等到 click 事件就已经不在了，onSelect 永远跑不到。菜单项自己的 onClick 会负责关。
+      if (menuRef.current?.contains(target)) return;
+      onClose();
+    };
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
     };
-    // 捕获阶段监听，保证点任何地方都能先关掉菜单
+    // 用捕获阶段：窗口的缩放柄按下时会 stopPropagation，而 React 会一并停掉原生事件的传播，
+    // 挂在冒泡阶段的话，从缩放柄起手拖动时菜单就关不掉了
     window.addEventListener("pointerdown", handlePointerDown, true);
     window.addEventListener("keydown", handleKey);
     return () => {
@@ -64,7 +71,7 @@ export default function ContextMenu({ x, y, items, onClose }: Props) {
             key={item.label}
             type="button"
             role="menuitem"
-            className={styles.item}
+            className={`chrome-button ${styles.item}`}
             disabled={item.disabled}
             onClick={() => {
               item.onSelect?.();

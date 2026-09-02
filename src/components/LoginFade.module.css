@@ -1,0 +1,20 @@
+.fade {
+  position: fixed;
+  inset: 0;
+  /* 盖住登录与桌面，低于蓝屏 / Welcome Back */
+  z-index: 9200;
+  background: #000;
+  opacity: 0;
+  pointer-events: auto;
+  transition: opacity 420ms linear;
+}
+
+.opaque {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade {
+    transition: none;
+  }
+}

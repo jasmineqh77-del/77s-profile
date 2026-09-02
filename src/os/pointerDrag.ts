@@ -18,12 +18,18 @@ export function startPointerDrag(
 ) {
   event.preventDefault();
 
+  // currentTarget 只在事件派发期间有效，必须在这里同步取
+  const handle = event.currentTarget as HTMLElement;
   const startX = event.clientX;
   const startY = event.clientY;
 
   const previousUserSelect = document.body.style.userSelect;
   const previousCursor = document.body.style.cursor;
   document.body.style.userSelect = "none";
+  // 手势期间鼠标经常不在抓着的元素上：窗口跟随慢一帧，撞到边界或最小尺寸后
+  // 更是直接被甩开。锁成按下那一刻的形态，配合 globals.css 里的 [data-dragging]。
+  document.body.style.cursor = getComputedStyle(handle).cursor;
+  document.body.dataset.dragging = "";
 
   const handleMove = (e: globalThis.PointerEvent) => {
     onMove(e.clientX - startX, e.clientY - startY);
@@ -35,6 +41,7 @@ export function startPointerDrag(
     window.removeEventListener("pointercancel", handleUp);
     document.body.style.userSelect = previousUserSelect;
     document.body.style.cursor = previousCursor;
+    delete document.body.dataset.dragging;
     onEnd?.();
   };
 

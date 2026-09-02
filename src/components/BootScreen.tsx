@@ -4,9 +4,11 @@ import { useEffect, useId, useState } from "react";
 
 import { site } from "@content/site";
 
+import { preloadDesktopAssets } from "@/os/preloadAssets";
 import { useSystemStore } from "@/os/systemStore";
 
 import styles from "./BootScreen.module.css";
+import IpAvatar from "./IpAvatar";
 
 /** 每块面板向自身重心收缩的比例，用来空出面板之间的黑色缝隙 */
 const PANE_SCALE = 0.94;
@@ -108,7 +110,7 @@ function BootFlag({ className }: { className?: string }) {
       viewBox="-6 -6 288 258"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label={`${site.osName} 徽标`}
+      aria-label={`${site.osName} logo`}
     >
       <defs>
         {panes.map((pane) => (
@@ -177,6 +179,8 @@ export function BootScreen() {
   const [skippable, setSkippable] = useState(false);
 
   useEffect(() => {
+    // 开机这几秒把桌面图标/壁纸/指针塞进缓存，进桌面时不会一块一块蹦出来
+    void preloadDesktopAssets();
     const showSkip = setTimeout(() => setSkippable(true), 900);
     const done = setTimeout(() => setPhase("login"), 3200);
     return () => {
@@ -203,8 +207,12 @@ export function BootScreen() {
       <ProgressBar />
 
       {skippable && (
-        <button type="button" className={styles.skip} onClick={() => setPhase("login")}>
-          跳过 →
+        <button
+          type="button"
+          className={`chrome-button ${styles.skip}`}
+          onClick={() => setPhase("login")}
+        >
+          Skip →
         </button>
       )}
 
@@ -214,7 +222,11 @@ export function BootScreen() {
 }
 
 export function LoginScreen() {
-  const setPhase = useSystemStore((s) => s.setPhase);
+  // 进桌面走 beginDesktopEntry（黑场），不再直接 setPhase
+  useEffect(() => {
+    // 跳过开机或缓存被清掉时，登录页再补一次；壁纸也提前抢
+    void preloadDesktopAssets();
+  }, []);
 
   return (
     <div className={styles.login}>
@@ -223,7 +235,7 @@ export function LoginScreen() {
       <div className={styles.loginMain}>
         <div className={styles.loginLeft}>
           <p className={styles.loginBrand}>{site.osName}</p>
-          <p className={styles.loginTip}>点击你的用户名开始</p>
+          <p className={styles.loginTip}>To begin, click your user name</p>
         </div>
 
         <div className={styles.loginDivider} />
@@ -231,23 +243,24 @@ export function LoginScreen() {
         <div className={styles.loginRight}>
           <button
             type="button"
-            className={styles.userTile}
-            onClick={() => setPhase("desktop")}
+            className={`chrome-button ${styles.userTile}`}
+            onClick={() => useSystemStore.getState().beginDesktopEntry()}
             autoFocus
           >
-            <span className={styles.userAvatar} aria-hidden>
-              🙂
-            </span>
+            <IpAvatar variant="heart" size={54} priority className={styles.userAvatar} />
             <span>
-              <span className={styles.userName}>{site.userName}</span>
-              <span className={styles.userNote}>{site.userTagline}</span>
+              <span className={styles.userName}>Guest</span>
+              <span className={styles.userNote}>Sign in as guest</span>
             </span>
           </button>
         </div>
       </div>
 
       <div className={styles.loginBottom}>
-        <p>开机后翻翻桌面图标和开始菜单，在电脑上还能拖动窗口、右键桌面。</p>
+        <p>
+          Once you&apos;re in, poke around the desktop icons and the Start menu. On a computer you
+          can also drag windows and right-click the desktop.
+        </p>
       </div>
     </div>
   );
@@ -266,8 +279,9 @@ export function ShutdownScreen() {
     return (
       <div className={styles.boot}>
         <div className={styles.shutdownBrand}>
+          <IpAvatar variant="sleep" size={150} className={styles.shutdownIp} />
           <BootFlag className={styles.flagSmall} />
-          <p className={styles.shutdownText}>正在关闭 {site.osName}…</p>
+          <p className={styles.shutdownText}>Shutting down {site.osName}…</p>
         </div>
 
         <ProgressBar />
@@ -277,9 +291,9 @@ export function ShutdownScreen() {
 
   return (
     <div className={styles.safeOff}>
-      <p className={styles.safeOffText}>现在可以安全地关闭计算机了。</p>
-      <button type="button" onClick={restart} className={styles.restartButton}>
-        重新开机
+      <p className={styles.safeOffText}>It is now safe to turn off your computer.</p>
+      <button type="button" onClick={restart} className={`chrome-button ${styles.restartButton}`}>
+        Restart
       </button>
     </div>
   );

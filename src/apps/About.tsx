@@ -1,32 +1,32 @@
 "use client";
 
+import Image from "next/image";
+
 import { about, site } from "@content/site";
 
 import styles from "./apps.module.css";
 
 export default function About() {
   return (
-    <div className={styles.page}>
-      <div className={styles.hero}>
-        <div className={styles.heroAvatar} aria-hidden>
-          🙂
-        </div>
-        <div>
-          <p className={styles.headline}>{about.headline}</p>
-          <p className={styles.muted}>{site.userTagline}</p>
-        </div>
-      </div>
+    <div className={`${styles.page} ${styles.pageStack}`}>
+      <h1 className={styles.pixelHeadline}>About {site.userName}</h1>
 
-      <div>
-        {about.intro.map((line) => (
-          <p key={line} className={styles.paragraph}>
-            {line}
-          </p>
-        ))}
-      </div>
+      <Image
+        src={about.photo}
+        alt={about.photoAlt}
+        width={200}
+        height={267}
+        unoptimized
+        draggable={false}
+        className={styles.photo}
+      />
+
+      <p className={styles.hook}>{about.hook}</p>
+
+      <p className={styles.paragraph}>{about.caption}</p>
 
       <fieldset>
-        <legend>系统信息</legend>
+        <legend>System</legend>
         <table className={styles.specTable}>
           <tbody>
             {about.specs.map((spec) => (
@@ -38,9 +38,6 @@ export default function About() {
           </tbody>
         </table>
       </fieldset>
-
-      <div className={styles.spacer} />
-      <p className={styles.muted}>{site.disclaimer}</p>
     </div>
   );
 }

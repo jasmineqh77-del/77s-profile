@@ -1,0 +1,71 @@
+/*
+ * Vista Sidebar 气质的窄玻璃条：贴右缘、垂直居中偏上，
+ * 避开右下角 Assistant（bottom ~52px）和任务栏。
+ * z-index 5：在图标之上、窗口（从 z=10 起）之下。
+ */
+.sidebar {
+  position: fixed;
+  top: 22%;
+  right: 10px;
+  z-index: 5;
+  width: 118px;
+  padding: 6px 6px 8px;
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--glass-radius);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  box-shadow:
+    inset 0 0 0 1px var(--glass-edge-inner),
+    0 4px 16px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: slideIn 0.28s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.title {
+  padding: 2px 4px 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #1a3558;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.toggle {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar {
+    animation: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .sidebar {
+    top: auto;
+    bottom: 56px;
+    right: 8px;
+    width: 108px;
+    /* 手机上 Assistant 也可能在右下，稍微抬高一点错开 */
+  }
+}

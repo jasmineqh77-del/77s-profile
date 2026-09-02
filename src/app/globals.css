@@ -1,8 +1,90 @@
-/* XP.css 已经提供了控件皮肤，这里只补它没管的部分：
-   全局重置、中文字体回退、以及桌面外壳需要的滚动/选中行为。 */
+/* 桌面外壳和控件皮肤全部在本项目里自绘（原来这层是 98.css 提供的，
+   换 Aero 之后整包撤掉了）。这里放三样东西：全局重置、Aero 的设计变量、
+   以及 button / input / fieldset / 滚动条这些没有组件归属的控件外观。 */
 
 * {
   box-sizing: border-box;
+}
+
+/*
+ * Windows XP 的「Hands（手掌）」指针方案，素材由 scripts/fetch-cursors.py
+ * 从系统原件转成 PNG（出处和抽帧说明见 README「指针素材」）。
+ *
+ * 集中定义成变量，是为了不把素材路径和热点坐标撒进十几个 CSS Module——
+ * 各模块只写 cursor: var(--cur-pointer)。每条末尾都留了系统关键字兜底，
+ * PNG 万一加载不到会退回系统指针，不会变成没有指针。
+ *
+ * url() 后面那两个数字是热点坐标（相对图片左上角的像素），必须和
+ * fetch-cursors.py 打印出来的一致，改素材时记得一起改。
+ *
+ * pointer / progress / wait 三个的热点不是原件里的原生值，是脚本重算过的：
+ * 原生热点各自独立设计，default 的在指尖、pointer 借用的握拳手却在拳心，
+ * 一切换手就整体往上跳 8 像素，看着像卡了一下。对齐后图案落点一致，
+ * 切换时只有形状变。热点只决定图案画在哪，点击永远落在鼠标真实坐标上，
+ * 所以这么改没有副作用。详见 fetch-cursors.py 的 align_hotspots()。
+ */
+:root {
+  --cur-default: url("/cursors/default.png") 12 1, default;
+  --cur-pointer: url("/cursors/pointer.png") 15 6, pointer;
+  --cur-text: url("/cursors/text.png") 5 9, text;
+  --cur-crosshair: url("/cursors/crosshair.png") 5 12, crosshair;
+  --cur-ns-resize: url("/cursors/ns-resize.png") 15 4, ns-resize;
+  --cur-ew-resize: url("/cursors/ew-resize.png") 4 16, ew-resize;
+  --cur-nwse-resize: url("/cursors/nwse-resize.png") 7 7, nwse-resize;
+  --cur-nesw-resize: url("/cursors/nesw-resize.png") 24 7, nesw-resize;
+  --cur-not-allowed: url("/cursors/not-allowed.png") 12 1, not-allowed;
+  --cur-progress: url("/cursors/progress.png") 12 5, progress;
+  --cur-wait: url("/cursors/wait.png") 10 7, wait;
+}
+
+/*
+ * Aero 的设计变量。集中在这里是因为改造前这些数值是手写散在十几个
+ * CSS Module 里的，改一次颜色要翻十几个文件。
+ *
+ * 关于 --glass-edge / --glass-edge-inner：Aero 的边框就是这么两条 1px 的线，
+ * 外面一条亮白、紧贴着里面一条更淡的高光，没有第三条。想加粗或加深都会立刻
+ * 不像——那是 XP 的蓝框或者 98 的斜角，不是 Aero。
+ *
+ * --glass-blur 用在窗框、任务栏、开始菜单、右键菜单、小助手、壁纸 Sidebar。
+ * 窗口正文区是不透明的，原版 Aero 就是这样（玻璃只在边框和标题栏），
+ * 顺带也省掉了「每开一个窗口多一层实时模糊」的开销。
+ *
+ * 用 backdrop-filter 时千万别手写 -webkit- 版本。Lightning CSS（Turbopack 的
+ * CSS 处理器）会按 browserslist 自己加前缀；手写的前缀声明排在标准写法后面，
+ * 会被当成同一属性的更晚声明接管，然后因为目标浏览器不需要前缀而被整条删掉——
+ * 结果是模糊直接消失，而且构建不报错。这个坑踩过一次了。
+ */
+:root {
+  --glass-bg: rgba(219, 233, 247, 0.72);
+  --glass-bg-inactive: rgba(233, 237, 242, 0.66);
+  --glass-blur: blur(12px);
+  --glass-edge: rgba(255, 255, 255, 0.75);
+  --glass-edge-inner: rgba(255, 255, 255, 0.32);
+  --glass-radius: 6px;
+  --glass-shadow: 0 8px 26px rgba(0, 0, 0, 0.38);
+
+  /* 深色玻璃：任务栏和开始菜单 */
+  --glass-dark: rgba(22, 34, 52, 0.78);
+  --glass-dark-text: #eef5ff;
+
+  /* 控件三态 */
+  --ctl-face: linear-gradient(180deg, #fdfefe, #eaf1f8 48%, #dce8f3 52%, #f2f7fb);
+  --ctl-face-hover: linear-gradient(180deg, #f4fbff, #ddf0ff 48%, #c2e4fb 52%, #e9f7ff);
+  --ctl-face-active: linear-gradient(180deg, #d3e9f8, #bcdcf2 48%, #a8d0ec 52%, #c6e2f6);
+  --ctl-border: #a3bdd4;
+  --ctl-border-hover: #3c9de0;
+  --ctl-radius: 3px;
+
+  /* 输入框 */
+  --field-bg: #fff;
+  --field-border: #abadb3;
+
+  --accent: #3399ff;
+  --accent-soft: rgba(51, 153, 255, 0.28);
+  --accent-text: #16548a;
+
+  /* 标题栏文字的外发光，Aero 靠这个让深色字浮在玻璃上 */
+  --title-glow: 0 0 4px #fff, 0 0 9px #fff;
 }
 
 html,
@@ -14,54 +96,207 @@ body {
 }
 
 body {
-  /* XP 界面字体是 Tahoma，中文回退到系统黑体 */
-  font-family: Tahoma, Verdana, "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB",
-    sans-serif;
+  font-family: "Segoe UI", Tahoma, Verdana, "PingFang SC", "Microsoft YaHei",
+    "Hiragino Sans GB", sans-serif;
   font-size: 12px;
-  color: #000;
+  color: #1a1a1a;
   background: #3a6ea5;
   -webkit-font-smoothing: antialiased;
+  cursor: var(--cur-default);
 }
 
-/* 标题栏在真实 XP 里用的是 Trebuchet MS */
-.title-bar-text {
-  font-family: "Trebuchet MS", Tahoma, "PingFang SC", "Microsoft YaHei", sans-serif;
-}
-
-button {
+/* 表单控件默认用系统字体，不继承 body，得显式拉回来 */
+button,
+input,
+label,
+legend,
+option,
+select,
+table,
+textarea {
   font-family: inherit;
+  font-size: 12px;
 }
 
-a {
-  color: #0a49b0;
+/*
+ * 窗口里的按钮走 Aero 外观，但桌面图标、任务栏、开始菜单这些是自绘控件，
+ * 它们带 chrome-button 类。用 :not(.chrome-button) 把它们摘出去，而不是
+ * 靠后面的模块样式覆盖——覆盖要连 :hover / :active 一起复写，漏一个态就露馅。
+ */
+button:not(.chrome-button),
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+select {
+  min-height: 23px;
+  padding: 2px 12px;
+  border: 1px solid var(--ctl-border);
+  border-radius: var(--ctl-radius);
+  background: var(--ctl-face);
+  color: #1a1a1a;
 }
 
-a:hover {
-  color: #1565d8;
+button:not(.chrome-button):hover:not(:disabled),
+input[type="button"]:hover:not(:disabled),
+input[type="submit"]:hover:not(:disabled),
+input[type="reset"]:hover:not(:disabled),
+select:hover:not(:disabled) {
+  border-color: var(--ctl-border-hover);
+  background: var(--ctl-face-hover);
 }
 
-/* 复古滚动条，只有 WebKit 内核支持，其他浏览器会优雅退化成默认样式 */
+button:not(.chrome-button):active:not(:disabled),
+input[type="button"]:active:not(:disabled),
+input[type="submit"]:active:not(:disabled),
+input[type="reset"]:active:not(:disabled) {
+  background: var(--ctl-face-active);
+}
+
+button:not(.chrome-button):disabled,
+select:disabled {
+  color: #8d8d8d;
+  border-color: #d7dde3;
+  background: #f5f7f9;
+}
+
+textarea,
+input:where(:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="button"], [type="submit"], [type="reset"])) {
+  padding: 3px 5px;
+  border: 1px solid var(--field-border);
+  border-radius: 2px;
+  background: var(--field-bg);
+  color: #1a1a1a;
+}
+
+textarea:focus,
+input:focus:where(:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="button"], [type="submit"], [type="reset"])) {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Aero 的分组框：细圆角边 + 深蓝标签，取代经典主题那圈双线凹槽 */
+fieldset {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #d4dde6;
+  border-radius: var(--ctl-radius);
+}
+
+legend {
+  padding: 0 4px;
+  color: var(--accent-text);
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* 浅色细滚动条，配玻璃外壳；Firefox 走 scrollbar-color */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #b7c9da #eef3f8;
+}
+
 ::-webkit-scrollbar {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-left: 1px solid #d6d6d6;
+  background: #eef3f8;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, #f0f4fb 0%, #c9dcf5 50%, #a8c6ec 100%);
-  border: 1px solid #7f9db9;
+  border: 1px solid #b0c3d6;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #fbfdff, #dbe8f3 50%, #c9dced);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(90deg, #f6f9fe 0%, #d8e6fa 50%, #b8d2f2 100%);
+  border-color: var(--ctl-border-hover);
+  background: linear-gradient(180deg, #f4fbff, #d3ecff 50%, #b9e0fa);
 }
 
-/* 窗口标题栏、图标这些地方不该被文字选中打断 */
-.title-bar,
-.title-bar-text {
-  user-select: none;
+::-webkit-scrollbar-corner {
+  background: #eef3f8;
+}
+
+/*
+ * 自绘控件先退回白板。浏览器给 <button> 的默认边框、底色、内边距
+ * 会顶掉组件自己的样式，这个类把它们全清掉。
+ *
+ * 别给这条加 :hover / :active 之类的伪类。加了权重就从 0-1-0 变成 0-2-0，
+ * 会压过各模块里 .icon / .task / .item 这些单类名的基础样式，按住鼠标那一刻
+ * padding 和 border 一起塌成 0——桌面图标会因此矮 14px，而图标网格是列方向
+ * wrap 且正卡在换列边界上，一个图标变矮就会把整列图标顶得上下乱跳。
+ * 之前带 :active 是为了抵消 98.css 给 button:active 画的按下斜角，那个包已经卸了。
+ */
+.chrome-button {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  text-shadow: none;
+  color: inherit;
+  font: inherit;
+}
+
+/*
+ * cursor 本身是继承属性，body 那条能盖住绝大多数元素。但浏览器的 UA 样式
+ * 给链接和表单控件另外指定了值（链接是 pointer、输入框是 auto），继承传不进去，
+ * 不显式覆盖的话这几类元素会漏出系统指针，和周围的手掌对不上。
+ * 这里全用元素选择器（0,0,1），各 CSS Module 里的类选择器仍然压得住。
+ */
+button,
+select {
+  /*
+   * 真实系统里鼠标移到按钮上是不变形的，这里有意反过来：凡是能点的都换握拳手，
+   * 和空白桌面、正文的食指手区分开，不然整站悬停毫无反馈。
+   * 用元素选择器兜住所有没单独写 cursor 的按钮；标题栏、扫雷已翻开的格子、
+   * 菜单禁用项都靠更高权重的类选择器保持箭头。
+   */
+  cursor: var(--cur-pointer);
+}
+
+textarea,
+input:where(:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="button"], [type="submit"], [type="reset"])) {
+  cursor: var(--cur-text);
+}
+
+:disabled {
+  cursor: var(--cur-not-allowed);
+}
+
+/*
+ * 拖窗口、拉边框期间鼠标经常不在抓着的那个元素上：窗口跟随慢一帧，撞到屏幕
+ * 边界或最小尺寸后更是直接被甩开，于是形态跟着鼠标底下的东西来回换。
+ * startPointerDrag 会把按下那一刻的形态锁在 body 上并打这个标记，
+ * 后代自己声明的 cursor 权重更高，这里让它们整段手势里一律让位。
+ */
+body[data-dragging] * {
+  cursor: inherit !important;
+}
+
+/*
+ * 跨域 iframe / object 会把落在自己身上的指针事件吃掉，父页面挂在 window 上的
+ * pointermove 收不到，拖窗口和拉边框一进到内嵌文档区域就断在半路。
+ * 整段手势里让它们不参与命中测试，事件就能穿回父文档。
+ */
+body[data-dragging] iframe,
+body[data-dragging] object,
+body[data-dragging] embed {
+  pointer-events: none;
+}
+
+a {
+  color: #0b52a8;
+  cursor: var(--cur-pointer);
+}
+
+a:hover {
+  color: #1a7bd4;
 }
