@@ -454,22 +454,23 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
   line-height: 1.45;
 }
 
-/* —— Design showcase (slide 07) —— */
-.design-show {
-  display: grid;
-  grid-template-columns: 0.78fr 1.55fr;
-  gap: 48px;
-  align-items: stretch;
+/* —— Design showcase (slide 07, static board) —— */
+.design-board {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   width: 100%;
   min-height: 720px;
 }
-.design-show-side {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding-right: 28px;
-  border-right: 1px solid var(--color-rule);
+.design-board-head {
+  display: grid;
+  grid-template-columns: 1fr 1.55fr;
+  gap: 36px;
+  align-items: end;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-rule);
 }
+.design-board-head .work-block { display: flex; flex-direction: column; gap: 6px; }
 .design-kicker {
   font-family: var(--font-mono);
   font-size: 12px;
@@ -477,139 +478,76 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
   text-transform: uppercase;
   color: var(--color-accent);
 }
-.design-show-side .work-title {
+.design-board-head .work-title {
   font-family: var(--font-display);
-  font-size: 40px;
+  font-size: 32px;
   font-weight: 700;
   line-height: 1.1;
   margin: 0;
   color: var(--color-ink);
 }
-.design-show-side .work-desc {
-  font-size: 18px;
-  line-height: 1.55;
-  color: var(--color-ink);
+.design-board-head .work-desc {
   margin: 0;
-  max-width: 28ch;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--color-muted);
+  max-width: 52ch;
 }
-.design-thumb-frame {
-  margin-top: 8px;
-  border: 1px solid var(--color-rule-strong);
-  background: #0b0b0f;
-  overflow: hidden;
-  height: 340px;
+.design-sheet {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px 16px;
+  flex: 1;
+  align-content: start;
+}
+.design-card {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  margin: 0;
 }
-.design-thumb-frame img {
+.design-card .shot {
+  border: 1px solid var(--color-rule-strong);
+  background: var(--color-paper-2);
+  height: 268px;
+  overflow: hidden;
+}
+.design-card .shot img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: top center;
   display: block;
 }
-.design-show-main {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  min-width: 0;
-}
-.design-show-main .work-head {
-  display: flex;
+.design-card.welcome .shot { background: #0b0b0f; }
+.design-card.welcome .shot img { object-fit: cover; object-position: center; }
+.design-card .meta {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  column-gap: 8px;
+  row-gap: 2px;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
 }
-.design-show-main .work-title {
-  font-family: var(--font-display);
-  font-size: 36px;
-  font-weight: 700;
-  margin: 0;
-  line-height: 1.1;
-}
-.design-pager {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.design-card .meta .idx {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 11px;
   letter-spacing: 0.08em;
+  color: var(--color-accent);
+}
+.design-card .meta .label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-ink);
+}
+.design-card .meta .note {
+  grid-column: 2;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.35;
   color: var(--color-muted);
 }
-.design-pager button {
-  appearance: none;
-  border: 1px solid var(--color-rule-strong);
-  background: var(--color-paper);
-  color: var(--color-ink);
-  width: 36px;
-  height: 36px;
-  font-size: 18px;
-  line-height: 1;
-  cursor: pointer;
-}
-.design-pager button:hover { border-color: var(--color-accent); color: var(--color-accent); }
-.design-pager button:disabled { opacity: 0.35; cursor: default; }
-.design-viewer {
-  position: relative;
-  border: 1px solid var(--color-rule-strong);
-  background: var(--color-paper-2);
-  height: 470px;
-  overflow: hidden;
-}
-.design-viewer img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center top;
-  display: block;
-  background: #111;
-}
-.design-caption {
-  display: grid;
-  grid-template-columns: 72px 1fr;
-  gap: 16px;
-  align-items: start;
-  min-height: 88px;
-  padding-top: 6px;
-}
-.design-caption .cap-idx {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  color: var(--color-accent);
-  padding-top: 4px;
-}
-.design-caption .cap-title {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0 0 6px;
-  line-height: 1.2;
-}
-.design-caption .cap-body {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--color-ink);
-  max-width: 62ch;
-}
-.design-dots {
-  display: flex;
-  gap: 8px;
-  margin-top: 2px;
-}
-.design-dots button {
-  appearance: none;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: 0;
-  padding: 0;
-  background: var(--color-rule);
-  cursor: pointer;
-}
-.design-dots button.active { background: var(--color-accent); }
 
 /* —— Judgment list (slide 08) —— */
 .judgment-head { margin-bottom: 12px; }
@@ -1085,47 +1023,59 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
         <span class="stage-label">作品 · Design works</span>
       </div>
 
-      <div class="design-show">
-        <aside class="design-show-side">
-          <span class="design-kicker">Work 01</span>
-          <h2 class="work-title">回来了</h2>
-          <p class="work-desc">欢迎页式的回归叙事：用一张深色封面把「离开又回来」压成一眼能读懂的入口。</p>
-          <div class="design-thumb-frame">
-            <img src="assets/design-welcome-thumb.png" alt="回来了 网页封面缩略图">
+      <div class="design-board">
+        <div class="design-board-head">
+          <div class="work-block">
+            <span class="design-kicker">Work 01</span>
+            <h2 class="work-title">回来了</h2>
+            <p class="work-desc">欢迎页式回归叙事：深色封面把「离开又回来」压成一眼可读的入口。</p>
           </div>
-        </aside>
+          <div class="work-block">
+            <span class="design-kicker">Work 02</span>
+            <h2 class="work-title">毕业第 63 天</h2>
+            <p class="work-desc">六章个人档案：从毕业、回家、求职到手帐与第一次，整条叙事线静态铺开。</p>
+          </div>
+        </div>
 
-        <div class="design-show-main" id="designFlipper">
-          <div class="work-head">
-            <div>
-              <span class="design-kicker">Work 02</span>
-              <h2 class="work-title">毕业第 63 天</h2>
-            </div>
-            <div class="design-pager">
-              <button type="button" id="designPrev" aria-label="上一页">‹</button>
-              <span id="designPageLabel">01 / 07</span>
-              <button type="button" id="designNext" aria-label="下一页">›</button>
-            </div>
-          </div>
-
-          <div class="design-viewer">
-            <img id="designPageImg" src="assets/design-63/00-cover.png" alt="毕业第 63 天封面">
-          </div>
-
-          <div class="design-caption">
-            <span class="cap-idx" id="designCapIdx">00</span>
-            <div>
-              <h3 class="cap-title" id="designCapTitle">封面 · 档案入口</h3>
-              <p class="cap-body" id="designCapBody">毕业后 63 天的个人档案首页。滚动探索，收集隐藏碎片，解锁整段夏天的记忆。</p>
-            </div>
-          </div>
-          <div class="design-dots" id="designDots" aria-label="页面指示"></div>
+        <div class="design-sheet">
+          <figure class="design-card welcome">
+            <div class="shot"><img src="assets/design-welcome-thumb.png" alt="回来了 封面"></div>
+            <div class="meta"><span class="idx">W1</span><span class="label">回来了</span><p class="note">封面入口</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/00-cover.png" alt="毕业第63天 封面"></div>
+            <div class="meta"><span class="idx">00</span><span class="label">封面 · 档案入口</span><p class="note">滚动探索，解锁夏天记忆</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/01-graduation.png" alt="毕业章"></div>
+            <div class="meta"><span class="idx">01</span><span class="label">毕业</span><p class="note">学生时代骤然停住</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/02-home.png" alt="回家章"></div>
+            <div class="meta"><span class="idx">02</span><span class="label">回家 · 苏州</span><p class="note">父母身边的一周喘息</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/03-shenzhen.png" alt="深圳香港章"></div>
+            <div class="meta"><span class="idx">03</span><span class="label">深圳 · 香港</span><p class="note">投递、面试与不确定</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/04-people.png" alt="人们手帐章"></div>
+            <div class="meta"><span class="idx">04</span><span class="label">人们 · 夏日手帐</span><p class="note">陌生人成为生活的一部分</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/05-firsts.png" alt="第一次章"></div>
+            <div class="meta"><span class="idx">05</span><span class="label">第一次</span><p class="note">合租、旅行、面对未来</p></div>
+          </figure>
+          <figure class="design-card">
+            <div class="shot"><img src="assets/design-63/06-next.png" alt="接下来章"></div>
+            <div class="meta"><span class="idx">06</span><span class="label">接下来</span><p class="note">秋招与未完待续</p></div>
+          </figure>
         </div>
       </div>
 
       <footer class="colophon">
         <span>Jiaqi Huang</span>
-        <span>design/ — 两件可点开的网页作品</span>
+        <span>design/ — 两件网页作品，静态铺开</span>
       </footer>
     </section>
 
@@ -1311,97 +1261,6 @@ function goTo(index) {
   renderSlide();
 }
 
-
-/* Design showcase page flipper (slide 07) */
-(function () {
-  var pages = [
-    {
-      src: 'assets/design-63/00-cover.png',
-      idx: '00',
-      title: '封面 · 档案入口',
-      body: '毕业后 63 天的个人档案首页。滚动探索，收集隐藏碎片，解锁整段夏天的记忆。'
-    },
-    {
-      src: 'assets/design-63/01-graduation.png',
-      idx: '01',
-      title: '毕业 · 一个时代的结束',
-      body: '拍下毕业照的那一刻，熟悉的学生生活突然停住。这一章把告别写成可翻开的第一页。'
-    },
-    {
-      src: 'assets/design-63/02-home.png',
-      idx: '02',
-      title: '回家 · 苏州的一周',
-      body: '回到父母身边的短暂喘息：车站、家常菜、奶茶——用三张日常照片接住刚毕业的空档。'
-    },
-    {
-      src: 'assets/design-63/03-shenzhen.png',
-      idx: '03',
-      title: '深圳·香港 · 进入未知',
-      body: '投递、面试、拒绝与 offer 的计数板：把求职的不确定感收成一屏可扫读的结果。'
-    },
-    {
-      src: 'assets/design-63/04-people.png',
-      idx: '04',
-      title: '人们 · 可翻阅的夏日手帐',
-      body: '陌生人变成生活的一部分。这一章做成可往后翻的手帐：点页面继续读下一则记忆。'
-    },
-    {
-      src: 'assets/design-63/05-firsts.png',
-      idx: '05',
-      title: '第一次 · 合租、旅行、面对未来',
-      body: '第一次合租、第一次和父母像成年人一样出游、第一次认真面对未来——并列成档案条目。'
-    },
-    {
-      src: 'assets/design-63/06-next.png',
-      idx: '06',
-      title: '接下来 · To be continued',
-      body: '暑假结束，秋招与未完待续。把「下一步会迎接我的是什么」留在黑屏上的问句里。'
-    }
-  ];
-
-  var img = document.getElementById('designPageImg');
-  var label = document.getElementById('designPageLabel');
-  var capIdx = document.getElementById('designCapIdx');
-  var capTitle = document.getElementById('designCapTitle');
-  var capBody = document.getElementById('designCapBody');
-  var prevBtn = document.getElementById('designPrev');
-  var nextBtn = document.getElementById('designNext');
-  var dots = document.getElementById('designDots');
-  if (!img || !prevBtn || !nextBtn || !dots) return;
-
-  var i = 0;
-  pages.forEach(function (_, idx) {
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.setAttribute('aria-label', '第 ' + (idx + 1) + ' 页');
-    b.addEventListener('click', function () { show(idx); });
-    dots.appendChild(b);
-  });
-
-  function show(index) {
-    i = (index + pages.length) % pages.length;
-    var p = pages[i];
-    img.src = p.src;
-    img.alt = p.title;
-    if (label) label.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(pages.length).padStart(2, '0');
-    if (capIdx) capIdx.textContent = p.idx;
-    if (capTitle) capTitle.textContent = p.title;
-    if (capBody) capBody.textContent = p.body;
-    Array.prototype.forEach.call(dots.children, function (dot, di) {
-      dot.classList.toggle('active', di === i);
-    });
-    prevBtn.disabled = i === 0;
-    nextBtn.disabled = i === pages.length - 1;
-  }
-
-  prevBtn.addEventListener('click', function (e) { e.stopPropagation(); show(i - 1); });
-  nextBtn.addEventListener('click', function (e) { e.stopPropagation(); show(i + 1); });
-  // Chapter 4 scrapbook: clicking the viewer advances when on people page or any page
-  img.addEventListener('click', function () {
-    if (i < pages.length - 1) show(i + 1);
-  });
-  show(0);
-})();
 
 document.getElementById('prevBtn').addEventListener('click', function () { goTo(current - 1); });
 document.getElementById('nextBtn').addEventListener('click', function () { goTo(current + 1); });
